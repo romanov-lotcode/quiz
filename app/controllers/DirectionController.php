@@ -15,7 +15,7 @@ class DirectionController extends BaseController
 
         foreach ($user_right as $u_r)
         {
-            if ($u_r['right_name'] == 'CAN_MODERATOR_DIRECTION')
+            if ($u_r['right_name'] == CAN_MODERATOR_DIRECTION)
             {
                 $is_can = true;
                 break;
@@ -24,8 +24,8 @@ class DirectionController extends BaseController
 
         if ($is_can)
         {
-            $page = 2;
-            $search['name'] = 'нап';
+            //$page = 2;
+            //$search['name'] = 'нап';
             $directions = Direction::getDirections($search, $page);
             $total_direction = Direction::getTotalDirections($search);
 

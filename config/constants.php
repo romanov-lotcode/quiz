@@ -18,3 +18,6 @@ define('DEFAULT_ENCODING_UPPERCASE', 'UTF-8');
 
 // Типы сообщений для пользователя
 define('MESSAGE_TYPE_ERROR', 'error'); // Ошибка
+
+// Права пользователя
+define('CAN_MODERATOR_DIRECTION', 'CAN_MODERATOR_DIRECTION'); // Может изменять направления
