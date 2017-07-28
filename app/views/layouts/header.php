@@ -93,4 +93,5 @@
     </tr>
     <tr id="content">
         <td style="vertical-align: text-top">
-            <div data-uk-grid class="uk-grid uk-grid-collapse uk-width-1-1" align="center">
+            <div data-uk-grid class="uk-grid uk-grid-collapse">
+                <div class="uk-width-1-1" align="center">
