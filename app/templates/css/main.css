@@ -44,6 +44,27 @@ table.content{
     margin-bottom: 20px;
 }
 
+table.view{
+    vertical-align: text-top;
+    padding: 5px;
+    border: 1px solid #ffffff;
+    border-collapse: collapse;
+}
+
+table.view th, caption{
+    background-color: #e0e0e0;
+    /*padding-top: 10px;
+    padding-bottom: 10px;*/
+}
+
+table.view tr.srow:nth-child(odd) {
+    background-color: #F9F9F9;
+}
+
+table.view tr.srow:nth-child(even) {
+    background-color: #EEEEEE;
+}
+
 #header{
     height: 34px;
     background: #9AB6BA;
