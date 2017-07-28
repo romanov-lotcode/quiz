@@ -16,6 +16,18 @@ html, body{
 :-moz-placeholder           {font-size: 0.8em;}/* Firefox 18- */
 :-ms-input-placeholder      {font-size: 0.8em;}
 
+form{
+    text-align: left;
+}
+
+form label{
+    color: #808080;
+}
+
+form legend {
+    text-align: center;
+}
+
 table.body{
     background: rgba(255, 255, 255, .8);
     width: 100%;
@@ -23,6 +35,7 @@ table.body{
     margin: 0; padding: 0;
     border: 0;
     border-collapse: collapse;
+    min-width: 920px;
 }
 
 table.content{
