@@ -23,8 +23,7 @@ class MainController extends BaseController
 
         $html_element['login'] = new \HTMLElement\HTMLTextStringElement();
         $html_element['login']->setConfig('type', 'text');
-        $html_element['login']->setConfig('class', 'uk-width-medium-1-2');
-        $html_element['login']->addStyleClass('uk-width-small-1-1');
+        $html_element['login']->setConfig('class', 'uk-width-1-1');
         $html_element['login']->setName('login');
         $html_element['login']->setId('login');
         $html_element['login']->setConfig('placeholder', 'Логин');
@@ -33,8 +32,7 @@ class MainController extends BaseController
 
         $html_element['password'] = new \HTMLElement\HTMLTextStringElement();
         $html_element['password']->setConfig('type', 'password');
-        $html_element['password']->setConfig('class', 'uk-width-medium-1-2');
-        $html_element['password']->addStyleClass('uk-width-small-1-1');
+        $html_element['password']->setConfig('class', 'uk-width-1-1');
         $html_element['password']->setName('password');
         $html_element['password']->setId('password');
         $html_element['password']->setConfig('placeholder', 'Пароль');
@@ -119,8 +117,7 @@ class MainController extends BaseController
         $html_element['lastname']->setMax(128);
         $html_element['lastname']->setCaption('Фамилия');
         $html_element['lastname']->setConfig('type', 'text');
-        $html_element['lastname']->setConfig('class', 'uk-width-medium-1-2');
-        $html_element['lastname']->addStyleClass('uk-width-small-1-1');
+        $html_element['lastname']->setConfig('class', 'uk-width-1-1');
         $html_element['lastname']->setConfig('placeholder', 'Фамилия');
         $html_element['lastname']->setValueFromRequest();
 
@@ -131,8 +128,7 @@ class MainController extends BaseController
         $html_element['firstname']->setMax(64);
         $html_element['firstname']->setCaption('Имя');
         $html_element['firstname']->setConfig('type', 'text');
-        $html_element['firstname']->setConfig('class', 'uk-width-medium-1-2');
-        $html_element['firstname']->addStyleClass('uk-width-small-1-1');
+        $html_element['firstname']->setConfig('class', 'uk-width-medium-1-1');
         $html_element['firstname']->setConfig('placeholder', 'Имя');
         $html_element['firstname']->setValueFromRequest();
 
@@ -142,8 +138,7 @@ class MainController extends BaseController
         $html_element['middlename']->setMax(128);
         $html_element['middlename']->setCaption('Отчество');
         $html_element['middlename']->setConfig('type', 'text');
-        $html_element['middlename']->setConfig('class', 'uk-width-medium-1-2');
-        $html_element['middlename']->addStyleClass('uk-width-small-1-1');
+        $html_element['middlename']->setConfig('class', 'uk-width-1-1');
         $html_element['middlename']->setConfig('placeholder', 'Отчество');
         $html_element['middlename']->setValueFromRequest();
 
@@ -154,8 +149,7 @@ class MainController extends BaseController
         $html_element['login']->setMax(32);
         $html_element['login']->setCaption('Логин');
         $html_element['login']->setConfig('type', 'text');
-        $html_element['login']->setConfig('class', 'uk-width-medium-1-2');
-        $html_element['login']->addStyleClass('uk-width-small-1-1');
+        $html_element['login']->setConfig('class', 'uk-width-1-1');
         $html_element['login']->setConfig('placeholder', 'Логин');
         $html_element['login']->setValueFromRequest();
 
@@ -176,8 +170,7 @@ class MainController extends BaseController
         $html_element['email']->setMax(128);
         $html_element['email']->setCaption('Email');
         $html_element['email']->setConfig('type', 'text');
-        $html_element['email']->setConfig('class', 'uk-width-medium-1-2');
-        $html_element['email']->addStyleClass('uk-width-small-1-1');
+        $html_element['email']->setConfig('class', 'uk-width-1-1');
         $html_element['email']->setConfig('placeholder', 'Email');
         $html_element['email']->setValueFromRequest();
 
@@ -280,7 +273,6 @@ class MainController extends BaseController
                     $errors['email'] = 'Ошибка в поле "'. $html_element['email']->getCaption() .'".';
                 }
             }
-
 
             if ($errors === false)
             {

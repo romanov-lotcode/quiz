@@ -6,7 +6,7 @@ include APP_VIEWS . 'layouts/header.php';
 ?>
     <script src='https://www.google.com/recaptcha/api.js'></script>
 
-    <div data-uk-grid class="uk-width-small-1-1 uk-width-medium-1-2 uk-width-large-1-3 uk-margin-large-top uk-align-center">
+    <div data-uk-grid class=" uk-width-1-2 uk-margin-large-top uk-align-center">
         <?php
         if (is_array($errors) && count($errors) > 0):
             foreach ($errors as $error):
@@ -20,13 +20,13 @@ include APP_VIEWS . 'layouts/header.php';
                 <legend>Авторизация</legend>
             </div>
             <div class="uk-form-row">
-                <div class="uk-form-icon uk-width-1-1">
+                <div class="uk-form-icon uk-width-1-1 uk-width-small-1-2">
                     <i class="uk-icon-user"></i>
                     <?= $html_element['login']->render(); ?>
                 </div>
             </div>
             <div class="uk-form-row">
-                <div class="uk-form-icon uk-width-1-1">
+                <div class="uk-form-icon uk-width-1-1 uk-width-small-1-2">
                     <i class="uk-icon-lock"></i>
                     <?= $html_element['password']->render(); ?>
                 </div>
@@ -40,7 +40,6 @@ include APP_VIEWS . 'layouts/header.php';
                     Регистрация
                 </a>
             </div>
-
         </form>
     </div>
 
