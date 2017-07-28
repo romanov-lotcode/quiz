@@ -65,7 +65,8 @@ class Menu_Panel
         $menu = '';
         if ($this->counter == 0)
         {
-            $menu = '<ul class="uk-navbar-nav uk-hidden-small">';
+            //$menu = '<ul class="uk-navbar-nav uk-hidden-small">'; // На случай, если понадобиться уменьшить до мобильной версии
+            $menu = '<ul class="uk-navbar-nav">';
             $this->counter++;
         }
         /*else

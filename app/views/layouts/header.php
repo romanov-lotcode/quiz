@@ -70,7 +70,8 @@
 
 
                     <div class="uk-navbar-flip">
-                        <ul class="uk-navbar-nav uk-hidden-small">
+                        <!-- <ul class="uk-navbar-nav uk-hidden-small"> -->
+                        <ul class="uk-navbar-nav">
                             <li>
                                 <a href="/main/logout">
                                     <i class="uk-icon-sign-out"></i>Выход
@@ -79,12 +80,12 @@
                         </ul>
                     </div>
 
-                    <a href="#my-id" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
+                    <!-- <a href="#my-id" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a> -->
 
                 </nav>
-                <div id="my-id" class="uk-offcanvas">
+                <!-- <div id="my-id" class="uk-offcanvas">
                     <div class="uk-offcanvas-bar uk-contrast">...</div>
-                </div>
+                </div> -->
             <?php
             endif; //if (isset($user_id) && !is_bool($user_id)):
             ?>
@@ -92,4 +93,4 @@
     </tr>
     <tr id="content">
         <td style="vertical-align: text-top">
-            <div data-uk-grid class="uk-grid uk-grid-collapse uk-width-1-1 ">
+            <div data-uk-grid class="uk-grid uk-grid-collapse uk-width-1-1" align="center">
