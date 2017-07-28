@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Июл 16 2017 г., 20:11
+-- Время создания: Июл 28 2017 г., 15:22
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.5.33
 
@@ -55,6 +55,8 @@ INSERT INTO `app_right` (`id`, `right_value`, `right_name`, `description`, `flag
 CREATE TABLE IF NOT EXISTS `direction` (
   `id` int(11) NOT NULL,
   `name` varchar(1024) NOT NULL,
+  `change_user_ud` int(11) DEFAULT NULL,
+  `change_datetime` datetime DEFAULT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
@@ -62,9 +64,9 @@ CREATE TABLE IF NOT EXISTS `direction` (
 -- Дамп данных таблицы `direction`
 --
 
-INSERT INTO `direction` (`id`, `name`, `flag`) VALUES
-(1, 'Направление 1', 1),
-(2, 'Направление 2', 0);
+INSERT INTO `direction` (`id`, `name`, `change_user_ud`, `change_datetime`, `flag`) VALUES
+(1, 'Направление 1', NULL, NULL, 1),
+(2, 'Направление 2', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
