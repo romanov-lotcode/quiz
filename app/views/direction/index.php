@@ -10,7 +10,7 @@ include APP_VIEWS . 'layouts/header.php';
         <h1><?= $pagetitle ?></h1>
         <div class="uk-width-8-10" align="left">
             <table class="view">
-                <caption align="bottom"><?= $total_direction; ?></caption>
+
                 <tr>
                     <th>№</th>
                     <th>Название</th>
@@ -27,6 +27,13 @@ include APP_VIEWS . 'layouts/header.php';
                     <td>Какое-то направление</td>
                     <td>Выключен</td>
                 </tr>
+
+                <?php
+                include APP_VIEWS . 'layouts/record_count.php';
+                echo recordCount($total_direction, 2);
+                ?>
+
+                <!-- <caption align="bottom"><?//= $total_direction; ?></caption> -->
 
             </table>
 
