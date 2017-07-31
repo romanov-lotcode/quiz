@@ -11,7 +11,6 @@ function recordCount($r_count = 0, $r_show = 0, $text = null)
     }
     else
     {
-
         $result .= 'Количество записей: '. $r_show . ' из '. $r_count;
     }
     $result .= '</caption>';

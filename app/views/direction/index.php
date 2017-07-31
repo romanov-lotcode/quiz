@@ -9,23 +9,26 @@ include APP_VIEWS . 'layouts/header.php';
 
         <h1><?= $pagetitle ?></h1>
         <div class="uk-width-8-10" align="left">
-            <table class="view">
+            <table class="uk-width-1-1 view">
 
                 <tr>
-                    <th>№</th>
-                    <th>Название</th>
-                    <th>Состояние</th>
+                    <th class="uk-width-1-10">№</th>
+                    <th class="uk-width-6-10">Название</th>
+                    <th class="uk-width-1-10">Состояние</th>
+                    <th class="uk-width-2-10">Действие</th>
                 </tr>
 
                 <tr class="srow">
                     <td>1</td>
                     <td>Какое-то направление</td>
                     <td>Включен</td>
+                    <td></td>
                 </tr>
                 <tr class="srow">
                     <td>2</td>
                     <td>Какое-то направление</td>
                     <td>Выключен</td>
+                    <td></td>
                 </tr>
 
                 <?php
