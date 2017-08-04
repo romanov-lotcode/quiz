@@ -16,6 +16,10 @@ html, body{
 :-moz-placeholder           {font-size: 0.8em;}/* Firefox 18- */
 :-ms-input-placeholder      {font-size: 0.8em;}
 
+div.inline{
+    display: inline;
+}
+
 form{
     text-align: left;
 }
@@ -26,6 +30,10 @@ form label{
 
 form legend {
     text-align: center;
+}
+
+form.simple{
+    margin-bottom: 10px;
 }
 
 table.body{
@@ -44,6 +52,21 @@ table.content{
     margin-bottom: 20px;
 }
 
+table.search_param{
+    border: 1px solid rgba(255, 255, 255, .8);
+    border-collapse: collapse;
+    padding: 0;
+}
+
+table.search_param td{
+    vertical-align: bottom;
+}
+
+/*
+Таблица для просмотра информации
+BEGIN
+*******************************/
+
 table.view{
     vertical-align: text-top;
     border-collapse: collapse;
@@ -51,7 +74,11 @@ table.view{
 
 table.view td, th, caption{
     padding: 5px;
-    border: 2px solid #ffffff;
+    border: 2px solid rgba(255, 255, 255, .8);
+}
+
+table.view caption{
+    border: 1px solid rgba(255, 255, 255, .8);
 }
 
 table.view th{
@@ -70,6 +97,11 @@ table.view tr.srow:nth-child(even) {
     background-color: #F1F1F1;
 }
 
+/*******************************
+Таблица для просмотра информации
+END
+*/
+
 #header{
     height: 34px;
     background: #9AB6BA;
@@ -85,5 +117,5 @@ table.view tr.srow:nth-child(even) {
     height: 34px;
     background: #485557;
     color: #808080;
-    font-size: .8em;
+    font-size: .9em;
 }
