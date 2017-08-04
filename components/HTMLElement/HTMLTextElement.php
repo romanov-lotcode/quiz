@@ -48,7 +48,7 @@ class HTMLTextElement extends HTMLElementBase
         {
             return false;
         }
-        $this->setValue(htmlspecialchars($_REQUEST[$this->getName()], null, parent::getDefaultCharset()));
+        $this->setValue(trim(htmlspecialchars($_REQUEST[$this->getName()], null, parent::getDefaultCharset())));
     }
 
     /**
