@@ -6,12 +6,14 @@ class DirectionController extends BaseController
     public function index()
     {
         $user_right = parent::getUserRight();
+        $app_state = new App_State();
+        $url_param = '';
         $is_can = false;
         $search = [];
         $page = 1;
         $index_number = 1;
         $directions = [];
-        $total_direction = 0;
+        $total = 0;
 
         foreach ($user_right as $u_r)
         {
@@ -49,9 +51,11 @@ class DirectionController extends BaseController
         if ($is_can)
         {
             $directions = Direction::getDirections($search, $page);
-            $total_direction = Direction::getTotalDirections($search);
+            $total = Direction::getTotalDirections($search);
             $index_number = ($page - 1) * Direction::SHOW_BY_DEFAULT;
-            $pagination = new Pagination($total_direction, $page, Direction::SHOW_BY_DEFAULT, 'page=');
+            $pagination = new Pagination($total, $page, Direction::SHOW_BY_DEFAULT, 'page=');
+
+            $url_param .= 'name='.$search['name'].'&page='.$page;
 
             include_once APP_VIEWS.'direction/index.php';
         }
@@ -59,7 +63,5 @@ class DirectionController extends BaseController
         {
             header('Location: /main/error');
         }
-
-
     }
 }

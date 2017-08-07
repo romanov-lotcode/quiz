@@ -43,8 +43,12 @@ include APP_VIEWS . 'layouts/header.php';
                         <tr class="srow">
                             <td><?= $index_number ?></td>
                             <td><?= $d_item['name'] ?></td>
-                            <td><?= $d_item['flag'] ?></td>
-                            <td>Кнопки</td>
+                            <td><?= $app_state->getFlagState($d_item['flag']) ?></td>
+                            <td>
+                                <a href="/direction/add/?<?= $url_param ?>" class="action" title="Добавить"><span class="uk-icon-plus"></span></a>
+                                <a href="/direction/edit/?<?= $url_param . '&did='.$d_item['id'] ?>" class="action" title="Изменить"><span class="uk-icon-pencil"></span></a>
+                                <a href="/direction/delete/?<?= $url_param . '&did='.$d_item['id'] ?>" class="action" title="Удалить"><span class="uk-icon-trash"></span></a>
+                            </td>
                         </tr>
                 <?php
                     endforeach; //foreach ($directions as $d_item):
@@ -53,14 +57,13 @@ include APP_VIEWS . 'layouts/header.php';
 
                 <?php
                 include APP_VIEWS . 'layouts/record_count.php';
-                echo recordCount($total_direction, $i);
+                echo recordCount($total, $i);
                 ?>
-
-                <!-- <caption align="bottom"><?//= $total_direction; ?></caption> -->
 
             </table>
 
-            <div class="uk-width-1-1"><?php print_r($directions) ?></div>
+            <?= $pagination->get() ?>
+
         </div>
 
 
