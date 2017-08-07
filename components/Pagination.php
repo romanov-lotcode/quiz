@@ -134,7 +134,7 @@ class Pagination
         $currentURI = preg_replace('~&page=([0-9]+)~', '', $currentURI);
         # Формируем HTML код ссылки и возвращаем
         return
-                '<li><a href="' . $currentURI . $this->index . $page . '">' . $text . '</a></li>';
+                '<a href="' . $currentURI . $this->index . $page . '"><li>' . $text . '</li></a>';
     }
 
     /**
