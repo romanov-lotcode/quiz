@@ -15,13 +15,12 @@ class App_State
         $result = 'Не определено';
         if ($value == 1)
         {
-            $result = 'Вкл';
+            $result = 'Вкл <span class="uk-icon-check" style="color: green;" title="Включено"></span>';
         }
         if ($value == 0)
         {
-            $result = 'Выкл';
+            $result = 'Выкл <span class="uk-icon-close" style="color: red;" title="Выключено"></span>';
         }
         return $result;
-
     }
 }
