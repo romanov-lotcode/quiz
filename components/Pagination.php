@@ -73,41 +73,54 @@ class Pagination
      */
     public function get()
     {
-        # Для записи ссылок
-        $links = null;
+        if ($this->total > $this->limit)
+        {
+            # Для записи ссылок
+            $links = null;
 
-        # Получаем ограничения для цикла
-        $limits = $this->limits();
+            # Получаем ограничения для цикла
+            $limits = $this->limits();
 
-        $html = '<ul class="pagination">';
-        # Генерируем ссылки
-        for ($page = $limits[0]; $page <= $limits[1]; $page++) {
-            # Если текущая это текущая страница, ссылки нет и добавляется класс active
-            if ($page == $this->current_page) {
-                $links .= '<li class="active_pagination"><a class="pagination_btn" href="#">' . $page . '</a></li>';
-            } else {
-                # Иначе генерируем ссылку
-                $links .= $this->generateHtml($page);
+            $html = '
+            <table class="uk-width-1-1 search_param">
+                <tr>
+                    <td align="center"><ul class="pagination">';
+            # Генерируем ссылки
+            for ($page = $limits[0]; $page <= $limits[1]; $page++) {
+                # Если текущая это текущая страница, ссылки нет и добавляется класс active
+                if ($page == $this->current_page) {
+                    $links .= '<li class="active_pagination"><a class="pagination_btn" href="#">' . $page . '</a></li>';
+                } else {
+                    # Иначе генерируем ссылку
+                    $links .= $this->generateHtml($page);
+                }
             }
+
+            # Если ссылки создались
+            if (!is_null($links)) {
+                # Если текущая страница не первая
+                if ($this->current_page > 1)
+                    # Создаём ссылку "На первую"
+                    $links = $this->generateHtml(1, '&lt;') . $links;
+
+                # Если текущая страница не первая
+                if ($this->current_page < $this->amount)
+                    # Создаём ссылку "На последнюю"
+                    $links .= $this->generateHtml($this->amount, '&gt;');
+            }
+
+            $html .= $links . '</ul>
+                    </td>
+                </tr>
+            </table>';
+
+            # Возвращаем html
+            return $html;
         }
-
-        # Если ссылки создались
-        if (!is_null($links)) {
-            # Если текущая страница не первая
-            if ($this->current_page > 1)
-                # Создаём ссылку "На первую"
-                $links = $this->generateHtml(1, '&lt;') . $links;
-
-            # Если текущая страница не первая
-            if ($this->current_page < $this->amount)
-                # Создаём ссылку "На последнюю"
-                $links .= $this->generateHtml($this->amount, '&gt;');
+        else
+        {
+            return '';
         }
-
-        $html .= $links . '</ul>';
-
-        # Возвращаем html
-        return $html;
     }
 
     /**
