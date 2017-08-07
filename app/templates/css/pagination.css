@@ -1,0 +1,23 @@
+ul.pagination a{
+    color: #444444;
+}
+
+ul.pagination li{
+    list-style-type: none;
+    padding: 6px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    background: rgba(240, 240, 240, 1);
+    margin: 1px;
+    display: inline-block;
+}
+
+ul.pagination li:hover{
+    background: rgba(215, 215, 215, 1);
+}
+
+ul.pagination li.active_pagination{
+    pointer-events: none;
+    cursor: default;
+    background: rgba(215, 215, 215, 1);
+}

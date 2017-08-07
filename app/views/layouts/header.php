@@ -5,6 +5,7 @@
     <link rel="shortcut icon" href="/favicon.ico?00001" type="image/x-icon">
     <link href="<?= APP_TEMPLATES ?>css/uikit.css?00001" rel="stylesheet">
     <link href="<?= APP_TEMPLATES ?>css/main.css?00004" rel="stylesheet">
+    <link href="<?= APP_TEMPLATES ?>css/pagination.css?00004" rel="stylesheet">
     <link href="<?= APP_TEMPLATES ?>css/nav.css?00001" rel="stylesheet">
     <link href="<?= APP_TEMPLATES ?>css/form-password.min.css?00001" rel="stylesheet">
     <link href="<?= APP_TEMPLATES ?>css/font-awesome.min.css?00001" rel="stylesheet">
