@@ -123,7 +123,14 @@ class Pagination
         # Указываем, что текст - цифра страницы
             $text = $page;
 
-        $currentURI = rtrim($_SERVER['REQUEST_URI'], '?') . '&';
+        $currentURI = rtrim($_SERVER['REQUEST_URI'], '?');
+
+        $param = trim(urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY)), '/');
+        if (empty($param))
+        {
+            $currentURI .= '?';
+        }
+        $currentURI .= '&';
         $currentURI = preg_replace('~&page=([0-9]+)~', '', $currentURI);
         # Формируем HTML код ссылки и возвращаем
         return
