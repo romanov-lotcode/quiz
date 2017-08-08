@@ -7,6 +7,11 @@ html, body{
     font: normal 14px 'PT Sans', Calibri, Raleway, Lato, Arial, Helvetica, Tahoma, Verdana, Sans-Serif;
 }
 
+.description_light{
+    color: #808080;
+    font-size: .7em;
+}
+
 .pointer{
     cursor: pointer;
 }
