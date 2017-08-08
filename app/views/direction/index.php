@@ -10,7 +10,7 @@ include APP_VIEWS . 'layouts/header.php';
         <h1><?= $pagetitle ?></h1>
         <div class="uk-width-8-10" align="left">
 
-            <form method="POST" class="uk-form simple">
+            <form method="GET" class="uk-form simple">
                 <table class="uk-width-1-1 search_param">
                     <tr>
                         <td class="uk-width-1-3">
