@@ -11,6 +11,9 @@ define('ROUTE_MAIN', '/');
 // Id пользователя
 define('USER_ID', User::checkLogged());
 
+// Для состояния не изменять
+define('NO_CHANGE', 0);
+
 // Кодировка со строчной буквы
 define('DEFAULT_ENCODING_LOWERCASE', 'utf8');
 // Кодировка с прописной буквы
