@@ -11,4 +11,5 @@ return [
     'main/logout' => ['controller' => 'Main', 'action' => 'logout'],
 
     'direction/index' => ['controller' => 'Direction', 'action' => 'index'],
+    'direction/add' => ['controller' => 'Direction', 'action' => 'add'],
 ];

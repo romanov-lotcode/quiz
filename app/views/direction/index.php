@@ -17,9 +17,13 @@ include APP_VIEWS . 'layouts/header.php';
                             <?= $html_element['name']->render() ?>
                         </td>
                         <td class="uk-width-1-3">
-                            <button class="uk-button" name="registration">Поиск</button>
+                            <button class="uk-button" name="search">Поиск</button>
                         </td>
-                        <td class="uk-width-1-3"></td>
+                        <td class="uk-width-1-3" align="right">
+                            <a href="/direction/add?<?= $url_param ?>" class="uk-button" title="Добавить">
+                                Добавить
+                            </a>
+                        </td>
                     </tr>
                 </table>
             </form>
@@ -45,9 +49,8 @@ include APP_VIEWS . 'layouts/header.php';
                             <td><?= $d_item['name'] ?></td>
                             <td><?= $app_state->getFlagState($d_item['flag']) ?></td>
                             <td>
-                                <a href="/direction/add/?<?= $url_param ?>" class="action" title="Добавить"><span class="uk-icon-plus"></span></a>
-                                <a href="/direction/edit/?<?= $url_param . '&did='.$d_item['id'] ?>" class="action" title="Изменить"><span class="uk-icon-pencil"></span></a>
-                                <a href="/direction/delete/?<?= $url_param . '&did='.$d_item['id'] ?>" class="action" title="Удалить"><span class="uk-icon-trash"></span></a>
+                                <a href="/direction/edit?<?= $url_param . '&did='.$d_item['id'] ?>" class="action" title="Редактировать"><span class="uk-icon-pencil"></span></a>
+                                <a href="/direction/delete?<?= $url_param . '&did='.$d_item['id'] ?>" class="action" title="Удалить"><span class="uk-icon-trash"></span></a>
                             </td>
                         </tr>
                 <?php
@@ -65,10 +68,5 @@ include APP_VIEWS . 'layouts/header.php';
             <?= $pagination->get() ?>
 
         </div>
-
-
-
-
-
 
 <?php include APP_VIEWS . 'layouts/footer.php'; ?>

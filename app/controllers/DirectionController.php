@@ -55,9 +55,128 @@ class DirectionController extends BaseController
             $index_number = ($page - 1) * Direction::SHOW_BY_DEFAULT;
             $pagination = new Pagination($total, $page, Direction::SHOW_BY_DEFAULT, 'page=');
 
-            $url_param .= 'name='.$search['name'].'&page='.$page;
+            $url_param .= 's_name='.$search['name'].'&page='.$page;
 
             include_once APP_VIEWS.'direction/index.php';
+        }
+        else
+        {
+            header('Location: /main/error');
+        }
+    }
+
+    public function add()
+    {
+        $user_right = parent::getUserRight();
+        $url_param = '';
+        $is_can = false;
+        $search = [];
+        $page = 1;
+        $errors = false;
+        $date_time = new DateTime();
+        $direction = [];
+
+
+        foreach ($user_right as $u_r)
+        {
+            if ($u_r['right_name'] == CAN_MODERATOR_DIRECTION)
+            {
+                $is_can = true;
+                break;
+            }
+        }
+
+        if (isset($_GET['s_name']))
+        {
+            $search['name'] = htmlspecialchars($_GET['s_name']);
+        }
+        if (isset($_GET['page']))
+        {
+            $page = intval(htmlspecialchars($_GET['page']));
+            if ($page < 1)
+            {
+                $page = 1;
+            }
+        }
+
+        $url_param .= 's_name='.$search['name'].'&page='.$page;
+
+        $html_element['name'] = new \HTMLElement\HTMLTextStringElement();
+        $html_element['name']->setName('name');
+        $html_element['name']->setId('name');
+        $html_element['name']->setMin(1);
+        $html_element['name']->setMax(500);
+        $html_element['name']->setCaption('Наименование');
+        $html_element['name']->setConfig('type', 'text');
+        $html_element['name']->setConfig('class', 'uk-width-1-1');
+        $html_element['name']->setConfig('placeholder', 'Направление');
+        $html_element['name']->setValueFromRequest();
+
+        $option_flag_select = 0;
+        $option_flag = [];
+        $optgroup_flag = [];
+
+        if (isset($_POST['flag']))
+        {
+            $option_flag_select = $_POST['flag'];
+            $option_flag_select = intval($option_flag_select);
+            if ($option_flag_select != 0
+                && $option_flag_select != 1)
+            {
+                $option_flag_select = 0;
+            }
+        }
+
+        $i = 0;
+        $option_flag[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_flag[$i]->setValue(1);
+        $option_flag[$i]->setText('Вкл');
+        ($option_flag_select == $option_flag[$i]->getValue())? $option_flag[$i]->setSelected(true):'';
+
+        $i = 1;
+        $option_flag[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_flag[$i]->setValue(0);
+        $option_flag[$i]->setText('Выкл');
+        ($option_flag_select == $option_flag[$i]->getValue())? $option_flag[$i]->setSelected(true):'';
+
+        $html_element['flag'] = new \HTMLElement\HTMLSelectElement();
+        $html_element['flag']->setCaption('Состояние');
+        $html_element['flag']->setConfig('class', 'uk-width-1-4');
+        $html_element['flag']->setName('flag');
+        $html_element['flag']->setId('flag');
+
+        if (isset($_POST['add']))
+        {
+            $html_element['name']->setValue(trim($html_element['name']->getValue()));
+
+            $html_element['name']->check();
+
+            if (!$html_element['name']->getCheck())
+            {
+                $errors['name'] = 'Ошибка в поле "'.$html_element['name']->getCaption().'".';
+            }
+
+            if ($errors === false)
+            {
+                $direction['name'] = $html_element['name']->getValue();
+                $direction['change_user_id'] = User::checkLogged();
+                $direction['change_datetime'] = $date_time->format('Y-m-d H:i:s');
+                $direction['flag'] = $option_flag_select;
+                $is_add = Direction::add($direction);
+                if ($is_add !== false)
+                {
+                    header('Location: /direction/index?'.$url_param);
+                }
+                else
+                {
+                    $errors['add'] = 'Ничего не удалось добавить! Возможно у вас нет прав';
+                }
+            }
+        }
+
+        if ($is_can)
+        {
+            include_once APP_VIEWS.'direction/add.php';
         }
         else
         {

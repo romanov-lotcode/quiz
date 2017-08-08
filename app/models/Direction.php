@@ -84,4 +84,26 @@ class Direction
         }
         return 0;
     }
+
+    /**
+     * Добавляет новое направление
+     * @param [] $direction - массив с данными
+     * @return bool|int
+     */
+    public static function add($direction)
+    {
+        $sql = 'INSERT INTO direction (name, change_user_id, change_datetime, flag)
+          VALUES (:name, :change_user_id, :change_datetime, :flag)';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':name', $direction['name'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $direction['change_user_id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $direction['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':flag', $direction['flag'], PDO::PARAM_INT);
+        if($result->execute())
+        {
+            return $db->lastInsertId();
+        }
+        return false;
+    }
 }
