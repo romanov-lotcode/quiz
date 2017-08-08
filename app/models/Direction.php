@@ -17,6 +17,41 @@ class Direction
      *****************************************************/
 
     /**
+     * Возвращает запись о направлении по его ID
+     * @param int $id - ID направления
+     * @return bool|array()
+     */
+    public static function getDirection($id)
+    {
+        $id = intval($id);
+        $sql = 'SELECT
+          direction.id,
+          direction.name,
+          direction.change_user_id,
+          direction.change_datetime,
+          direction.flag,
+          user.lastname,
+          user.firstname,
+          user.middlename
+        FROM
+          direction
+          INNER JOIN user ON (direction.change_user_id = user.id)
+        WHERE direction.id = :id';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $id, PDO::PARAM_INT);
+        $result->execute();
+
+        // Обращаемся к записи
+        $direction = $result->fetch(PDO::FETCH_ASSOC);
+
+        if ($direction) {
+            return $direction;
+        }
+        return false;
+    }
+
+    /**
      * Возвращает направления, удовлетворяющие параметрам поиска
      * @param [] $search - параметры поиска
      * @param int $page - номер страницы
@@ -105,5 +140,25 @@ class Direction
             return $db->lastInsertId();
         }
         return false;
+    }
+
+    /**
+     * Изменить запись
+     * @param [] $direction
+     */
+    public static function edit($direction)
+    {
+        $sql = 'UPDATE direction
+          SET name = :name, change_user_id = :change_user_id, change_datetime = :change_datetime,
+          flag = :flag
+          WHERE id = :id AND flag > 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $direction['id'], PDO::PARAM_INT);
+        $result->bindParam(':name', $direction['name'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $direction['change_user_id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $direction['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':flag', $direction['flag'], PDO::PARAM_INT);
+        $result->execute();
     }
 }
