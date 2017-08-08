@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Июл 28 2017 г., 15:22
+-- Время создания: Авг 08 2017 г., 16:04
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.5.33
 
@@ -55,18 +55,20 @@ INSERT INTO `app_right` (`id`, `right_value`, `right_name`, `description`, `flag
 CREATE TABLE IF NOT EXISTS `direction` (
   `id` int(11) NOT NULL,
   `name` varchar(1024) NOT NULL,
-  `change_user_ud` int(11) DEFAULT NULL,
+  `change_user_id` int(11) DEFAULT NULL,
   `change_datetime` datetime DEFAULT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `direction`
 --
 
-INSERT INTO `direction` (`id`, `name`, `change_user_ud`, `change_datetime`, `flag`) VALUES
-(1, 'Направление 1', NULL, NULL, 1),
-(2, 'Направление 2', NULL, NULL, 1);
+INSERT INTO `direction` (`id`, `name`, `change_user_id`, `change_datetime`, `flag`) VALUES
+(1, 'Направление 1', 0, NULL, 1),
+(2, 'Направление 2', 0, NULL, 0),
+(3, 'Направление 3', 1, '2017-08-08 12:54:25', 1),
+(4, 'Напр 4', 1, '2017-08-08 13:10:54', 0);
 
 -- --------------------------------------------------------
 
@@ -126,6 +128,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`id`, `lastname`, `firstname`, `middlename`, `login`, `password`, `email`, `registered_datetime`, `last_test_datetime`, `changed_datetime`, `changed_user_id`, `flag`) VALUES
+(0, 'Нет', '', NULL, '', '123456', NULL, '2017-08-01 00:00:00', NULL, NULL, NULL, 1),
 (1, 'Романов', 'Сергей', 'Сергеевич', 'romanovss', 'dca20cd83717c9596b17e66822f7f507', '', '2017-05-13 22:32:42', NULL, NULL, NULL, 1),
 (2, 'Романов', 'Сергей', 'По Умолчанию', 'defromanov', 'dca20cd83717c9596b17e66822f7f507', 's.nichipurenko@yandex.ru', '2017-05-31 18:39:03', NULL, NULL, NULL, 1);
 
@@ -202,7 +205,7 @@ ALTER TABLE `app_right`
 -- AUTO_INCREMENT для таблицы `direction`
 --
 ALTER TABLE `direction`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT для таблицы `menu_panel`
 --
