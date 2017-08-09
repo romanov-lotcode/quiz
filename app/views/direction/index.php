@@ -49,8 +49,14 @@ include APP_VIEWS . 'layouts/header.php';
                             <td><?= $d_item['name'] ?></td>
                             <td><?= $app_state->getFlagState($d_item['flag']) ?></td>
                             <td>
+                                <?php
+                                if ($d_item['flag'] != FLAG_NO_CHANGE):
+                                ?>
                                 <a href="/direction/edit?<?= $url_param . '&did='.$d_item['id'] ?>" class="action" title="Редактировать"><span class="uk-icon-pencil"></span></a>
                                 <a href="/direction/delete?<?= $url_param . '&did='.$d_item['id'] ?>" class="action" title="Удалить"><span class="uk-icon-trash"></span></a>
+                                <?php
+                                endif; //if ($d_item['flag'] != FLAG_NO_CHANGE):
+                                ?>
                             </td>
                         </tr>
                 <?php
