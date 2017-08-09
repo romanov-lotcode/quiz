@@ -26,3 +26,4 @@ define('MESSAGE_TYPE_ERROR', 'error'); // Ошибка
 
 // Права пользователя
 define('CAN_MODERATOR_DIRECTION', 'CAN_MODERATOR_DIRECTION'); // Может изменять направления
+define('CAN_MODERATOR_TEST', 'CAN_MODERATOR_TEST'); // Может изменять Тест
