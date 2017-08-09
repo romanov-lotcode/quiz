@@ -17,7 +17,7 @@ include APP_VIEWS . 'layouts/header.php';
                             <?= $html_element['name']->render() ?>
                         </td>
                         <td class="uk-width-1-3">
-                            <button class="uk-button" name="search">Поиск</button>
+                            <button class="uk-button">Поиск</button>
                         </td>
                         <td class="uk-width-1-3" align="right">
                             <a href="/direction/add?<?= $url_param ?>" class="uk-button" title="Добавить">

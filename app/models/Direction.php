@@ -144,7 +144,7 @@ class Direction
 
     /**
      * Изменить запись
-     * @param [] $direction
+     * @param [] $direction - массив с данными
      */
     public static function edit($direction)
     {
@@ -159,6 +159,24 @@ class Direction
         $result->bindParam(':change_user_id', $direction['change_user_id'], PDO::PARAM_INT);
         $result->bindParam(':change_datetime', $direction['change_datetime'], PDO::PARAM_STR);
         $result->bindParam(':flag', $direction['flag'], PDO::PARAM_INT);
+        $result->execute();
+    }
+
+    /**
+     * Удалить направление (изменить флаг)
+     * @param [] $direction - массив с данными
+     */
+    public static function delete($direction)
+    {
+        $sql = 'UPDATE direction
+          SET
+            change_datetime = :change_datetime, change_user_id = :change_user_id, flag = -1
+          WHERE id = :id AND flag > 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $direction['id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $direction['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $direction['change_user_id'], PDO::PARAM_INT);
         $result->execute();
     }
 }
