@@ -11,8 +11,10 @@ define('ROUTE_MAIN', '/');
 // Id пользователя
 define('USER_ID', User::checkLogged());
 
-// Для состояния не изменять
-define('NO_CHANGE', 0);
+// Состояния в проекте, по флагу
+define('FLAG_NO_CHANGE', 0);
+define('FLAG_ON', 1);
+define('FLAG_OFF', 2);
 
 // Кодировка со строчной буквы
 define('DEFAULT_ENCODING_LOWERCASE', 'utf8');

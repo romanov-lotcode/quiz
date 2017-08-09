@@ -32,7 +32,7 @@ include APP_VIEWS . 'layouts/header.php';
             include APP_VIEWS . 'layouts/description.php';
             echo renderDescriptionDatetimeFIO($direction);
             ?>
-            <?php if ($direction['flag'] != NO_CHANGE): ?>
+            <?php if ($direction['flag'] != FLAG_NO_CHANGE): ?>
             <div class="uk-form-row">
                 <button class="uk-button" name="edit">Редактировать</button>
             </div>

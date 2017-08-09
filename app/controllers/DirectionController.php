@@ -112,7 +112,7 @@ class DirectionController extends BaseController
         $html_element['name']->setConfig('placeholder', 'Направление');
         $html_element['name']->setValueFromRequest();
 
-        $option_flag_select = 2;
+        $option_flag_select = FLAG_OFF;
         $option_flag = [];
         $optgroup_flag = [];
 
@@ -120,22 +120,22 @@ class DirectionController extends BaseController
         {
             $option_flag_select = $_POST['flag'];
             $option_flag_select = intval($option_flag_select);
-            if ($option_flag_select != 2
-                && $option_flag_select != 1)
+            if ($option_flag_select != FLAG_OFF
+                && $option_flag_select != FLAG_ON)
             {
-                $option_flag_select = 2;
+                $option_flag_select = FLAG_OFF;
             }
         }
 
         $i = 0;
         $option_flag[$i] = new \HTMLElement\HTMLSelectOptionElement();
-        $option_flag[$i]->setValue(1);
+        $option_flag[$i]->setValue(FLAG_ON);
         $option_flag[$i]->setText('Вкл');
         ($option_flag_select == $option_flag[$i]->getValue())? $option_flag[$i]->setSelected(true):'';
 
         $i = 1;
         $option_flag[$i] = new \HTMLElement\HTMLSelectOptionElement();
-        $option_flag[$i]->setValue(2);
+        $option_flag[$i]->setValue(FLAG_OFF);
         $option_flag[$i]->setText('Выкл');
         ($option_flag_select == $option_flag[$i]->getValue())? $option_flag[$i]->setSelected(true):'';
 
@@ -222,9 +222,9 @@ class DirectionController extends BaseController
             $did = htmlspecialchars($_GET['did']);
         }
 
-        $direction = Direction::getDirection($did);
-
         $url_param .= 's_name='.$search['name'].'&page='.$page;
+
+        $direction = Direction::getDirection($did);
 
         $html_element['name'] = new \HTMLElement\HTMLTextStringElement();
         $html_element['name']->setName('name');
@@ -247,41 +247,35 @@ class DirectionController extends BaseController
             $option_flag_select = $_POST['flag'];
             $option_flag_select = intval($option_flag_select);
         }
-        if ($direction['flag'] != NO_CHANGE)
+        if ($option_flag_select != FLAG_OFF
+            && $option_flag_select != FLAG_ON)
         {
-            if ($option_flag_select != 2
-                && $option_flag_select != 1)
-            {
-                $option_flag_select = 2;
-            }
+            $option_flag_select = FLAG_OFF;
         }
-
 
         $i = 0;
         $option_flag[$i] = new \HTMLElement\HTMLSelectOptionElement();
-        $option_flag[$i]->setValue(1);
+        $option_flag[$i]->setValue(FLAG_ON);
         $option_flag[$i]->setText('Вкл');
         ($option_flag_select == $option_flag[$i]->getValue())? $option_flag[$i]->setSelected(true):'';
 
         $i = 1;
         $option_flag[$i] = new \HTMLElement\HTMLSelectOptionElement();
-        $option_flag[$i]->setValue(2);
+        $option_flag[$i]->setValue(FLAG_OFF);
         $option_flag[$i]->setText('Выкл');
         ($option_flag_select == $option_flag[$i]->getValue())? $option_flag[$i]->setSelected(true):'';
 
         $html_element['flag'] = new \HTMLElement\HTMLSelectElement();
         $html_element['flag']->setCaption('Состояние');
         $html_element['flag']->setConfig('class', 'uk-width-1-4');
-        if ($direction['flag'] == NO_CHANGE)
+        if ($direction['flag'] == FLAG_NO_CHANGE)
         {
             $html_element['flag']->setConfig('disabled', 'disabled');
-            $option_flag_select = 0;
+            $option_flag_select = FLAG_NO_CHANGE;
             $errors['no_change'] = 'Невозможно изменить данное направление';
         }
         $html_element['flag']->setName('flag');
         $html_element['flag']->setId('flag');
-
-        $url_param .= 's_name='.$search['name'].'&page='.$page;
 
         if (isset($_POST['edit']))
         {
@@ -301,22 +295,17 @@ class DirectionController extends BaseController
 
             if ($errors === false)
             {
-
                 $direction['name'] = $html_element['name']->getValue();
                 $direction['change_user_id'] = User::checkLogged();
                 $direction['change_datetime'] = $date_time->format('Y-m-d H:i:s');
                 $direction['flag'] = $option_flag_select;
-                if ($direction['flag'] != NO_CHANGE)
+                if ($direction['flag'] != FLAG_NO_CHANGE)
                 {
                     Direction::edit($direction);
                     header('Location: /direction/index?'.$url_param);
                 }
             }
         }
-
-
-
-
 
         if ($is_can)
         {
