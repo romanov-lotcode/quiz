@@ -29,7 +29,7 @@ include APP_VIEWS . 'layouts/header.php';
                 <?= $html_element['flag']->render($option_flag, $optgroup_flag) ?>
             </div>
 
-            <div class="uk-form-row">
+            <div class="uk-form-row uk-width-1-1">
                 <button class="uk-button" name="add">Добавить</button>
             </div>
 
