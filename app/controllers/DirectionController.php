@@ -268,14 +268,17 @@ class DirectionController extends BaseController
         $html_element['flag'] = new \HTMLElement\HTMLSelectElement();
         $html_element['flag']->setCaption('Состояние');
         $html_element['flag']->setConfig('class', 'uk-width-1-4');
-        if ($direction['flag'] == FLAG_NO_CHANGE)
-        {
-            $html_element['flag']->setConfig('disabled', 'disabled');
-            $option_flag_select = FLAG_NO_CHANGE;
-            $errors['no_change'] = 'Невозможно изменить данное направление';
-        }
         $html_element['flag']->setName('flag');
         $html_element['flag']->setId('flag');
+
+        if ($direction['flag'] == FLAG_NO_CHANGE)
+        {
+            $errors['no_change'] = 'Невозможно изменить данное направление';
+            $html_element['name']->setConfig('disabled', 'disabled');
+            $html_element['flag']->setConfig('disabled', 'disabled');
+            $option_flag_select = FLAG_NO_CHANGE;
+        }
+
 
         if (isset($_POST['edit']))
         {
