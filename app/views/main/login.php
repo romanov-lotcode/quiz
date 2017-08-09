@@ -6,7 +6,7 @@ include APP_VIEWS . 'layouts/header.php';
 ?>
     <script src='https://www.google.com/recaptcha/api.js'></script>
 
-    <div data-uk-grid class=" uk-width-1-2 uk-margin-large-top uk-align-center">
+    <div data-uk-grid class=" uk-width-1-2 uk-margin-large-top uk-margin-large-bottom uk-align-center">
         <?php
         if (is_array($errors) && count($errors) > 0):
             foreach ($errors as $error):
