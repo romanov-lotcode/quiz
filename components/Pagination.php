@@ -82,7 +82,7 @@ class Pagination
             $limits = $this->limits();
 
             $html = '
-            <table class="uk-width-1-1 search_param">
+            <table class="uk-width-1-1 uk-margin-small-top">
                 <tr>
                     <td align="center"><ul class="pagination">';
             # Генерируем ссылки

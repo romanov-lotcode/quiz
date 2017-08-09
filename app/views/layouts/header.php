@@ -95,4 +95,4 @@
     <tr id="content">
         <td style="vertical-align: text-top">
             <div data-uk-grid class="uk-grid uk-grid-collapse">
-                <div class="uk-width-1-1" align="center">
+                <div class="uk-width-1-1 uk-margin-large-bottom" align="center">
