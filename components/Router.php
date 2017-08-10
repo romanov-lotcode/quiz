@@ -54,6 +54,7 @@ class Router
     public function run()
     {
         $uri_dec = $this->getURIDec();
+        $validate = new App_Validate();
 
         $segments = explode('/', $uri_dec);
 
@@ -71,7 +72,7 @@ class Router
         if (isset($this->routes[$uri]))
         {
             $this->controller = $this->routes[$uri]['controller'].'Controller';
-            $this->action = $this->routes[$uri]['action'];
+            $this->action = 'action'.trim($validate->my_ucwords($this->routes[$uri]['action']));
         }
 
         if (!$this->controller || !$this->action)

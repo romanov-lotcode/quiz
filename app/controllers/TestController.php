@@ -3,7 +3,7 @@
 
 class TestController extends BaseController
 {
-    public function index()
+    public function actionIndex()
     {
         $user_right = parent::getUserRight();
         $app_state = new App_State();

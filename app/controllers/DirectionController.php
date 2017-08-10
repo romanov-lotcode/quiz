@@ -3,7 +3,7 @@
 
 class DirectionController extends BaseController
 {
-    public function index()
+    public function actionIndex()
     {
         $user_right = parent::getUserRight();
         $app_state = new App_State();
@@ -65,7 +65,7 @@ class DirectionController extends BaseController
         }
     }
 
-    public function add()
+    public function actionAdd()
     {
         $user_right = parent::getUserRight();
         $url_param = '';
@@ -184,7 +184,7 @@ class DirectionController extends BaseController
         }
     }
 
-    public function edit()
+    public function actionEdit()
     {
         $user_right = parent::getUserRight();
         $url_param = '';
@@ -320,7 +320,7 @@ class DirectionController extends BaseController
         }
     }
 
-    public function delete()
+    public function actionDelete()
     {
         $user_right = parent::getUserRight();
         $url_param = '';

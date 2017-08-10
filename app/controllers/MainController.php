@@ -3,7 +3,7 @@
 
 class MainController extends BaseController
 {
-    public function index()
+    public function actionIndex()
     {
         //include_once ROOT . '/config/rights_rules.php';
 
@@ -17,7 +17,7 @@ class MainController extends BaseController
         include_once APP_VIEWS.'main/index.php';
     }
 
-    public function login()
+    public function actionLogin()
     {
         $errors = false;
 
@@ -98,12 +98,12 @@ class MainController extends BaseController
         include_once APP_VIEWS . 'main/login.php';
     }
 
-    public function logout()
+    public function actionLogout()
     {
         User::logout();
     }
 
-    public function registration()
+    public function actionRegistration()
     {
         $errors = false;
         $validate = new App_Validate();
