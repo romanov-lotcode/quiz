@@ -16,6 +16,9 @@ define('FLAG_NO_CHANGE', 0);
 define('FLAG_ON', 1);
 define('FLAG_OFF', 2);
 
+// Состояния в проекте по статусу
+define('STATE_ON', 1);
+
 // Кодировка со строчной буквы
 define('DEFAULT_ENCODING_LOWERCASE', 'utf8');
 // Кодировка с прописной буквы
