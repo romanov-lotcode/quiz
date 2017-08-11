@@ -12,6 +12,8 @@ class TestController extends BaseController
         $search = [];
         $page = 1;
         $index_number = 1;
+        $directions = [];
+        $option_direction_selected = null;
         $tests = [];
         $total = 0;
 
@@ -24,6 +26,11 @@ class TestController extends BaseController
             }
         }
 
+        if (isset($_GET['direction']))
+        {
+            $option_direction_selected = htmlspecialchars($_GET['direction']);
+        }
+
         if (isset($_GET['page']))
         {
             $page = htmlspecialchars($_GET['page']);
@@ -33,6 +40,64 @@ class TestController extends BaseController
         {
             $page = 1;
         }
+
+        $directions = Direction::getDirectionsByState(STATE_ON);
+        $option_direction = [];
+        $optgroup_direction = [];
+
+        $i = 0;
+        $option_direction[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_direction[$i]->setValue(0);
+        $option_direction[$i]->setText('[выбрать]');
+
+        $i = 1;
+
+        foreach ($directions as $value)
+        {
+            $option_direction[$i] = new \HTMLElement\HTMLSelectOptionElement();
+            $option_direction[$i]->setValue($value['id']);
+            $option_direction[$i]->setText($value['name']);
+
+            if ($option_direction_selected == $option_direction[$i]->getValue())
+            {
+                $option_direction[$i]->setSelected(true);
+            }
+
+            $i++;
+        }
+
+        $html_element['direction'] = new \HTMLElement\HTMLSelectElement();
+        $html_element['direction']->setCaption('Направление');
+        $html_element['direction']->setName('direction');
+        $html_element['direction']->setId('direction');
+        $html_element['direction']->setConfig('data-placeholder', 'Не выбрано');
+        $html_element['direction']->setConfig('onchange', 'this.form.submit();');
+        $html_element['direction']->setConfig('class', 'uk-width-1-1');
+
+        $html_element['name'] = new \HTMLElement\HTMLTextStringElement();
+        $html_element['name']->setName('s_name');
+        $html_element['name']->setId('s_name');
+        $html_element['name']->setCaption('Тест');
+        $html_element['name']->setConfig('type', 'text');
+        $html_element['name']->setConfig('class', 'uk-width-1-1');
+        $html_element['name']->setConfig('placeholder', 'Тест');
+        $html_element['name']->setValueFromRequest();
+
+
+
+        if ($option_direction_selected > 0)
+        {
+            $search['direction_id'] = $option_direction_selected;
+
+            if ($html_element['name']->getValue() != null)
+            {
+                $search['name'] = trim($html_element['name']->getValue());
+            }
+
+            $tests = Test::getTests($search, $page);
+            $total = Test::getTotalTests($search);
+        }
+
 
 
 
