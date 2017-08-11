@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 08 2017 г., 16:04
+-- Время создания: Авг 11 2017 г., 15:30
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.5.33
 
@@ -58,17 +58,19 @@ CREATE TABLE IF NOT EXISTS `direction` (
   `change_user_id` int(11) DEFAULT NULL,
   `change_datetime` datetime DEFAULT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `direction`
 --
 
 INSERT INTO `direction` (`id`, `name`, `change_user_id`, `change_datetime`, `flag`) VALUES
-(1, 'Направление 1', 0, NULL, 1),
-(2, 'Направление 2', 0, NULL, 0),
-(3, 'Направление 3', 1, '2017-08-08 12:54:25', 1),
-(4, 'Напр 4', 1, '2017-08-08 13:10:54', 0);
+(1, 'Направление 1', 1, '2017-08-09 08:00:47', 0),
+(2, 'А12', 1, '2017-08-09 16:27:14', 1),
+(3, 'Б2', 1, '2017-08-09 16:08:53', 1),
+(4, 'В3', 1, '2017-08-09 16:10:44', 2),
+(5, 'Направление 5', 1, '2017-08-09 10:49:05', -1),
+(6, 'А222', 1, '2017-08-09 16:27:38', 1);
 
 -- --------------------------------------------------------
 
@@ -101,6 +103,29 @@ INSERT INTO `menu_panel` (`id`, `name`, `page_name`, `icon_name`, `title`, `desc
 (3, 'Модератор', 'moderator', 'gear', 'Настройки модератора', 'Модератор обладает правами настройки тестов.', 2, '#', 0, 2, 8, 1),
 (4, 'Тест', 'moderator', 'gear', 'Настроить тест', 'Настройки тестирования', 1, '/test/index', 3, 2, 16, 1),
 (5, 'Направление', 'moderator', 'gear', 'Настроить направление', 'Настройка направлений', 1, '/direction/index', 3, 1, 32, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `test`
+--
+
+CREATE TABLE IF NOT EXISTS `test` (
+  `id` int(11) NOT NULL,
+  `name` varchar(1024) NOT NULL,
+  `comment` varchar(2048) DEFAULT NULL,
+  `direction_id` int(11) NOT NULL,
+  `change_user_id` int(11) DEFAULT NULL,
+  `change_datetime` datetime DEFAULT NULL,
+  `flag` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `test`
+--
+
+INSERT INTO `test` (`id`, `name`, `comment`, `direction_id`, `change_user_id`, `change_datetime`, `flag`) VALUES
+(1, 'Тест1', NULL, 1, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -180,6 +205,12 @@ ALTER TABLE `menu_panel`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `test`
+--
+ALTER TABLE `test`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Индексы таблицы `user`
 --
 ALTER TABLE `user`
@@ -205,12 +236,17 @@ ALTER TABLE `app_right`
 -- AUTO_INCREMENT для таблицы `direction`
 --
 ALTER TABLE `direction`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT для таблицы `menu_panel`
 --
 ALTER TABLE `menu_panel`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT для таблицы `test`
+--
+ALTER TABLE `test`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT для таблицы `user`
 --
