@@ -121,6 +121,41 @@ class Direction
     }
 
     /**
+     * Получить направления, по статусу
+     * @param int $state - Статус (по умолчанию включен)
+     * @return array
+     */
+    public static function getDirectionsByState($state = 1)
+    {
+        $where = '';
+        if ($state == STATE_ON)
+        {
+            $where = ' WHERE direction.flag = 0 OR
+          direction.flag = 1';
+        }
+
+        $sql = 'SELECT
+          direction.id,
+          direction.name,
+          direction.flag
+        FROM
+          direction '.$where;
+
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->execute();
+
+        // Получение и возврат результатов
+        $directions = [];
+        $i = 0;
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $directions[$i] = $row;
+            $i++;
+        }
+        return $directions;
+    }
+
+    /**
      * Добавляет новое направление
      * @param [] $direction - массив с данными
      * @return bool|int
