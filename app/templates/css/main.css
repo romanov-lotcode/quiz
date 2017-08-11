@@ -12,6 +12,9 @@ html, body{
     font-size: .7em;
 }
 
+.fl{float: left;}
+.fr{float: right;}
+
 .pointer{
     cursor: pointer;
 }
