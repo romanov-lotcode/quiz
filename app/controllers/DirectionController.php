@@ -52,7 +52,7 @@ class DirectionController extends BaseController
         {
             $directions = Direction::getDirections($search, $page);
             $total = Direction::getTotalDirections($search);
-            $index_number = ($page - 1) * Direction::SHOW_BY_DEFAULT;
+            $index_number = Direction::getIndexNumber($page);
             $pagination = new Pagination($total, $page, Direction::SHOW_BY_DEFAULT, 'page=');
 
             $url_param .= 's_name='.$search['name'].'&page='.$page;

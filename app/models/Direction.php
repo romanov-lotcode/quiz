@@ -156,6 +156,18 @@ class Direction
     }
 
     /**
+     * Возвращает порядковый номер по номеру страницы
+     * @param int $page - номер страницы
+     * @return int
+     */
+    public static function getIndexNumber($page)
+    {
+        $page = intval($page);
+        $result = ($page - 1) * self::SHOW_BY_DEFAULT;
+        return $result;
+    }
+
+    /**
      * Добавляет новое направление
      * @param [] $direction - массив с данными
      * @return bool|int
