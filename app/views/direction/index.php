@@ -13,14 +13,12 @@ include APP_VIEWS . 'layouts/header.php';
             <form method="GET" class="uk-form simple">
                 <table class="uk-width-1-1 search_param">
                     <tr>
-                        <td class="uk-width-1-3">
+                        <td class="uk-width-2-3" colspan="2">
                             <?= $html_element['name']->render() ?>
                         </td>
                         <td class="uk-width-1-3">
                             <button class="uk-button">Поиск</button>
-                        </td>
-                        <td class="uk-width-1-3" align="right">
-                            <a href="/direction/add?<?= $url_param ?>" class="uk-button" title="Добавить">
+                            <a href="/direction/add?<?= $url_param ?>" class="uk-button fr" title="Добавить">
                                 Добавить
                             </a>
                         </td>
