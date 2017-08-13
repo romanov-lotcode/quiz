@@ -87,4 +87,16 @@ class Test
         return 0;
     }
 
+    /**
+     * Возвращает порядковый номер по номеру страницы
+     * @param int $page - номер страницы
+     * @return int
+     */
+    public static function getIndexNumber($page)
+    {
+        $page = intval($page);
+        $result = ($page - 1) * self::SHOW_BY_DEFAULT;
+        return $result;
+    }
+
 }

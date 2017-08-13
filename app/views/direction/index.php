@@ -35,8 +35,8 @@ include APP_VIEWS . 'layouts/header.php';
                 </tr>
 
                 <?php
+                $i=0;
                 if (is_array($directions) && count($directions) > 0):
-                    $i=0;
                     foreach ($directions as $d_item):
                         $index_number++;
                         $i++;

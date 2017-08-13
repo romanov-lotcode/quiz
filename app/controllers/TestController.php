@@ -96,15 +96,12 @@ class TestController extends BaseController
 
             $tests = Test::getTests($search, $page);
             $total = Test::getTotalTests($search);
+            $index_number = Test::getIndexNumber($page);
+            $pagination = new Pagination($total, $page, Test::SHOW_BY_DEFAULT, 'page=');
         }
-
-
-
 
         if ($is_can)
         {
-
-
             $url_param .= 's_name='.$search['name'].'&page='.$page;
 
             include_once APP_VIEWS.'test/index.php';

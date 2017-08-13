@@ -17,29 +17,85 @@ include APP_VIEWS . 'layouts/header.php';
                         <?= $html_element['direction']->render($option_direction, $optgroup_direction) ?>
                     </td>
                     <td class="uk-width-1-3">
+                        <?php
+                        if ($option_direction_selected == 0):
+                        ?>
+                        <button class="uk-button">Поиск</button>
+                        <a href="/test/add?<?= $url_param ?>" class="uk-button fr" title="Добавить">Добавить</a>
+                        <?php
+                        endif; //if ($option_direction_selected == 0):
+                        ?>
+                    </td>
+                </tr>
+                <?php
+                if ($option_direction_selected > 0):
+                ?>
+                <tr>
+                    <td class="uk-width-2-3"  colspan="2">
+                        <?= $html_element['name']->render() ?>
+                    </td>
+                    <td class="uk-width-1-3">
                         <button class="uk-button">Поиск</button>
                         <a href="/test/add?<?= $url_param ?>" class="uk-button fr" title="Добавить">Добавить</a>
                     </td>
                 </tr>
-                <tr>
-                    <td class="uk-width-1-3">
-                        <?= $html_element['name']->render() ?>
-                    </td>
-                    <td class="uk-width-1-3">
-
-                    </td>
-                    <td class="uk-width-1-3">
-                    </td>
-                </tr>
-
+                <?php
+                endif; // if ($option_direction_selected > 0):
+                ?>
             </table>
         </form>
 
-        <div>
-            <?php print_r($tests); ?>
-        </div>
+        <?php
+        if ($option_direction_selected > 0):
+        ?>
+        <table class="uk-width-1-1 view">
+            <tr>
+                <th class="uk-width-1-10">№</th>
+                <th class="uk-width-6-10">Название</th>
+                <th class="uk-width-1-10">Состояние</th>
+                <th class="uk-width-2-10">Действие</th>
+            </tr>
 
+            <?php
+            $i=0;
+            if (is_array($tests) && count($tests) > 0):
+                foreach ($tests as $t_item):
+                    $index_number++;
+                    $i++;
+                    ?>
 
+                    <tr class="srow">
+                        <td><?= $index_number ?></td>
+                        <td><?= $t_item['name'] ?></td>
+                        <td><?= $app_state->getFlagState($t_item['flag']) ?></td>
+                        <td>
+                            <?php
+                            if ($t_item['flag'] != FLAG_NO_CHANGE):
+                                ?>
+                                <a href="/test/edit?<?= $url_param . '&did='.$t_item['id'] ?>" class="action" title="Редактировать"><span class="uk-icon-pencil"></span></a>
+                                <a href="/test/delete?<?= $url_param . '&did='.$t_item['id'] ?>" class="action" title="Удалить"><span class="uk-icon-trash"></span></a>
+                                <?php
+                            endif; //if ($t_item['flag'] != FLAG_NO_CHANGE):
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                endforeach; //foreach ($tests as $t_item):
+            endif; //if (is_array($tests) && count($tests) > 0):
+            ?>
+
+            <?php
+            include APP_VIEWS . 'layouts/record_count.php';
+            echo recordCount($total, $i);
+            ?>
+
+        </table>
+
+        <?= $pagination->get() ?>
+
+        <?php
+        endif; // if ($option_direction_selected > 0):
+        ?>
     </div>
     <script src="<?= APP_TEMPLATES ?>css/chosen/chosen.jquery.js" type="text/javascript"></script>
     <script type="text/javascript">
