@@ -50,14 +50,14 @@ class HTMLSelectElement extends HTMLElementBase
     /**
      * Проводит необходимую проверку для текущего типа.
      */
-    public function check()
+    /*public function check()
     {
         if ($this->getNecessarily() !== false)
         {
-            parent::setCheck(false);
+            $this->setCheck(false);
             return;
         }
-    }
+    }*/
 
     /**
      * @param $options
@@ -70,10 +70,10 @@ class HTMLSelectElement extends HTMLElementBase
         $result = '';
         $el_attributes = '';
 
-        if (parent::getCheck() === false)
+       /* if ($this->getCheck() === false)
         {
             parent::addStyleClass('uk-form-danger');
-        }
+        }*/
 
         for ($i = 0; $i < count($options); $i++)
         {
