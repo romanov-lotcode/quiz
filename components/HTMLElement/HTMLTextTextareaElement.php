@@ -36,10 +36,10 @@ class HTMLTextTextareaElement extends HTMLTextElement
     {
         $el_attributes = '';
 
-        parent::setStyle('width: 250px;');
+        //parent::setStyle('width: 250px;');
         if (parent::getCheck() === false)
         {
-            $this->setStyle('border: 1px solid red;');
+            parent::addStyleClass('uk-form-danger');
         }
 
         $full_config = parent::getFullConfig();
