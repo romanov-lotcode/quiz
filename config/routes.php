@@ -16,4 +16,5 @@ return [
     'direction/delete' => ['controller' => 'Direction', 'action' => 'delete'],
 
     'test/index' => ['controller' => 'Test', 'action' => 'index'],
+    'test/add' => ['controller' => 'Test', 'action' => 'add'],
 ];

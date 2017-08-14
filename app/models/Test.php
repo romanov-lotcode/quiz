@@ -99,4 +99,28 @@ class Test
         return $result;
     }
 
+    /**
+     * Добавляет новый тест
+     * @param [] $test - массив с данными
+     * @return bool|int
+     */
+    public static function add($test)
+    {
+        $sql = 'INSERT INTO test (name, comment, direction_id, change_user_id, change_datetime, flag)
+          VALUES (:name, :comment, :direction_id, :change_user_id, :change_datetime, :flag)';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':name', $test['name'], PDO::PARAM_STR);
+        $result->bindParam(':comment', $test['comment'], PDO::PARAM_STR);
+        $result->bindParam(':direction_id', $test['direction_id'], PDO::PARAM_INT);
+        $result->bindParam(':change_user_id', $test['change_user_id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $test['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':flag', $test['flag'], PDO::PARAM_INT);
+        if($result->execute())
+        {
+            return $db->lastInsertId();
+        }
+        return false;
+    }
+
 }
