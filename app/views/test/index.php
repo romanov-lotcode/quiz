@@ -72,8 +72,8 @@ include APP_VIEWS . 'layouts/header.php';
                             <?php
                             if ($t_item['flag'] != FLAG_NO_CHANGE):
                                 ?>
-                                <a href="/test/edit?<?= $url_param . '&did='.$t_item['id'] ?>" class="action" title="Редактировать"><span class="uk-icon-pencil"></span></a>
-                                <a href="/test/delete?<?= $url_param . '&did='.$t_item['id'] ?>" class="action" title="Удалить"><span class="uk-icon-trash"></span></a>
+                                <a href="/test/edit?<?= $url_param . '&tid='.$t_item['id'] ?>" class="action" title="Редактировать"><span class="uk-icon-pencil"></span></a>
+                                <a href="/test/delete?<?= $url_param . '&tid='.$t_item['id'] ?>" class="action" title="Удалить"><span class="uk-icon-trash"></span></a>
                                 <?php
                             endif; //if ($t_item['flag'] != FLAG_NO_CHANGE):
                             ?>
@@ -99,7 +99,7 @@ include APP_VIEWS . 'layouts/header.php';
     </div>
     <script src="<?= APP_TEMPLATES ?>css/chosen/chosen.jquery.js" type="text/javascript"></script>
     <script type="text/javascript">
-        $("#direction").chosen({no_results_text: "Пока нет направлений", search_contains: true});
+        $("#s_direction").chosen({no_results_text: "Пока нет направлений", search_contains: true});
     </script>
 
 <?php include APP_VIEWS . 'layouts/footer.php'; ?>

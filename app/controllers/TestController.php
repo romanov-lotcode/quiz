@@ -26,9 +26,9 @@ class TestController extends BaseController
             }
         }
 
-        if (isset($_GET['direction']))
+        if (isset($_GET['s_direction']))
         {
-            $option_direction_selected = htmlspecialchars($_GET['direction']);
+            $option_direction_selected = htmlspecialchars($_GET['s_direction']);
         }
 
         if (isset($_GET['page']))
@@ -68,8 +68,8 @@ class TestController extends BaseController
 
         $html_element['direction'] = new \HTMLElement\HTMLSelectElement();
         $html_element['direction']->setCaption('Направление');
-        $html_element['direction']->setName('direction');
-        $html_element['direction']->setId('direction');
+        $html_element['direction']->setName('s_direction');
+        $html_element['direction']->setId('s_direction');
         $html_element['direction']->setConfig('data-placeholder', 'Не выбрано');
         $html_element['direction']->setConfig('onchange', 'this.form.submit();');
         $html_element['direction']->setConfig('class', 'uk-width-1-1');
@@ -102,7 +102,7 @@ class TestController extends BaseController
 
         if ($is_can)
         {
-            $url_param .= 's_name='.$search['name'].'&page='.$page;
+            $url_param .= 's_direction='.$search['direction_id'].'&s_name='.$search['name'].'&page='.$page;
 
             include_once APP_VIEWS.'test/index.php';
         }
