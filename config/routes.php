@@ -17,4 +17,5 @@ return [
 
     'test/index' => ['controller' => 'Test', 'action' => 'index'],
     'test/add' => ['controller' => 'Test', 'action' => 'add'],
+    'test/edit' => ['controller' => 'Test', 'action' => 'edit'],
 ];
