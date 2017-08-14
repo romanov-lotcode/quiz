@@ -10,24 +10,24 @@ use HTMLElement\HTMLSelectOptionElement;
 class HTMLSelectElement extends HTMLElementBase
 {
     /*******************************************************
-     ********************* Ïîëÿ êëàññà *********************
+     ********************* ÐŸÐ¾Ð»Ñ ÐºÐ»Ð°ÑÑÐ° *********************
      *******************************************************/
 
-    // Óñòàíîâêè êîíôèãóðàöèè ýëåìåíòà
+    // Ð£ÑÑ‚Ð°Ð½Ð¾Ð²ÐºÐ¸ ÐºÐ¾Ð½Ñ„Ð¸Ð³ÑƒÑ€Ð°Ñ†Ð¸Ð¸ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚Ð°
     const HTML_E_CONFIG_VALUE_NAME = 'value';
 
     /**
-     * Îáÿçàòåëüíûé ëè ê âûáîðó ýëåìåíò.
+     * ÐžÐ±ÑÐ·Ð°Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ð¹ Ð»Ð¸ Ðº Ð²Ñ‹Ð±Ð¾Ñ€Ñƒ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚.
      * @var bool
      */
     private $necessarily = false;
 
     /*******************************************************
-     ******************** Ìåòîäû êëàññà ********************
+     ******************** ÐœÐµÑ‚Ð¾Ð´Ñ‹ ÐºÐ»Ð°ÑÑÐ° ********************
      *******************************************************/
 
     /**
-     * Óñòàíàâëèâàåò îáÿçàòåëüíî ëè âûáèðàòü ýëåìåíò.
+     * Ð£ÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÑ‚ Ð¾Ð±ÑÐ·Ð°Ñ‚ÐµÐ»ÑŒÐ½Ð¾ Ð»Ð¸ Ð²Ñ‹Ð±Ð¸Ñ€Ð°Ñ‚ÑŒ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚.
      * @param $value bool
      */
     public function setNecessarily($value)
@@ -39,12 +39,24 @@ class HTMLSelectElement extends HTMLElementBase
     }
 
     /**
-     * Âîçâðàùàåò îáÿçàòíîëüíî ëè âûáèðàòü ýëåìåíò.
+     * Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ Ð¾Ð±ÑÐ·Ð°Ñ‚Ð½Ð¾Ð»ÑŒÐ½Ð¾ Ð»Ð¸ Ð²Ñ‹Ð±Ð¸Ñ€Ð°Ñ‚ÑŒ ÑÐ»ÐµÐ¼ÐµÐ½Ñ‚.
      * @return bool
      */
     public function getNecessarily()
     {
         return $this->necessarily;
+    }
+
+    /**
+     * ÐŸÑ€Ð¾Ð²Ð¾Ð´Ð¸Ñ‚ Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼ÑƒÑŽ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÑƒ Ð´Ð»Ñ Ñ‚ÐµÐºÑƒÑ‰ÐµÐ³Ð¾ Ñ‚Ð¸Ð¿Ð°.
+     */
+    public function check()
+    {
+        if ($this->getNecessarily() !== false)
+        {
+            parent::setCheck(false);
+            return;
+        }
     }
 
     /**
@@ -57,6 +69,11 @@ class HTMLSelectElement extends HTMLElementBase
         $default_group = null;
         $result = '';
         $el_attributes = '';
+
+        if (parent::getCheck() === false)
+        {
+            parent::addStyleClass('uk-form-danger');
+        }
 
         for ($i = 0; $i < count($options); $i++)
         {
