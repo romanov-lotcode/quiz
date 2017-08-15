@@ -182,4 +182,21 @@ class Test
         $result->execute();
     }
 
+    /**
+     * Удалить тест (изменить флаг)
+     * @param [] $test - массив с данными
+     */
+    public static function delete($test)
+    {
+        $sql = 'UPDATE test
+          SET
+            change_datetime = :change_datetime, change_user_id = :change_user_id, flag = -1
+          WHERE id = :id AND flag > 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $test['id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $test['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $test['change_user_id'], PDO::PARAM_INT);
+        $result->execute();
+    }
 }

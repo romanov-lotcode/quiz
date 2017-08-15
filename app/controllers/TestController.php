@@ -542,4 +542,95 @@ class TestController extends BaseController
             header('Location: /main/error');
         }
     }
+
+    public function actionDelete()
+    {
+        $user_right = parent::getUserRight();
+        $url_param = '';
+        $is_can = false;
+        $search = [];
+        $page = 1;
+        $errors = false;
+        $date_time = new DateTime();
+        $test = [];
+        $tid = null;
+
+
+        foreach ($user_right as $u_r)
+        {
+            if ($u_r['right_name'] == CAN_MODERATOR_DIRECTION)
+            {
+                $is_can = true;
+                break;
+            }
+        }
+
+        if (isset($_GET['s_name']))
+        {
+            $search['name'] = htmlspecialchars($_GET['s_name']);
+        }
+
+        if (isset($_GET['s_direction']))
+        {
+            $search['direction_id'] = htmlspecialchars($_GET['s_direction']);
+        }
+
+        if (isset($_GET['page']))
+        {
+            $page = intval(htmlspecialchars($_GET['page']));
+            if ($page < 1)
+            {
+                $page = 1;
+            }
+        }
+
+        if (isset($_GET['tid']))
+        {
+            $tid = htmlspecialchars($_GET['tid']);
+        }
+
+        $url_param .= 's_direction='.$search['direction_id'].'&s_name='.$search['name'];
+
+        $test = Test::getTest($tid);
+
+        if ($test['flag'] == FLAG_NO_CHANGE)
+        {
+            $errors['no_change'] = 'Невозможно изменить данное направление';
+        }
+
+        if (isset($_POST['yes']))
+        {
+            if ($tid != $test['id'])
+            {
+                $errors['id'] = 'Невозможно внести изменения для данного направления';
+            }
+            if ($errors === false)
+            {
+                $test['change_user_id'] = User::checkLogged();
+                $test['change_datetime'] = $date_time->format('Y-m-d H:i:s');
+                Test::delete($test);
+                $total = Test::getTotalTests($search);
+                if ($total <= Test::SHOW_BY_DEFAULT)
+                {
+                    $page = 1;
+                }
+                $url_param .= '&page='.$page;
+                header('Location: /test/index?'.$url_param);
+            }
+        }
+        $url_param .= '&page='.$page;
+        if (isset($_POST['no']))
+        {
+            header('Location: /test/index?'.$url_param);
+        }
+
+        if ($is_can)
+        {
+            include_once APP_VIEWS.'test/delete.php';
+        }
+        else
+        {
+            header('Location: /main/error');
+        }
+    }
 }
