@@ -16,6 +16,10 @@ define('FLAG_NO_CHANGE', 0);
 define('FLAG_ON', 1);
 define('FLAG_OFF', 2);
 
+// Ответы проекта Да/Нет
+define('FLAG_YES', 1);
+define('FLAG_NO', 2);
+
 // Состояния в проекте по статусу
 define('STATE_ON', 1);
 
