@@ -125,6 +125,50 @@ class Test
     }
 
     /**
+     * Получить тесты, по направлению и статусу
+     * @param int $direction - ID направление
+     * @param int $state - статус
+     * @return array
+     */
+    public static function getTestsByDirectionAndState($direction, $state = 1)
+    {
+        $where = '';
+        if ($state == STATE_ON)
+        {
+            $where = ' WHERE (test.flag = 0 OR
+              test.flag = 1) AND
+              (direction.flag = 0 OR
+              direction.flag = 1) AND
+              test.direction_id = :direction';
+        }
+
+        $sql = 'SELECT
+            test.id,
+            test.name,
+            test.flag
+          FROM
+            test
+          INNER JOIN direction ON (test.direction_id = direction.id) '.$where;
+
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        if ($state == STATE_ON)
+        {
+            $result->bindParam(':direction', $direction, PDO::PARAM_INT);
+        }
+        $result->execute();
+
+        // Получение и возврат результатов
+        $tests = [];
+        $i = 0;
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $tests[$i] = $row;
+            $i++;
+        }
+        return $tests;
+    }
+
+    /**
      * Возвращает порядковый номер по номеру страницы
      * @param int $page - номер страницы
      * @return int
