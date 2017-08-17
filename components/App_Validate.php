@@ -134,6 +134,31 @@ class App_Validate
     }
 
     /**
+     * Получить значение времени по формату в виде массива
+     * @param string $time_string - время
+     * @param string $format - формат времени
+     * @return array
+     */
+    public function setTimeArrayFromTime($time_string, $format = 'H:i:s')
+    {
+        $time['hour'] = '0';
+        $time['minute'] = '0';
+        $time['second'] = '0';
+
+        if ($format == 'H:i:s')
+        {
+            $segments = explode(":", $time_string);
+            if(count($segments) == 3)
+            {
+                $time['hour'] = $segments[0];
+                $time['minute'] = $segments[1];
+                $time['second'] = $segments[2];
+            }
+        }
+        return $time;
+    }
+
+    /**
      * Возвращает строку с переводом первый символ в верхний регистр
      * @param string $string - строка, которую нужно преобразовать
      * @param string $enc - кодировка
