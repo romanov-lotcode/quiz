@@ -29,6 +29,57 @@ class App_Validate
         return false;
     }
 
+    /**
+     * Проверить число
+     * @param int $value - Значение числа
+     * @param bool|true $canzero - Флаг: может ли быть 0
+     * @param bool|true $limit - Флаг: есть ли лимит
+     * @param int $min - Минимальное значение лимита
+     * @param int $max - Максимальное значение лимита
+     * @return bool
+     */
+    public function checkInt($value, $canzero = true, $limit = true, $min = 0, $max = 10)
+    {
+        if ($value != null)
+        {
+            if ($canzero)
+            {
+                if ($limit)
+                {
+                    if ($value >= 0 || $value <= $max)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if ($value == 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            if(filter_var($value, FILTER_VALIDATE_INT))
+            {
+                if ($limit)
+                {
+                    if ($value < $min || $value > $max)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * Проверяет кооректно ли введен e-mail
@@ -42,6 +93,44 @@ class App_Validate
             return true;
         }
         return false;
+    }
+
+    /**
+     * Получить значение времени по формату
+     * @param [] $time - время
+     * @param string $format - формат времени
+     * @return bool|string
+     */
+    public function getTimeFromArrayInt($time, $format = 'H:i:s')
+    {
+        $time_string = '';
+        if (!is_array($time))
+        {
+            return false;
+        }
+        if ($time['hour'] == null || $time['minute'] == null || $time['second'] == null)
+        {
+            return false;
+        }
+        if ($format == 'H:i:s')
+        {
+            if (strlen($time['hour']) == 1)
+            {
+                $time['hour'] = '0'.$time['hour'];
+            }
+            if (strlen($time['minute']) == 1)
+            {
+                $time['minute'] = '0'.$time['minute'];
+            }
+            if (strlen($time['second']) == 1)
+            {
+                $time['second'] = '0'.$time['second'];
+            }
+            $time_string = $time['hour'] . ':'
+                . $time['minute'] . ':' . $time['second'];
+        }
+
+        return $time_string;
     }
 
     /**
