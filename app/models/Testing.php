@@ -48,8 +48,7 @@ class Testing
             INNER JOIN direction ON (test.direction_id = direction.id)
           WHERE
             testing.test_id = ? AND
-            (testing.flag = 0 OR
-            testing.flag = 1) AND
+            testing.flag >= 0 AND
             test.direction_id = ? AND
             (test.flag = 0 OR
             test.flag = 1) AND
@@ -91,8 +90,7 @@ class Testing
             INNER JOIN direction ON (test.direction_id = direction.id)
           WHERE
             testing.test_id = ? AND
-            (testing.flag = 0 OR
-            testing.flag = 1) AND
+            testing.flag >= 0 AND
             test.direction_id = ? AND
             (test.flag = 0 OR
             test.flag = 1) AND
@@ -124,4 +122,35 @@ class Testing
         return $result;
     }
 
+    /**
+     * Добавляет новое тестирование
+     * @param [] $testing - массив с данными
+     * @return bool|int
+     */
+    public static function add($testing)
+    {
+        $sql = 'INSERT INTO testing (name, test_id, testing_count, question_count, is_question_random,
+            is_answer_random, minimum_score, testing_time, testing_time_flag, change_user_id, change_datetime, flag)
+          VALUES (:name, :test_id, :testing_count, :question_count, :is_question_random,
+            :is_answer_random, :minimum_score, :testing_time, :testing_time_flag, :change_user_id, :change_datetime, :flag)';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':name', $testing['name'], PDO::PARAM_STR);
+        $result->bindParam(':test_id', $testing['test_id'], PDO::PARAM_INT);
+        $result->bindParam(':testing_count', $testing['testing_count'], PDO::PARAM_INT);
+        $result->bindParam(':question_count', $testing['question_count'], PDO::PARAM_INT);
+        $result->bindParam(':is_question_random', $testing['is_question_random'], PDO::PARAM_INT);
+        $result->bindParam(':is_answer_random', $testing['is_answer_random'], PDO::PARAM_INT);
+        $result->bindParam(':minimum_score', $testing['minimum_score'], PDO::PARAM_INT);
+        $result->bindParam(':testing_time', $testing['testing_time'], PDO::PARAM_STR);
+        $result->bindParam(':testing_time_flag', $testing['testing_time_flag'], PDO::PARAM_INT);
+        $result->bindParam(':change_user_id', $testing['change_user_id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $testing['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':flag', $testing['flag'], PDO::PARAM_INT);
+        if($result->execute())
+        {
+            return $db->lastInsertId();
+        }
+        return false;
+    }
 }

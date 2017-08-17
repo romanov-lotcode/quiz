@@ -151,4 +151,432 @@ class TestingController extends BaseController
             header('Location: /main/error');
         }
     }
+
+    public function actionAdd()
+    {
+        $user_right = parent::getUserRight();
+        $app_state = new App_State();
+        $app_validate = new App_Validate();
+        $url_param = '';
+        $is_can = false;
+        $search = [];
+        $page = 1;
+        $errors = false;
+        $date_time = new DateTime();
+        $testing = [];
+        $test = null;
+
+        foreach ($user_right as $u_r)
+        {
+            if ($u_r['right_name'] == CAN_MODERATOR_DIRECTION)
+            {
+                $is_can = true;
+                break;
+            }
+        }
+
+        if (isset($_GET['s_direction']))
+        {
+            $search['direction_id'] = htmlspecialchars($_GET['s_direction']);
+        }
+
+        if (isset($_GET['s_test']))
+        {
+            $search['test_id'] = htmlspecialchars($_GET['s_test']);
+            $test = Test::getTest($search['test_id']);
+        }
+
+        if (isset($_GET['s_name']))
+        {
+            $search['name'] = htmlspecialchars($_GET['s_name']);
+        }
+
+        if (isset($_GET['page']))
+        {
+            $page = intval(htmlspecialchars($_GET['page']));
+            if ($page < 1)
+            {
+                $page = 1;
+            }
+        }
+
+        $url_param .= 's_direction='.$search['direction_id'].'&s_test='.$search['test_id']
+            .'&s_name='.$search['name'].'&page='.$page;
+
+        if ($test['name'] == null || ($test['flag'] != 0 && $test['flag'] != 1))
+        {
+            $errors['test_id'] = 'Ошибка. Не выбран тест.';
+        }
+
+        $html_element['name'] = new \HTMLElement\HTMLTextStringElement();
+        $html_element['name']->setName('name');
+        $html_element['name']->setId('name');
+        $html_element['name']->setMin(1);
+        $html_element['name']->setMax(500);
+        $html_element['name']->setCaption('Наименование');
+        $html_element['name']->setConfig('type', 'text');
+        $html_element['name']->setConfig('class', 'uk-width-1-1');
+        $html_element['name']->setConfig('placeholder', 'Тестирование');
+        $html_element['name']->setValueFromRequest();
+
+        $html_element['testing_count'] = new \HTMLElement\HTMLTextStringElement();
+        $html_element['testing_count']->setName('testing_count');
+        $html_element['testing_count']->setId('testing_count');
+        $html_element['testing_count']->setValue(1);
+        $html_element['testing_count']->setMin(1);
+        $html_element['testing_count']->setMax(6);
+        $html_element['testing_count']->setCaption('Количество прохождений');
+        $html_element['testing_count']->setConfig('type', 'number');
+        $html_element['testing_count']->setConfig('min', '1');
+        $html_element['testing_count']->setConfig('max', '999999');
+        $html_element['testing_count']->setConfig('class', 'uk-width-1-4');
+        $html_element['testing_count']->setConfig('placeholder', 'Количество прохождений');
+        $html_element['testing_count']->setValueFromRequest();
+
+        $html_element['question_count'] = new \HTMLElement\HTMLTextStringElement();
+        $html_element['question_count']->setName('question_count');
+        $html_element['question_count']->setId('question_count');
+        $html_element['question_count']->setValue(1);
+        $html_element['question_count']->setMin(1);
+        $html_element['question_count']->setMax(6);
+        $html_element['question_count']->setCaption('Количество вопросов');
+        $html_element['question_count']->setConfig('type', 'number');
+        $html_element['question_count']->setConfig('min', '1');
+        $html_element['question_count']->setConfig('max', '999999');
+        $html_element['question_count']->setConfig('class', 'uk-width-1-4');
+        $html_element['question_count']->setConfig('placeholder', 'Количество вопросов');
+        $html_element['question_count']->setValueFromRequest();
+
+        $option_is_question_random_select = APP_NO;
+        $option_is_question_random = [];
+        $optgroup_is_question_random = [];
+
+        if (isset($_POST['is_question_random']))
+        {
+            $option_is_question_random_select = $_POST['is_question_random'];
+            $option_is_question_random_select = intval($option_is_question_random_select);
+            if ($option_is_question_random_select != APP_NO
+                && $option_is_question_random_select != APP_YES)
+            {
+                $option_is_question_random_select = APP_NO;
+            }
+        }
+
+        $i = 0;
+        $option_is_question_random[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_is_question_random[$i]->setValue(APP_YES);
+        $option_is_question_random[$i]->setText('Да');
+        ($option_is_question_random_select == $option_is_question_random[$i]->getValue())? $option_is_question_random[$i]->setSelected(true):'';
+
+        $i = 1;
+        $option_is_question_random[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_is_question_random[$i]->setValue(APP_NO);
+        $option_is_question_random[$i]->setText('Нет');
+        ($option_is_question_random_select == $option_is_question_random[$i]->getValue())? $option_is_question_random[$i]->setSelected(true):'';
+
+        $html_element['is_question_random'] = new \HTMLElement\HTMLSelectElement();
+        $html_element['is_question_random']->setCaption('Выводить вопросы случайно');
+        $html_element['is_question_random']->setConfig('class', 'uk-width-1-4');
+        $html_element['is_question_random']->setName('is_question_random');
+        $html_element['is_question_random']->setId('is_question_random');
+        $html_element['is_question_random']->setNecessarily(true);
+
+        $option_is_answer_random_select = APP_NO;
+        $option_is_answer_random = [];
+        $optgroup_is_answer_random = [];
+
+        if (isset($_POST['is_answer_random']))
+        {
+            $option_is_answer_random_select = $_POST['is_answer_random'];
+            $option_is_answer_random_select = intval($option_is_answer_random_select);
+            if ($option_is_answer_random_select != APP_NO
+                && $option_is_answer_random_select != APP_YES)
+            {
+                $option_is_answer_random_select = APP_NO;
+            }
+        }
+
+        $i = 0;
+        $option_is_answer_random[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_is_answer_random[$i]->setValue(APP_YES);
+        $option_is_answer_random[$i]->setText('Да');
+        ($option_is_answer_random_select == $option_is_answer_random[$i]->getValue())? $option_is_answer_random[$i]->setSelected(true):'';
+
+        $i = 1;
+        $option_is_answer_random[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_is_answer_random[$i]->setValue(APP_NO);
+        $option_is_answer_random[$i]->setText('Нет');
+        ($option_is_answer_random_select == $option_is_answer_random[$i]->getValue())? $option_is_answer_random[$i]->setSelected(true):'';
+
+        $html_element['is_answer_random'] = new \HTMLElement\HTMLSelectElement();
+        $html_element['is_answer_random']->setCaption('Выводить ответы случайно');
+        $html_element['is_answer_random']->setConfig('class', 'uk-width-1-4');
+        $html_element['is_answer_random']->setName('is_answer_random');
+        $html_element['is_answer_random']->setId('is_answer_random');
+        $html_element['is_answer_random']->setNecessarily(true);
+
+        $html_element['minimum_score'] = new \HTMLElement\HTMLTextStringElement();
+        $html_element['minimum_score']->setName('minimum_score');
+        $html_element['minimum_score']->setId('minimum_score');
+        $html_element['minimum_score']->setValue(1);
+        $html_element['minimum_score']->setMin(1);
+        $html_element['minimum_score']->setMax(6);
+        $html_element['minimum_score']->setCaption('Коэффициент прохождения');
+        $html_element['minimum_score']->setConfig('type', 'number');
+        $html_element['minimum_score']->setConfig('min', '1');
+        $html_element['minimum_score']->setConfig('max', '999999');
+        $html_element['minimum_score']->setConfig('class', 'uk-width-1-4');
+        $html_element['minimum_score']->setConfig('placeholder', 'Коэффициент прохождения');
+        $html_element['minimum_score']->setValueFromRequest();
+
+        $html_element['hour'] = new \HTMLElement\HTMLTextStringElement();
+        $html_element['hour']->setName('hour');
+        $html_element['hour']->setId('hour');
+        $html_element['hour']->setValue(0);
+        $html_element['hour']->setMax(3);
+        $html_element['hour']->setCaption('часы');
+        $html_element['hour']->setConfig('type', 'number');
+        $html_element['hour']->setConfig('min', '0');
+        $html_element['hour']->setConfig('max', '838');
+        $html_element['hour']->setConfig('class', 'uk-width-1-2');
+        $html_element['hour']->setConfig('placeholder', 'чч');
+        $html_element['hour']->setValueFromRequest();
+
+        $html_element['minute'] = new \HTMLElement\HTMLTextStringElement();
+        $html_element['minute']->setName('minute');
+        $html_element['minute']->setId('minute');
+        $html_element['minute']->setValue(0);
+        $html_element['minute']->setMax(2);
+        $html_element['minute']->setCaption('минуты');
+        $html_element['minute']->setConfig('type', 'number');
+        $html_element['minute']->setConfig('min', '0');
+        $html_element['minute']->setConfig('max', '59');
+        $html_element['minute']->setConfig('class', 'uk-width-1-2');
+        $html_element['minute']->setConfig('placeholder', 'мм');
+        $html_element['minute']->setValueFromRequest();
+
+        $html_element['second'] = new \HTMLElement\HTMLTextStringElement();
+        $html_element['second']->setName('second');
+        $html_element['second']->setId('second');
+        $html_element['second']->setValue(0);
+        $html_element['second']->setMax(2);
+        $html_element['second']->setCaption('секунды');
+        $html_element['second']->setConfig('type', 'number');
+        $html_element['second']->setConfig('min', '0');
+        $html_element['second']->setConfig('max', '59');
+        $html_element['second']->setConfig('class', 'uk-width-1-2');
+        $html_element['second']->setConfig('placeholder', 'сс');
+        $html_element['second']->setValueFromRequest();
+
+        $option_testing_time_flag_select = APP_NO;
+        $option_testing_time_flag = [];
+        $optgroup_testing_time_flag = [];
+
+        if (isset($_POST['testing_time_flag']))
+        {
+            $option_testing_time_flag_select = $_POST['testing_time_flag'];
+            $option_testing_time_flag_select = intval($option_testing_time_flag_select);
+            if ($option_testing_time_flag_select != APP_NO
+                && $option_testing_time_flag_select != APP_YES)
+            {
+                $option_testing_time_flag_select = APP_NO;
+            }
+        }
+
+        $i = 0;
+        $option_testing_time_flag[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_testing_time_flag[$i]->setValue(APP_YES);
+        $option_testing_time_flag[$i]->setText('Да');
+        ($option_testing_time_flag_select == $option_testing_time_flag[$i]->getValue())? $option_testing_time_flag[$i]->setSelected(true):'';
+
+        $i = 1;
+        $option_testing_time_flag[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_testing_time_flag[$i]->setValue(APP_NO);
+        $option_testing_time_flag[$i]->setText('Нет');
+        ($option_testing_time_flag_select == $option_testing_time_flag[$i]->getValue())? $option_testing_time_flag[$i]->setSelected(true):'';
+
+        $html_element['testing_time_flag'] = new \HTMLElement\HTMLSelectElement();
+        $html_element['testing_time_flag']->setCaption('Включить время');
+        $html_element['testing_time_flag']->setConfig('class', 'uk-width-1-4');
+        $html_element['testing_time_flag']->setName('testing_time_flag');
+        $html_element['testing_time_flag']->setId('testing_time_flag');
+        $html_element['testing_time_flag']->setNecessarily(true);
+
+        $option_flag_select = FLAG_OFF;
+        $option_flag = [];
+        $optgroup_flag = [];
+
+        if (isset($_POST['flag']))
+        {
+            $option_flag_select = $_POST['flag'];
+            $option_flag_select = intval($option_flag_select);
+            if ($option_flag_select != FLAG_OFF
+                && $option_flag_select != FLAG_ON)
+            {
+                $option_flag_select = FLAG_OFF;
+            }
+        }
+
+        $i = 0;
+        $option_flag[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_flag[$i]->setValue(FLAG_ON);
+        $option_flag[$i]->setText('Вкл');
+        ($option_flag_select == $option_flag[$i]->getValue())? $option_flag[$i]->setSelected(true):'';
+
+        $i = 1;
+        $option_flag[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_flag[$i]->setValue(FLAG_OFF);
+        $option_flag[$i]->setText('Выкл');
+        ($option_flag_select == $option_flag[$i]->getValue())? $option_flag[$i]->setSelected(true):'';
+
+        $html_element['flag'] = new \HTMLElement\HTMLSelectElement();
+        $html_element['flag']->setCaption('Состояние');
+        $html_element['flag']->setConfig('class', 'uk-width-1-4');
+        $html_element['flag']->setName('flag');
+        $html_element['flag']->setId('flag');
+
+        if (isset($_POST['add']))
+        {
+            $html_element['name']->setValue($html_element['name']->getValue());
+            $html_element['testing_count']->setValue($html_element['testing_count']->getValue());
+            $html_element['question_count']->setValue($html_element['question_count']->getValue());
+            $html_element['minimum_score']->setValue($html_element['minimum_score']->getValue());
+
+            $html_element['name']->check();
+            $html_element['testing_count']->check();
+            $html_element['question_count']->check();
+            $html_element['minimum_score']->check();
+
+            if ($option_testing_time_flag_select == APP_YES)
+            {
+                $html_element['hour']->setValue(trim(intval($html_element['hour']->getValue())));
+                $html_element['minute']->setValue(trim(intval($html_element['minute']->getValue())));
+                $html_element['second']->setValue(trim(intval($html_element['second']->getValue())));
+
+                $html_element['hour']->check();
+                $html_element['minute']->check();
+                $html_element['second']->check();
+
+                if ($html_element['hour']->getValue() == 0
+                    && $html_element['minute']->getValue() == 0
+                    && $html_element['second']->getValue() == 0)
+                {
+                    $errors['testing_time'] = 'Вы включили время, но время прохождения не задали.<br />Укажите часы или минуты, или секунды.';
+                    $html_element['hour']->setCheck(false);
+                    $html_element['minute']->setCheck(false);
+                    $html_element['second']->setCheck(false);
+                }
+            }
+
+            if (!$html_element['name']->getCheck())
+            {
+                $errors['name'] = 'Ошибка в поле "'.$html_element['name']->getCaption().'".<br />Не может быть такой длины.';
+            }
+
+            if (!$app_validate->checkInt($html_element['testing_count']->getValue(), false, true, 1, 999999))
+            {
+                $html_element['testing_count']->setCheck(false);
+            }
+
+            if (!$html_element['testing_count']->getCheck())
+            {
+                $errors['testing_count'] = 'Ошибка в поле "'.$html_element['testing_count']->getCaption().'".<br />Должно быть целым числом от 1 до 999999.';
+            }
+
+            if (!$app_validate->checkInt($html_element['question_count']->getValue(), false, true, 1, 999999))
+            {
+                $html_element['question_count']->setCheck(false);
+            }
+
+            if (!$html_element['question_count']->getCheck())
+            {
+                $errors['question_count'] = 'Ошибка в поле "'.$html_element['question_count']->getCaption().'".<br />Должно быть целым числом от 1 до 999999.';
+            }
+
+            if (!$app_validate->checkInt($html_element['minimum_score']->getValue(), false, true, 1, 999999))
+            {
+                $html_element['minimum_score']->setCheck(false);
+            }
+
+            if (!$html_element['minimum_score']->getCheck())
+            {
+                $errors['minimum_score'] = 'Ошибка в поле "'.$html_element['minimum_score']->getCaption().'".<br />Должно быть целым числом от 1 до 999999.';
+            }
+
+            if (!$app_validate->checkInt($html_element['hour']->getValue(), true, true, 0, 838))
+            {
+                $html_element['hour']->setCheck(false);
+            }
+
+            if (!$html_element['hour']->getCheck())
+            {
+                $errors['hour'] = 'Ошибка в поле "'.$html_element['hour']->getCaption().'".<br />Должно быть целым числом от 0 до 838.';
+            }
+
+            if (!$app_validate->checkInt($html_element['minute']->getValue(), true, true, 0, 59))
+            {
+                $html_element['minute']->setCheck(false);
+            }
+
+            if (!$html_element['minute']->getCheck())
+            {
+                $errors['minute'] = 'Ошибка в поле "'.$html_element['minute']->getCaption().'".<br />Должно быть целым числом от 0 до 59.';
+            }
+
+            if (!$app_validate->checkInt($html_element['second']->getValue(), true, true, 0, 59))
+            {
+                $html_element['second']->setCheck(false);
+            }
+
+            if (!$html_element['second']->getCheck())
+            {
+                $errors['second'] = 'Ошибка в поле "'.$html_element['second']->getCaption().'".<br />Должно быть целым числом от 0 до 59.';
+            }
+
+            if ($errors === false)
+            {
+                $time['hour'] = $html_element['hour']->getValue();
+                $time['minute'] = $html_element['minute']->getValue();
+                $time['second'] = $html_element['second']->getValue();
+                $testing['testing_time'] = $app_validate->getTimeFromArrayInt($time);
+                if (!$testing['testing_time'])
+                {
+                    $errors['testing_time'] = 'Не удалось установить время';
+                }
+                if ($errors === false)
+                {
+                    $testing['name'] = $html_element['name']->getValue();
+                    $testing['test_id'] = $search['test_id'];
+                    $testing['testing_count'] = $html_element['testing_count']->getValue();
+                    $testing['question_count'] = $html_element['question_count']->getValue();
+                    $testing['is_question_random'] = $option_is_question_random_select;
+                    $testing['is_answer_random'] = $option_is_answer_random_select;
+                    $testing['minimum_score'] = $html_element['minimum_score']->getValue();
+                    // testing_time значение передано выше
+                    $testing['testing_time_flag'] = $option_testing_time_flag_select;
+                    $testing['change_user_id'] = User::checkLogged();
+                    $testing['change_datetime'] = $date_time->format('Y-m-d H:i:s');
+                    $testing['flag'] = $option_flag_select;
+                    $is_add = Testing::add($testing);
+                    if ($is_add !== false)
+                    {
+                        header('Location: /testing/index?'.$url_param);
+                    }
+                    else
+                    {
+                        $errors['add'] = 'Ничего не удалось добавить! Возможно у вас нет прав';
+                    }
+                }
+            }
+        }
+
+        if ($is_can)
+        {
+            include_once APP_VIEWS.'testing/add.php';
+        }
+        else
+        {
+            header('Location: /main/error');
+        }
+    }
 }
