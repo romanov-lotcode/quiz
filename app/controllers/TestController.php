@@ -9,6 +9,7 @@ class TestController extends BaseController
         $app_state = new App_State();
         $url_param = '';
         $is_can = false;
+        $is_can_question = false;
         $search = [];
         $page = 1;
         $index_number = 1;
@@ -22,6 +23,13 @@ class TestController extends BaseController
             if ($u_r['right_name'] == CAN_MODERATOR_TEST)
             {
                 $is_can = true;
+            }
+            if ($u_r['right_name'] == CAN_MODERATOR_QUESTION)
+            {
+                $is_can_question = true;
+            }
+            if ($is_can === true && $is_can_question === true)
+            {
                 break;
             }
         }

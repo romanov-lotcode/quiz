@@ -74,9 +74,12 @@ include APP_VIEWS . 'layouts/header.php';
                                 ?>
                                 <a href="/test/edit?<?= $url_param . '&tid='.$t_item['id'] ?>" class="action" title="Редактировать"><span class="uk-icon-pencil"></span></a>
                                 <a href="/test/delete?<?= $url_param . '&tid='.$t_item['id'] ?>" class="action" title="Удалить"><span class="uk-icon-trash"></span></a>
-                                <?php
+                            <?php
                             endif; //if ($t_item['flag'] != FLAG_NO_CHANGE):
+                            if ($is_can_question):
                             ?>
+                                <a href="/question/index?<?= $url_param .'&tid='.$t_item['id'] ?>" class="action" title="Вопросы"><span class="uk-icon-question-circle"></span></a>
+                            <?php endif; //if ($is_can_question): ?>
                         </td>
                     </tr>
                     <?php
