@@ -27,4 +27,22 @@ class App_State
         }
         return $result;
     }
+
+    /**
+     * @param int $value - целое значение
+     * @return string
+     */
+    public function getTimeFlagState($value)
+    {
+        $result = '';
+        if ($value == 2)
+        {
+            $result = '<span class="uk-icon-ban" style="color: red;" title="Выключено"></span>';
+        }
+        if ($value == 1)
+        {
+            $result = '<span class="uk-icon-clock-o" style="color: green;" title="Включено"></span>';
+        }
+        return $result;
+    }
 }

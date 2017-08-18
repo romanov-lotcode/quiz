@@ -108,7 +108,7 @@ include APP_VIEWS . 'layouts/header.php';
                             }
                             ?>
                             <td>
-                                <?= $testingTime ?>
+                                <?= $testingTime.' '.$app_state->getTimeFlagState($t_item['testing_time_flag']) ?>
                             </td>
 
                             <td><?= $app_state->getFlagState($t_item['flag']) ?></td>
