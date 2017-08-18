@@ -1123,9 +1123,6 @@ class TestingController extends BaseController
             header('Location: /testing/index?'.$url_param);
         }
 
-
-        $url_param .= '&page='.$page;
-
         if ($is_can)
         {
             include_once APP_VIEWS.'testing/delete.php';
