@@ -35,3 +35,5 @@ define('MESSAGE_TYPE_ERROR', 'error'); // Ошибка
 define('CAN_MODERATOR_DIRECTION', 'CAN_MODERATOR_DIRECTION'); // Может изменять Направление
 define('CAN_MODERATOR_TEST', 'CAN_MODERATOR_TEST'); // Может изменять Тест
 define('CAN_MODERATOR_TESTING', 'CAN_MODERATOR_TESTING'); // Может изменять Тестирование
+define('CAN_MODERATOR_QUESTION', 'CAN_MODERATOR_QUESTION'); // Может изменять Вопрос
+define('CAN_MODERATOR_ANSWER', 'CAN_MODERATOR_ANSWER'); // Может изменять Ответ
