@@ -468,7 +468,7 @@ class TestController extends BaseController
 
         if ($test['flag'] == FLAG_NO_CHANGE)
         {
-            $errors['no_change'] = 'Невозможно изменить данное направление';
+            $errors['no_change'] = 'Невозможно изменить данный тест';
             $html_element['direction']->setConfig('disabled', 'disabled');
             $html_element['name']->setConfig('disabled', 'disabled');
             $html_element['comment']->setConfig('disabled', 'disabled');
