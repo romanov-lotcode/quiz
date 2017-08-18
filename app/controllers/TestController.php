@@ -595,14 +595,14 @@ class TestController extends BaseController
 
         if ($test['flag'] == FLAG_NO_CHANGE)
         {
-            $errors['no_change'] = 'Невозможно изменить данное направление';
+            $errors['no_change'] = 'Невозможно изменить данный тест';
         }
 
         if (isset($_POST['yes']))
         {
             if ($tid != $test['id'])
             {
-                $errors['id'] = 'Невозможно внести изменения для данного направления';
+                $errors['id'] = 'Невозможно внести изменения для данного теста';
             }
             if ($errors === false)
             {
