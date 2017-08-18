@@ -46,6 +46,14 @@ include APP_VIEWS . 'layouts/header.php';
                 <?= $html_element['minimum_score']->render(); ?>
             </div>
             <div class="uk-form-row uk-width-1-1">
+                <?= $html_element['testing_time_flag']->render($option_testing_time_flag, $optgroup_testing_time_flag); ?>
+            </div>
+            <div class="uk-form-row uk-width-1-1" id="t_time"
+            <?php
+            if ($option_testing_time_flag_select == APP_NO)
+                echo ' style="display: none;" ';
+            ?>
+            >
                 <table class="uk-width-1-1 search_param">
                     <tr>
                         <td align="center" colspan="3"><label>Время прохождения</label></td>
@@ -63,9 +71,7 @@ include APP_VIEWS . 'layouts/header.php';
                     </tr>
                     </table>
             </div>
-            <div class="uk-form-row uk-width-1-1">
-                <?= $html_element['testing_time_flag']->render($option_testing_time_flag, $optgroup_testing_time_flag); ?>
-            </div>
+
             <div class="uk-form-row uk-width-1-1">
                 <?= $html_element['flag']->render($option_flag, $optgroup_flag) ?>
             </div>
@@ -76,5 +82,18 @@ include APP_VIEWS . 'layouts/header.php';
 
         </form>
     </div>
+    <script type='text/javascript'>
+        function show_hide(id_changing_element, id_changed_element)
+        {
+            if (document.getElementById(id_changing_element).value == 1)
+            {
+                document.getElementById(id_changed_element).style.display = 'block'; //покажет
+            }
+            else
+            {
+                document.getElementById(id_changed_element).style.display='none'; // Скроет слой
+            }
+        }
+    </script>
 
 <?php include APP_VIEWS . 'layouts/footer.php'; ?>
