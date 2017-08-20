@@ -10,8 +10,6 @@ class Question
      ******************** ПОЛЯ КЛАССА ********************
      *****************************************************/
 
-    const SHOW_BY_DEFAULT = 20;
-
     /*****************************************************
      ******************* МЕТОДЫ КЛАССА *******************
      *****************************************************/
@@ -103,5 +101,25 @@ class Question
             return $count['row_count'];
         }
         return 0;
+    }
+
+    /**
+     * Получить типы вопросов
+     * @return array
+     */
+    public static function getQuestionTypes()
+    {
+        $sql = 'SELECT * FROM question_type WHERE question_type.flag = 0 OR question_type.flag = 1';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->execute();
+        // Получение и возврат результатов
+        $question_types = [];
+        $i = 0;
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $question_types[$i] = $row;
+            $i++;
+        }
+        return $question_types;
     }
 }

@@ -26,4 +26,5 @@ return [
     'testing/delete' => ['controller' => 'Testing', 'action' => 'delete'],
 
     'question/index' => ['controller' => 'Question', 'action' => 'index'],
+    'question/add' => ['controller' => 'Question', 'action' => 'add'],
 ];

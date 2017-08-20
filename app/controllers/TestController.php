@@ -558,7 +558,7 @@ class TestController extends BaseController
         $date_time = new DateTime();
         $test = [];
         $tid = null;
-        
+
         foreach ($user_right as $u_r)
         {
             if ($u_r['right_name'] == CAN_MODERATOR_DIRECTION)
