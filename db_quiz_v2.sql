@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 18 2017 г., 16:07
+-- Время создания: Авг 20 2017 г., 22:22
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.5.33
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `app_right` (
   `right_name` varchar(64) NOT NULL COMMENT 'Наименование правила',
   `description` varchar(512) DEFAULT NULL COMMENT 'Описание',
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `app_right`
@@ -46,7 +46,8 @@ INSERT INTO `app_right` (`id`, `right_value`, `right_name`, `description`, `flag
 (5, 16, 'CAN_MODERATOR_TEST', 'Может работать с тестами', 1),
 (6, 32, 'CAN_MODERATOR_DIRECTION', 'Может работать с направлениями', 1),
 (7, 64, 'CAN_MODERATOR_TESTING', 'Может работать с тестированиями', 1),
-(8, 128, 'CAN_MODERATOR_QUESTION', 'Может работать с вопросами', 1);
+(8, 128, 'CAN_MODERATOR_QUESTION', 'Может работать с вопросами', 1),
+(9, 256, 'CAN_MODERATOR_ANSWER', 'Может работать с ответами', 1);
 
 -- --------------------------------------------------------
 
@@ -117,11 +118,11 @@ CREATE TABLE IF NOT EXISTS `question` (
   `id` int(11) NOT NULL,
   `name` varchar(2048) NOT NULL,
   `number` int(1) DEFAULT '0',
+  `question_type_id` int(1) NOT NULL DEFAULT '0',
   `explanation` varchar(2048) DEFAULT NULL,
   `comment` varchar(2048) DEFAULT NULL,
   `test_id` int(11) NOT NULL,
   `path_img` varchar(1024) DEFAULT NULL,
-  `question_type_id` int(1) NOT NULL DEFAULT '0',
   `question_time` time NOT NULL,
   `question_time_flag` int(1) NOT NULL,
   `change_user_id` int(11) NOT NULL,
@@ -133,8 +134,8 @@ CREATE TABLE IF NOT EXISTS `question` (
 -- Дамп данных таблицы `question`
 --
 
-INSERT INTO `question` (`id`, `name`, `number`, `explanation`, `comment`, `test_id`, `path_img`, `question_type_id`, `question_time`, `question_time_flag`, `change_user_id`, `change_datetime`, `flag`) VALUES
-(1, 'Вопрос А', 1, NULL, NULL, 1, NULL, 0, '00:00:00', 2, 0, '2017-08-18 00:00:00', 1);
+INSERT INTO `question` (`id`, `name`, `number`, `question_type_id`, `explanation`, `comment`, `test_id`, `path_img`, `question_time`, `question_time_flag`, `change_user_id`, `change_datetime`, `flag`) VALUES
+(1, 'Вопрос А', 1, 0, NULL, NULL, 1, NULL, '00:00:00', 2, 0, '2017-08-18 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -154,8 +155,8 @@ CREATE TABLE IF NOT EXISTS `question_type` (
 --
 
 INSERT INTO `question_type` (`id`, `name`, `comment`, `flag`) VALUES
-(0, 'Один к одному', 'Один вопрос имеет один ответ', 1),
-(1, 'Один ко многим', 'Один вопрос может иметь несколько ответов', 1);
+(0, 'Один к одному', 'Один вопрос имеет один ответ', 0),
+(1, 'Один ко многим', 'Один вопрос может иметь несколько ответов', 0);
 
 -- --------------------------------------------------------
 
@@ -258,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `user_or_app_right` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL DEFAULT '0',
   `app_right_id` int(11) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user_or_app_right`
@@ -273,7 +274,8 @@ INSERT INTO `user_or_app_right` (`id`, `user_id`, `app_right_id`) VALUES
 (6, 2, 1),
 (7, 2, 2),
 (8, 1, 7),
-(9, 1, 8);
+(9, 1, 8),
+(10, 1, 9);
 
 --
 -- Индексы сохранённых таблиц
@@ -342,7 +344,7 @@ ALTER TABLE `user_or_app_right`
 -- AUTO_INCREMENT для таблицы `app_right`
 --
 ALTER TABLE `app_right`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT для таблицы `direction`
 --
@@ -382,7 +384,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT для таблицы `user_or_app_right`
 --
 ALTER TABLE `user_or_app_right`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
