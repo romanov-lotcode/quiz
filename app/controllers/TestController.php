@@ -91,8 +91,6 @@ class TestController extends BaseController
         $html_element['name']->setConfig('placeholder', 'Тест');
         $html_element['name']->setValueFromRequest();
 
-
-
         if ($option_direction_selected > 0)
         {
             $search['direction_id'] = $option_direction_selected;
@@ -132,7 +130,6 @@ class TestController extends BaseController
         $directions = [];
         $option_direction_selected = null;
         $test = [];
-
 
         foreach ($user_right as $u_r)
         {
@@ -220,7 +217,7 @@ class TestController extends BaseController
         $html_element['comment']->setId('comment');
         $html_element['comment']->setMax(1000);
         $html_element['comment']->setCaption('Комментарий');
-        $html_element['comment']->setConfig('rows', '7');
+        $html_element['comment']->setConfig('rows', '5');
         $html_element['comment']->setConfig('class', 'uk-width-1-1');
         $html_element['comment']->setConfig('placeholder', 'Комментарий');
         $html_element['comment']->setValueFromRequest();
@@ -338,7 +335,6 @@ class TestController extends BaseController
         $test = [];
         $tid = null;
 
-
         foreach ($user_right as $u_r)
         {
             if ($u_r['right_name'] == CAN_MODERATOR_DIRECTION)
@@ -436,7 +432,7 @@ class TestController extends BaseController
         $html_element['comment']->setValue($test['comment']);
         $html_element['comment']->setMax(1000);
         $html_element['comment']->setCaption('Комментарий');
-        $html_element['comment']->setConfig('rows', '7');
+        $html_element['comment']->setConfig('rows', '5');
         $html_element['comment']->setConfig('class', 'uk-width-1-1');
         $html_element['comment']->setConfig('placeholder', 'Комментарий');
         $html_element['comment']->setValueFromRequest();
@@ -562,8 +558,7 @@ class TestController extends BaseController
         $date_time = new DateTime();
         $test = [];
         $tid = null;
-
-
+        
         foreach ($user_right as $u_r)
         {
             if ($u_r['right_name'] == CAN_MODERATOR_DIRECTION)
