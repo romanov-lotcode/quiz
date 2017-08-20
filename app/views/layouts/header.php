@@ -11,6 +11,7 @@
     <link href="<?= APP_TEMPLATES ?>css/form-password.min.css?00001" rel="stylesheet">
     <link href="<?= APP_TEMPLATES ?>css/font-awesome.min.css?00001" rel="stylesheet">
     <link href="<?= APP_TEMPLATES ?>css/app_messages.css?00003" rel="stylesheet">
+    <link href="<?= APP_TEMPLATES ?>css/form-file.css?00001" rel="stylesheet">
 
     <script src="<?= APP_TEMPLATES ?>js/nav.js"></script>
     <script src="<?= APP_TEMPLATES ?>js/offcanvas.js"></script>
