@@ -41,11 +41,18 @@ include APP_VIEWS . 'layouts/header.php';
             <div class="uk-form-row uk-width-1-1">
                 <!-- Область для перетаскивания -->
 
+                <div id="img_path_img">
+                    <span>Был выбран 1 файл</span>
+                    <a href="#" class="uk-button delete">Удалить</a><br /><br />
+                    <img src="http://quiz-v2/temp/users/<?= $u_id .'/'.$file_name ?>" class="image">
+                </div>
 
                 <div id="drop-files" ondragover="return false" class="uk-form-file">
                     Выберите или перетащите изображение сюда
+                    <input type="hidden" name="p_i" value="<?= $question['path_img'] ?>" id="p_i" />
                     <input type="file" id="uploadbtn" name="path_img" />
                 </div>
+
                 <!-- Область предпросмотра -->
                 <div id="uploaded-holder">
                     <div id="dropped-files">
@@ -70,8 +77,6 @@ include APP_VIEWS . 'layouts/header.php';
                     </ul>
                 </div>
             </div>
-
-
 
             <div class="uk-form-row uk-width-1-1">
                 <?= $html_element['explanation']->render(); ?>
@@ -129,6 +134,10 @@ include APP_VIEWS . 'layouts/header.php';
                 document.getElementById(id_changed_element).style.display='none'; // Скроет слой
             }
         }
+    </script>
+    <script type="text/javascript">
+        var p_i = '<?= $question['p_i']; ?>';
+
     </script>
 
 

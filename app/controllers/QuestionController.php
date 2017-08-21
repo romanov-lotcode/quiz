@@ -114,6 +114,10 @@ class QuestionController extends BaseController
         $question_types = Question::getQuestionTypes();
         $test = null;
 
+        $u_id = User::checkLogged();
+
+        $full_file_path = '';
+
         foreach ($user_right as $u_r)
         {
             if ($u_r['right_name'] == CAN_MODERATOR_QUESTION)
@@ -342,17 +346,69 @@ class QuestionController extends BaseController
 
         if (isset($_POST['path_img']))
         {
-
+            //$question['path_img'] = $_POST['path_img'];
         }
 
         if (isset($_POST['add']))
         {
+            $user_dir = ROOT.'\\temp\\users\\'.$u_id;
             print_r($_FILES['path_img']);
 
-            if(is_uploaded_file($_FILES['path_img']['tmp_name']))
+
+            $types = array('image/gif' => '.gif', 'image/png' => '.png', 'image/jpeg' => '.jpg');
+
+            $file_max_size = '3145728'; // 3Мб 3145728
+            $file_max = 0;
+
+            // Получаем максимальное значение файла из настроек php.ini
+            $file_max_size_php_ini = ini_get('post_max_size');
+
+            $file_max_size_php_ini = $this->parse_size($file_max_size_php_ini);
+            if ((int)$file_max_size <= (int)$file_max_size_php_ini)
             {
-                var_dump(move_uploaded_file($_FILES['path_img']['name'], ROOT.'/temp/'));
+                $file_max = $file_max_size;
             }
+            else
+            {
+                $file_max = $file_max_size_php_ini;
+            }
+
+            $file_type = '';
+            $file_name = '';
+
+            if ($_FILES['path_img']['error'] == UPLOAD_ERR_OK)
+            {
+                $i = 1;
+                foreach ($types as $key => $value)
+                {
+                    if ($key == $_FILES['path_img']['type'] && $_FILES['path_img']['size'] <= $file_max)
+                    {
+                        $file_type = $value;
+                        $file_name = 'path_img'.$file_type;
+                        break;
+                    }
+                    $i++;
+                }
+                if ($i == count($types)+1)
+                {
+                    $errors['path_img'] = 'Изображение должно быть формата .jpg, .png или .gif';
+                }
+            }
+            if ($_FILES['path_img']['size'] > $file_max)
+            {
+                $errors['path_img'] = 'Изображение превышает 3 Мб';
+            }
+            if ($file_name != '')
+            {
+                $full_file_path = $user_dir.'\\'.$file_name;
+                move_uploaded_file($_FILES['path_img']['tmp_name'], $full_file_path);
+                $question['path_img'] = $file_name;
+                $question['p_i'] = $file_name;
+            }
+
+
+
+
             /*$html_element['name']->setValue($html_element['name']->getValue());
             $html_element['testing_count']->setValue($html_element['testing_count']->getValue());
             $html_element['question_count']->setValue($html_element['question_count']->getValue());
@@ -494,5 +550,11 @@ class QuestionController extends BaseController
         {
             header('Location: /main/error');
         }
+    }
+
+    private function parse_size($value) {
+        static $sizes = ['K' => 1024, 'M' => 1048576, 'G' => 1073741824];
+        $last = substr($value, -1);
+        return isset($sizes[$last]) ? (int)$value * $sizes[$last] : $value;
     }
 }

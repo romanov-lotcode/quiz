@@ -181,7 +181,7 @@ END
     color: #FFF;
 }
 
-#dropped-files .image {
+#dropped-files .image, img.image {
     position: relative;
     height: 200px;
     width: 300px;
@@ -208,7 +208,7 @@ END
     background-color: #4bc1e3;
 }*/
 
-#upload-button span {
+#upload-button span, #img_path_img span {
     position:relative;
     text-align: center;
     background: white;

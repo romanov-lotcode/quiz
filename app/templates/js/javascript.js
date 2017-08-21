@@ -85,6 +85,7 @@ $(document).ready(function() {
 			if((dataArray.length+files.length) <= maxFiles) {
 				// показываем область с кнопками
 				$('#upload-button').css({'display' : 'block'});
+				$('#drop-files').hide();
 			}
 			else { alert('Вы не можете загружать больше '+maxFiles+' изображений!'); return; }
 
@@ -128,7 +129,8 @@ $(document).ready(function() {
 		for (i = start; i < end; i++) {
 			// размещаем загруженные изображения
 			if($('#dropped-files > .image').length <= maxFiles) {
-				$('#dropped-files').append('<div id="img-'+i+'" class="image" style="background: url('+dataArray[i].value+'); background-size: cover;"> <a href="#" id="drop-'+i+'" class="drop-button">Удалить изображение</a></div>');
+				//$('#dropped-files').append('<div id="img-'+i+'" class="image" style="background: url('+dataArray[i].value+'); background-size: cover;"> <a href="#" id="drop-'+i+'" class="drop-button">Удалить изображение</a></div>');
+				$('#dropped-files').append('<div id="img-'+i+'" class="image" style="background: url('+dataArray[i].value+'); background-size: cover;"></div>');
 			}
 		}
 		return false;
@@ -147,6 +149,9 @@ $(document).ready(function() {
 		$('#dropped-files > .image').remove();
 		$('#uploaded-holder').hide();
 		$('#uploadbtn').prop('value', null);
+		$('#p_i').prop('value', null);
+		$('#drop-files').show();
+		$('#img_path_img').hide();
 
 		// Очищаем массив
 		dataArray.length = 0;
@@ -172,6 +177,7 @@ $(document).ready(function() {
 
 	// Удалить все изображения кнопка
 	$('#dropped-files #upload-button .delete').click(restartFiles);
+	$('#img_path_img .delete').click(restartFiles);
 
 	// Загрузка изображений на сервер
 	$('#upload-button .upload').click(function() {
@@ -224,13 +230,13 @@ $(document).ready(function() {
 	});
 
 	// Простые стили для области перетаскивания
-	/*$('#drop-files').on('dragenter', function() {
-		$(this).css({'box-shadow' : 'inset 0px 0px 20px rgba(0, 0, 0, 0.1)', 'border' : '4px dashed #bb2b2b'});
-		return false;
+	$('#drop-files').on('dragenter', function() {
+		$(this).css({'box-shadow' : 'inset 0px 0px 20px rgba(0, 0, 0, 0.1)', 'border' : '1px dashed #bb2b2b'});
+		//return false;
 	});
 
 	$('#drop-files').on('drop', function() {
-		$(this).css({'box-shadow' : 'none', 'border' : '4px dashed rgba(0,0,0,0.2)'});
-		return false;
-	});*/
+		$(this).css({'box-shadow' : 'none', 'border' : '1px dashed rgba(0,0,0,0.2)'});
+		//return false;
+	});
 });
