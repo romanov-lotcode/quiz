@@ -85,6 +85,15 @@ class MainController extends BaseController
                 if ($u_id !== false)
                 {
                     User::auth($u_id);
+                    $app_directory = new App_Directory();
+                    $dir_path = '/temp/users';
+                    $temp_user_dir = ROOT.$dir_path.'/'.$u_id;
+                    // Удаляем директорию, если она есть
+                    $app_directory->removeDirectory($temp_user_dir);
+                    if (!mkdir($temp_user_dir, 0777, true))
+                    {
+                        $errors['not_dir'] = 'Не удалось создать временную директорию пользователя';
+                    }
                     header('Location: /main/index');
                 }
                 else
@@ -290,6 +299,15 @@ class MainController extends BaseController
                 {
                     User::setDefaultUserRight($new_user_id);
                     User::auth($new_user_id);
+                    $app_directory = new App_Directory();
+                    $dir_path = '/temp/users';
+                    $temp_user_dir = ROOT.$dir_path.'/'.$new_user_id;
+                    // Удаляем директорию, если она есть
+                    $app_directory->removeDirectory($temp_user_dir);
+                    if (!mkdir($temp_user_dir, 0777, true))
+                    {
+                        $errors['not_dir'] = 'Не удалось создать временную директорию пользователя';
+                    }
                     header('Location: /main/index');
                 }
                 else

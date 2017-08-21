@@ -81,6 +81,15 @@ class User
     public static function logout()
     {
         session_start();
+        $u_id = User::checkLogged();
+        if ($u_id != false)
+        {
+            $app_directory = new App_Directory();
+            $dir_path = '/temp/users';
+            $temp_user_dir = ROOT.$dir_path.'/'.$u_id;
+            // Удаляем директорию, если она есть
+            $app_directory->removeDirectory($temp_user_dir);
+        }
         $_SESSION = array();
         session_destroy ();
         // Перенаправляем пользователя на главную страницу
