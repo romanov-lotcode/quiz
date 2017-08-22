@@ -151,6 +151,7 @@ $(document).ready(function() {
 		$('#uploadbtn').prop('value', null);
 		$('#p_i').prop('value', null);
 		$('#drop-files').show();
+		$('#img_path_img img').prop('src', null);
 		$('#img_path_img').hide();
 
 		// Очищаем массив

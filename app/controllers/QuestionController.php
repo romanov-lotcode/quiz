@@ -111,7 +111,6 @@ class QuestionController extends BaseController
         $errors = false;
         $date_time = new DateTime();
         $question = [];
-        $question_types = Question::getQuestionTypes();
         $test = null;
 
         $u_id = User::checkLogged();
@@ -344,20 +343,21 @@ class QuestionController extends BaseController
         $html_element['flag']->setName('flag');
         $html_element['flag']->setId('flag');
 
-        if (isset($_POST['path_img']))
+        if (isset($_POST['p_i']))
         {
-            //$question['path_img'] = $_POST['path_img'];
+            $question['path_img'] = htmlspecialchars($_POST['p_i']);
         }
 
         if (isset($_POST['add']))
         {
+            /**
+             * Обработка изображения Begin
+             */
             $user_dir = ROOT.'\\temp\\users\\'.$u_id;
-            print_r($_FILES['path_img']);
-
 
             $types = array('image/gif' => '.gif', 'image/png' => '.png', 'image/jpeg' => '.jpg');
 
-            $file_max_size = '3145728'; // 3Мб 3145728
+            $file_max_size = '3145728'; // 3Мб
             $file_max = 0;
 
             // Получаем максимальное значение файла из настроек php.ini
@@ -396,30 +396,29 @@ class QuestionController extends BaseController
             }
             if ($_FILES['path_img']['size'] > $file_max)
             {
-                $errors['path_img'] = 'Изображение превышает 3 Мб';
+                $errors['path_img'] = 'Изображение не должно превышать 3 Мб';
             }
             if ($file_name != '')
             {
                 $full_file_path = $user_dir.'\\'.$file_name;
                 move_uploaded_file($_FILES['path_img']['tmp_name'], $full_file_path);
                 $question['path_img'] = $file_name;
-                $question['p_i'] = $file_name;
             }
+            /**
+             * Обработка изображения End
+             */
 
-
-
-
-            /*$html_element['name']->setValue($html_element['name']->getValue());
-            $html_element['testing_count']->setValue($html_element['testing_count']->getValue());
-            $html_element['question_count']->setValue($html_element['question_count']->getValue());
-            $html_element['minimum_score']->setValue($html_element['minimum_score']->getValue());
+            $html_element['name']->setValue($html_element['name']->getValue());
+            $html_element['number']->setValue($html_element['number']->getValue());
+            $html_element['explanation']->setValue($html_element['explanation']->getValue());
+            $html_element['comment']->setValue($html_element['comment']->getValue());
 
             $html_element['name']->check();
-            $html_element['testing_count']->check();
-            $html_element['question_count']->check();
-            $html_element['minimum_score']->check();
+            $html_element['number']->check();
+            $html_element['explanation']->check();
+            $html_element['comment']->check();
 
-            if ($option_testing_time_flag_select == APP_YES)
+            if ($option_question_time_flag_select == APP_YES)
             {
                 $html_element['hour']->setValue(trim(intval($html_element['hour']->getValue())));
                 $html_element['minute']->setValue(trim(intval($html_element['minute']->getValue())));
@@ -433,7 +432,7 @@ class QuestionController extends BaseController
                     && $html_element['minute']->getValue() == 0
                     && $html_element['second']->getValue() == 0)
                 {
-                    $errors['testing_time'] = 'Вы включили время, но время прохождения не задали.<br />Укажите часы или минуты, или секунды.';
+                    $errors['question_time'] = 'Вы включили время, но время для ответа на вопрос не задали.<br />Укажите часы или минуты, или секунды.';
                     $html_element['hour']->setCheck(false);
                     $html_element['minute']->setCheck(false);
                     $html_element['second']->setCheck(false);
@@ -445,34 +444,24 @@ class QuestionController extends BaseController
                 $errors['name'] = 'Ошибка в поле "'.$html_element['name']->getCaption().'".<br />Не может быть такой длины.';
             }
 
-            if (!$app_validate->checkInt($html_element['testing_count']->getValue(), false, true, 1, 999999))
+            if (!$app_validate->checkInt($html_element['number']->getValue(), true, true, 0, 999999))
             {
-                $html_element['testing_count']->setCheck(false);
+                $html_element['number']->setCheck(false);
             }
 
-            if (!$html_element['testing_count']->getCheck())
+            if (!$html_element['number']->getCheck())
             {
-                $errors['testing_count'] = 'Ошибка в поле "'.$html_element['testing_count']->getCaption().'".<br />Должно быть целым числом от 1 до 999999.';
+                $errors['number'] = 'Ошибка в поле "'.$html_element['number']->getCaption().'".<br />Должно быть целым числом от 0 до 999999.';
             }
 
-            if (!$app_validate->checkInt($html_element['question_count']->getValue(), false, true, 1, 999999))
+            if (!$html_element['explanation']->getCheck())
             {
-                $html_element['question_count']->setCheck(false);
+                $errors['explanation'] = 'Ошибка в поле "'.$html_element['explanation']->getCaption().'".<br />Не может быть такой длины.';
             }
 
-            if (!$html_element['question_count']->getCheck())
+            if (!$html_element['comment']->getCheck())
             {
-                $errors['question_count'] = 'Ошибка в поле "'.$html_element['question_count']->getCaption().'".<br />Должно быть целым числом от 1 до 999999.';
-            }
-
-            if (!$app_validate->checkInt($html_element['minimum_score']->getValue(), false, true, 1, 999999))
-            {
-                $html_element['minimum_score']->setCheck(false);
-            }
-
-            if (!$html_element['minimum_score']->getCheck())
-            {
-                $errors['minimum_score'] = 'Ошибка в поле "'.$html_element['minimum_score']->getCaption().'".<br />Должно быть целым числом от 1 до 999999.';
+                $errors['comment'] = 'Ошибка в поле "'.$html_element['comment']->getCaption().'".<br />Не может быть такой длины.';
             }
 
             if (!$app_validate->checkInt($html_element['hour']->getValue(), true, true, 0, 838))
@@ -503,43 +492,77 @@ class QuestionController extends BaseController
             if (!$html_element['second']->getCheck())
             {
                 $errors['second'] = 'Ошибка в поле "'.$html_element['second']->getCaption().'".<br />Должно быть целым числом от 0 до 59.';
-            }*/
+            }
 
-            /*if ($errors === false)
+            if ($errors === false)
             {
                 $time['hour'] = $html_element['hour']->getValue();
                 $time['minute'] = $html_element['minute']->getValue();
                 $time['second'] = $html_element['second']->getValue();
-                $testing['testing_time'] = $app_validate->getTimeFromArrayInt($time);
-                if (!$testing['testing_time'])
+                $question['question_time'] = $app_validate->getTimeFromArrayInt($time);
+                if (!$question['question_time'])
                 {
-                    $errors['testing_time'] = 'Не удалось установить время';
+                    $errors['question_time'] = 'Не удалось установить время';
                 }
+
+
                 if ($errors === false)
                 {
-                    $testing['name'] = $html_element['name']->getValue();
-                    $testing['test_id'] = $search['test_id'];
-                    $testing['testing_count'] = $html_element['testing_count']->getValue();
-                    $testing['question_count'] = $html_element['question_count']->getValue();
-                    $testing['is_question_random'] = $option_is_question_random_select;
-                    $testing['is_answer_random'] = $option_is_answer_random_select;
-                    $testing['minimum_score'] = $html_element['minimum_score']->getValue();
-                    // testing_time значение передано выше
-                    $testing['testing_time_flag'] = $option_testing_time_flag_select;
-                    $testing['change_user_id'] = User::checkLogged();
-                    $testing['change_datetime'] = $date_time->format('Y-m-d H:i:s');
-                    $testing['flag'] = $option_flag_select;
-                    $is_add = Testing::add($testing);
+                    $question['name'] = $html_element['name']->getValue();
+                    $question['number'] = $html_element['number']->getValue();
+                    $question['question_type_id'] = $option_question_type_selected;
+                    $question['explanation'] = $html_element['explanation']->getValue();
+                    $question['comment'] = $html_element['comment']->getValue();
+                    $question['test_id'] = $search['test_id'];
+                    $file_name = $question['path_img'];
+                    $question['path_img'] = '';
+                    // question_time значение передано выше
+                    $question['question_time_flag'] = $option_question_time_flag_select;
+                    $question['change_user_id'] = $u_id;
+                    $question['change_datetime'] = $date_time->format('Y-m-d H:i:s');
+                    $question['flag'] = $option_flag_select;
+
+                    $is_add = Question::add($question);
                     if ($is_add !== false)
                     {
-                        header('Location: /testing/index?'.$url_param);
+                        if ($file_name != null)
+                        {
+                            $file = $user_dir.'\\'.$file_name;
+                            if (file_exists($file))
+                            {
+                                $file_type = '';
+                                if (exif_imagetype($file) == IMAGETYPE_GIF)
+                                {
+                                    $file_type = '.gif';
+                                }
+                                if (exif_imagetype($file) == IMAGETYPE_JPEG)
+                                {
+                                    $file_type = '.jpg';
+                                }
+                                if (exif_imagetype($file) == IMAGETYPE_PNG)
+                                {
+                                    $file_type = '.png';
+                                }
+                                $name = $is_add.$file_type;
+                                copy($user_dir.'\\'.$file_name, ROOT.'\\app\\templates\\images\\questions\\'.$name);
+                                Question::updatePathImg($is_add, $name);
+                                foreach ($types as $key => $value)
+                                {
+                                    if (file_exists($user_dir.'\\path_img'.$value))
+                                    {
+                                        unlink($user_dir.'\\path_img'.$value);
+                                    }
+                                }
+                            }
+                        }
+                        header('Location: /question/index?'.$url_param);
                     }
                     else
                     {
                         $errors['add'] = 'Ничего не удалось добавить! Возможно у вас нет прав';
                     }
                 }
-            }*/
+            }
         }
 
         if ($is_can)

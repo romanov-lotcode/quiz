@@ -32,25 +32,26 @@ include APP_VIEWS . 'layouts/header.php';
                 <?= $html_element['name']->render(); ?>
             </div>
             <div class="uk-form-row uk-width-1-1">
-                <?= $html_element['number']->render(); ?>
-            </div>
-            <div class="uk-form-row uk-width-1-1">
-                <?= $html_element['question_type']->render($option_question_type, $optgroup_question_type); ?>
-            </div>
-
-            <div class="uk-form-row uk-width-1-1">
                 <!-- Область для перетаскивания -->
 
-                <div id="img_path_img">
-                    <span>Был выбран 1 файл</span>
-                    <a href="#" class="uk-button delete">Удалить</a><br /><br />
-                    <img src="http://quiz-v2/temp/users/<?= $u_id .'/'.$file_name ?>" class="image">
-                </div>
+                <?php
+                $img_show = 0;
+                if ($question['path_img'] != null)
+                {
+                    $img_show = 1;
+                }
+                ?>
 
-                <div id="drop-files" ondragover="return false" class="uk-form-file">
+                <div id="drop-files" ondragover="return false" class="uk-form-file" <?php if ($img_show == 1) echo 'style="display:none;"' ?>>
                     Выберите или перетащите изображение сюда
                     <input type="hidden" name="p_i" value="<?= $question['path_img'] ?>" id="p_i" />
                     <input type="file" id="uploadbtn" name="path_img" />
+                </div>
+
+                <div id="img_path_img" <?php if ($img_show == 0) echo 'style="display:none;"' ?>>
+                    <span>Был выбран 1 файл</span>
+                    <a href="#" class="uk-button delete">Удалить</a><br /><br />
+                    <img src="http://quiz-v2/temp/users/<?= $u_id .'/'.$question['path_img'] ?>" class="image">
                 </div>
 
                 <!-- Область предпросмотра -->
@@ -77,7 +78,12 @@ include APP_VIEWS . 'layouts/header.php';
                     </ul>
                 </div>
             </div>
-
+            <div class="uk-form-row uk-width-1-1">
+                <?= $html_element['number']->render(); ?>
+            </div>
+            <div class="uk-form-row uk-width-1-1">
+                <?= $html_element['question_type']->render($option_question_type, $optgroup_question_type); ?>
+            </div>
             <div class="uk-form-row uk-width-1-1">
                 <?= $html_element['explanation']->render(); ?>
             </div>
@@ -95,7 +101,7 @@ include APP_VIEWS . 'layouts/header.php';
                 >
                 <table class="uk-width-1-1 search_param">
                     <tr>
-                        <td align="center" colspan="3"><label>Время прохождения</label></td>
+                        <td align="center" colspan="3"><label>Время для ответа на вопрос</label></td>
                     </tr>
                     <tr>
                         <td class="uk-width-1-3">
@@ -134,10 +140,6 @@ include APP_VIEWS . 'layouts/header.php';
                 document.getElementById(id_changed_element).style.display='none'; // Скроет слой
             }
         }
-    </script>
-    <script type="text/javascript">
-        var p_i = '<?= $question['p_i']; ?>';
-
     </script>
 
 
