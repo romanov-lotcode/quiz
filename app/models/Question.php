@@ -15,6 +15,51 @@ class Question
      *****************************************************/
 
     /**
+     * Получить информацию о вопросе
+     * @param int $id - ID вопроса
+     * @return bool|array
+     */
+    public static function getQuestion($id)
+    {
+        $sql = 'SELECT
+          question.id,
+          question.name,
+          question.number,
+          question.question_type_id,
+          question.explanation,
+          question.`comment`,
+          question.test_id,
+          question.path_img,
+          question.question_time,
+          question.question_time_flag,
+          question.change_user_id,
+          question.change_datetime,
+          question.flag,
+          test.name AS test_name,
+          user.lastname,
+          user.firstname,
+          user.middlename
+        FROM
+          question
+          INNER JOIN test ON (question.test_id = test.id)
+          INNER JOIN user ON (question.change_user_id = user.id)
+        WHERE
+          question.id = :id';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $id, PDO::PARAM_INT);
+        $result->execute();
+
+        // Обращаемся к записи
+        $question = $result->fetch(PDO::FETCH_ASSOC);
+
+        if ($question) {
+            return $question;
+        }
+        return false;
+    }
+
+    /**
      * Получить вопросы по параметрам поиска
      * @param [] $search - параметры поиска
      * @return array
