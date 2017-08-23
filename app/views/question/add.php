@@ -36,7 +36,7 @@ include APP_VIEWS . 'layouts/header.php';
 
                 <?php
                 $img_show = 0;
-                if ($question['path_img'] != null)
+                if ($question['path_img'] != null && file_exists($full_file_path))
                 {
                     $img_show = 1;
                 }
