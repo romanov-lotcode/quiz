@@ -123,10 +123,11 @@ include APP_VIEWS . 'layouts/header.php';
             <div class="uk-form-row uk-width-1-1">
                 <?= $html_element['flag']->render($option_flag, $optgroup_flag) ?>
             </div>
-
+            <?php if ($question['flag'] != FLAG_NO_CHANGE): ?>
             <div class="uk-form-row uk-width-1-1">
                 <button class="uk-button" name="edit">Редактировать</button>
             </div>
+            <?php endif;//if ($question['flag'] != FLAG_NO_CHANGE): ?>
 
         </form>
     </div>
