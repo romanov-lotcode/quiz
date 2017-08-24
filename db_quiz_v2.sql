@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 20 2017 г., 22:22
+-- Время создания: Авг 24 2017 г., 16:31
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.5.33
 
@@ -19,6 +19,30 @@ SET time_zone = "+00:00";
 --
 -- База данных: `db_quiz_v2`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `answer`
+--
+
+CREATE TABLE IF NOT EXISTS `answer` (
+  `id` int(11) NOT NULL,
+  `name` varchar(1024) NOT NULL,
+  `question_id` int(11) NOT NULL,
+  `complexity_coefficient` int(1) NOT NULL DEFAULT '0',
+  `change_user_id` int(11) NOT NULL,
+  `change_datetime` datetime NOT NULL,
+  `flag` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `answer`
+--
+
+INSERT INTO `answer` (`id`, `name`, `question_id`, `complexity_coefficient`, `change_user_id`, `change_datetime`, `flag`) VALUES
+(1, 'Правильный', 1, 10, 1, '2017-08-01 00:00:00', 1),
+(2, 'Не правильный', 1, 0, 1, '2017-08-01 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -128,14 +152,18 @@ CREATE TABLE IF NOT EXISTS `question` (
   `change_user_id` int(11) NOT NULL,
   `change_datetime` datetime NOT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `question`
 --
 
 INSERT INTO `question` (`id`, `name`, `number`, `question_type_id`, `explanation`, `comment`, `test_id`, `path_img`, `question_time`, `question_time_flag`, `change_user_id`, `change_datetime`, `flag`) VALUES
-(1, 'Вопрос А', 1, 0, NULL, NULL, 1, NULL, '00:00:00', 2, 0, '2017-08-18 00:00:00', 1);
+(1, 'Вопрос А', 1, 0, NULL, NULL, 1, NULL, '00:00:00', 2, 0, '2017-08-18 00:00:00', 0),
+(2, 'Какая машина изображена на рисунке?', 2, 0, 'На изображении изображена Audi A4', '', 1, '', '00:00:00', 2, 1, '2017-08-22 12:43:18', 1),
+(8, 'фыв', 0, 0, '', '', 1, '8.jpg', '00:00:00', 2, 1, '2017-08-24 15:17:59', -1),
+(12, '22244', 40, 1, '1', '2', 1, '12.jpg', '00:01:00', 1, 1, '2017-08-24 14:31:21', 1),
+(13, 'Вопрос', 0, 0, '', '', 1, '', '00:20:00', 1, 1, '2017-08-23 15:57:17', 2);
 
 -- --------------------------------------------------------
 
@@ -238,7 +266,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `changed_datetime` datetime DEFAULT NULL,
   `changed_user_id` int(11) DEFAULT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user`
@@ -247,7 +275,8 @@ CREATE TABLE IF NOT EXISTS `user` (
 INSERT INTO `user` (`id`, `lastname`, `firstname`, `middlename`, `login`, `password`, `email`, `registered_datetime`, `last_test_datetime`, `changed_datetime`, `changed_user_id`, `flag`) VALUES
 (0, 'Нет', '', NULL, '', '123456', NULL, '2017-08-01 00:00:00', NULL, NULL, NULL, 1),
 (1, 'Романов', 'Сергей', 'Сергеевич', 'romanovss', 'dca20cd83717c9596b17e66822f7f507', '', '2017-05-13 22:32:42', NULL, NULL, NULL, 1),
-(2, 'Романов', 'Сергей', 'По Умолчанию', 'defromanov', 'dca20cd83717c9596b17e66822f7f507', 's.nichipurenko@yandex.ru', '2017-05-31 18:39:03', NULL, NULL, NULL, 1);
+(2, 'Романов', 'Сергей', 'По Умолчанию', 'defromanov', 'dca20cd83717c9596b17e66822f7f507', 's.nichipurenko@yandex.ru', '2017-05-31 18:39:03', NULL, NULL, NULL, 1),
+(3, 'Романов', 'Серж', '', 'serjserj', 'dca20cd83717c9596b17e66822f7f507', '', '2017-08-21 09:15:46', NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -259,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `user_or_app_right` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL DEFAULT '0',
   `app_right_id` int(11) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user_or_app_right`
@@ -275,11 +304,19 @@ INSERT INTO `user_or_app_right` (`id`, `user_id`, `app_right_id`) VALUES
 (7, 2, 2),
 (8, 1, 7),
 (9, 1, 8),
-(10, 1, 9);
+(10, 1, 9),
+(11, 3, 1),
+(12, 3, 2);
 
 --
 -- Индексы сохранённых таблиц
 --
+
+--
+-- Индексы таблицы `answer`
+--
+ALTER TABLE `answer`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Индексы таблицы `app_right`
@@ -341,6 +378,11 @@ ALTER TABLE `user_or_app_right`
 --
 
 --
+-- AUTO_INCREMENT для таблицы `answer`
+--
+ALTER TABLE `answer`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT для таблицы `app_right`
 --
 ALTER TABLE `app_right`
@@ -359,7 +401,7 @@ ALTER TABLE `menu_panel`
 -- AUTO_INCREMENT для таблицы `question`
 --
 ALTER TABLE `question`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT для таблицы `question_type`
 --
@@ -379,12 +421,12 @@ ALTER TABLE `testing`
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT для таблицы `user_or_app_right`
 --
 ALTER TABLE `user_or_app_right`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
