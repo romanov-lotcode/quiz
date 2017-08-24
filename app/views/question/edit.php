@@ -24,9 +24,9 @@ include APP_VIEWS . 'layouts/header.php';
                 <legend class="app">Редактировать</legend>
             </div>
             <div class="uk-form-row uk-width-1-1">
-                <?php if($test['name'] != null): ?>
-                    Тест: "<?= $test['name'] ?>"
-                <?php endif; //if($test['name'] != null) ?>
+                <?php if($question['test_name'] != null): ?>
+                    Тест: "<?= $question['test_name'] ?>"
+                <?php endif; //if($question['test_name'] != null): ?>
             </div>
             <div class="uk-form-row uk-width-1-1">
                 <?= $html_element['name']->render(); ?>
@@ -36,22 +36,25 @@ include APP_VIEWS . 'layouts/header.php';
 
                 <?php
                 $img_show = 0;
+
                 if ($question['path_img'] != null && file_exists($full_file_path))
                 {
                     $img_show = 1;
                 }
                 ?>
 
+                <?php if ($question['flag'] != FLAG_NO_CHANGE): ?>
                 <div id="drop-files" ondragover="return false" class="uk-form-file" <?php if ($img_show == 1) echo 'style="display:none;"' ?>>
                     Выберите или перетащите изображение сюда
                     <input type="hidden" name="p_i" value="<?= $question['path_img'] ?>" id="p_i" />
                     <input type="file" id="uploadbtn" name="path_img" />
                 </div>
+                <?php endif; //if ($question['flag'] != FLAG_NO_CHANGE): ?>
 
                 <div id="img_path_img" <?php if ($img_show == 0) echo 'style="display:none;"' ?>>
                     <span>Был выбран 1 файл</span>
                     <a href="#" class="uk-button delete">Удалить</a><br /><br />
-                    <img src="http://quiz-v2/temp/users/<?= $u_id .'/'.$question['path_img'] ?>" class="image">
+                    <img src="<?= $img_src ?>" class="image">
                 </div>
 
                 <!-- Область предпросмотра -->

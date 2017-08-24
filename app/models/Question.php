@@ -216,4 +216,30 @@ class Question
         $result->bindParam(':path_img', $path, PDO::PARAM_INT);
         $result->execute();
     }
+
+    public static function edit($question)
+    {
+        $sql = 'UPDATE question
+          SET name = :name, number = :number, question_type_id = :question_type_id, explanation = :explanation,
+          comment = :comment, test_id = :test_id, path_img = :path_img, question_time = :question_time,
+          question_time_flag = :question_time_flag, change_user_id = :change_user_id,
+          change_datetime = :change_datetime, flag = :flag
+          WHERE id = :id AND flag > 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $question['id'], PDO::PARAM_INT);
+        $result->bindParam(':name', $question['name'], PDO::PARAM_STR);
+        $result->bindParam(':number', $question['number'], PDO::PARAM_INT);
+        $result->bindParam(':question_type_id', $question['question_type_id'], PDO::PARAM_INT);
+        $result->bindParam(':explanation', $question['explanation'], PDO::PARAM_STR);
+        $result->bindParam(':comment', $question['comment'], PDO::PARAM_STR);
+        $result->bindParam(':test_id', $question['test_id'], PDO::PARAM_INT);
+        $result->bindParam(':path_img', $question['path_img'], PDO::PARAM_STR);
+        $result->bindParam(':question_time', $question['question_time'], PDO::PARAM_STR);
+        $result->bindParam(':question_time_flag', $question['question_time_flag'], PDO::PARAM_INT);
+        $result->bindParam(':change_user_id', $question['change_user_id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $question['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':flag', $question['flag'], PDO::PARAM_INT);
+        $result->execute();
+    }
 }

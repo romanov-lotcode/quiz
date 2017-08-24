@@ -591,6 +591,12 @@ class QuestionController extends BaseController
         $u_id = User::checkLogged();
 
         $full_file_path = '';
+        $is_new_file_name = false;
+        $img_delete = false;
+        $old_file = '';
+        $img_src = '';
+        $src_1 = 'http://quiz-v2/temp/users/'. $u_id .'/';
+        $src_2 = 'http://quiz-v2/app/templates/images/questions/';
 
         foreach ($user_right as $u_r)
         {
@@ -637,6 +643,7 @@ class QuestionController extends BaseController
             .'&tid='.$search['test_id'].'&page='.$page.'&s_q_name='.$search['name'];
 
         $question = Question::getQuestion($qid);
+        $old_file = $question['path_img'];
 
         $html_element['name'] = new \HTMLElement\HTMLTextTextareaElement();
         $html_element['name']->setName('name');
@@ -848,10 +855,263 @@ class QuestionController extends BaseController
             $option_flag_select = FLAG_NO_CHANGE;
         }
 
+
+        if (isset($_POST['p_i']))
+        {
+            $question['path_img'] = htmlspecialchars($_POST['p_i']);
+        }
+
+        $img_src = $src_2;
+        $full_file_path = ROOT . '\\app\\templates\\images\\questions\\'.$question['path_img'];
+
         if (isset($_POST['edit']))
         {
+            if ($qid != $question['id'])
+            {
+                $errors['id'] = 'Невозможно внести изменения для данного вопроса';
+            }
+            /**
+             * Обработка изображения Begin
+             */
+            $user_dir = ROOT.'\\temp\\users\\'.$u_id;
+
+            $types = array('image/gif' => '.gif', 'image/png' => '.png', 'image/jpeg' => '.jpg');
+
+            $file_max_size = '3145728'; // 3Мб
+            $file_max = 0;
+
+            // Получаем максимальное значение файла из настроек php.ini
+            $file_max_size_php_ini = ini_get('post_max_size');
+
+            $file_max_size_php_ini = $this->parse_size($file_max_size_php_ini);
+            if ((int)$file_max_size <= (int)$file_max_size_php_ini)
+            {
+                $file_max = $file_max_size;
+            }
+            else
+            {
+                $file_max = $file_max_size_php_ini;
+            }
+
+            $file_type = '';
+            $file_name = '';
+
+            if ($_FILES['path_img']['error'] == UPLOAD_ERR_OK)
+            {
+                $i = 1;
+                foreach ($types as $key => $value)
+                {
+                    if ($key == $_FILES['path_img']['type'] && $_FILES['path_img']['size'] <= $file_max)
+                    {
+                        $file_type = $value;
+                        $file_name = 'path_img'.$file_type;
+                        break;
+                    }
+                    $i++;
+                }
+                if ($i == count($types)+1)
+                {
+                    $errors['path_img'] = 'Изображение должно быть формата .jpg, .png или .gif';
+                }
+            }
+            if ($_FILES['path_img']['size'] > $file_max)
+            {
+                $errors['path_img'] = 'Изображение не должно превышать 3 Мб';
+            }
+            if ($file_name != '')
+            {
+                $full_file_path = $user_dir.'\\'.$file_name;
+                move_uploaded_file($_FILES['path_img']['tmp_name'], $full_file_path);
+                $question['path_img'] = $file_name;
+                $is_new_file_name = true;
+            }
+
+            if ($is_new_file_name)
+            {
+                $img_src = $src_1;
+            }
+
+            /**
+             * Обработка изображения End
+             */
+
+            if ($question['path_img'] == null)
+            {
+                $img_delete = true;
+            }
+
+            $html_element['name']->setValue($html_element['name']->getValue());
+            $html_element['number']->setValue($html_element['number']->getValue());
+            $html_element['explanation']->setValue($html_element['explanation']->getValue());
+            $html_element['comment']->setValue($html_element['comment']->getValue());
+
+            $html_element['name']->check();
+            $html_element['number']->check();
+            $html_element['explanation']->check();
+            $html_element['comment']->check();
+
+            if ($option_question_time_flag_select == APP_YES)
+            {
+                $html_element['hour']->setValue(trim(intval($html_element['hour']->getValue())));
+                $html_element['minute']->setValue(trim(intval($html_element['minute']->getValue())));
+                $html_element['second']->setValue(trim(intval($html_element['second']->getValue())));
+
+                $html_element['hour']->check();
+                $html_element['minute']->check();
+                $html_element['second']->check();
+
+                if ($html_element['hour']->getValue() == 0
+                    && $html_element['minute']->getValue() == 0
+                    && $html_element['second']->getValue() == 0)
+                {
+                    $errors['question_time'] = 'Вы включили время, но время для ответа на вопрос не задали.<br />Укажите часы или минуты, или секунды.';
+                    $html_element['hour']->setCheck(false);
+                    $html_element['minute']->setCheck(false);
+                    $html_element['second']->setCheck(false);
+                }
+            }
+
+            if (!$html_element['name']->getCheck())
+            {
+                $errors['name'] = 'Ошибка в поле "'.$html_element['name']->getCaption().'".<br />Не может быть такой длины.';
+            }
+
+            if (!$app_validate->checkInt($html_element['number']->getValue(), true, true, 0, 999999))
+            {
+                $html_element['number']->setCheck(false);
+            }
+
+            if (!$html_element['number']->getCheck())
+            {
+                $errors['number'] = 'Ошибка в поле "'.$html_element['number']->getCaption().'".<br />Должно быть целым числом от 0 до 999999.';
+            }
+
+            if (!$html_element['explanation']->getCheck())
+            {
+                $errors['explanation'] = 'Ошибка в поле "'.$html_element['explanation']->getCaption().'".<br />Не может быть такой длины.';
+            }
+
+            if (!$html_element['comment']->getCheck())
+            {
+                $errors['comment'] = 'Ошибка в поле "'.$html_element['comment']->getCaption().'".<br />Не может быть такой длины.';
+            }
+
+            if (!$app_validate->checkInt($html_element['hour']->getValue(), true, true, 0, 838))
+            {
+                $html_element['hour']->setCheck(false);
+            }
+
+            if (!$html_element['hour']->getCheck())
+            {
+                $errors['hour'] = 'Ошибка в поле "'.$html_element['hour']->getCaption().'".<br />Должно быть целым числом от 0 до 838.';
+            }
+
+            if (!$app_validate->checkInt($html_element['minute']->getValue(), true, true, 0, 59))
+            {
+                $html_element['minute']->setCheck(false);
+            }
+
+            if (!$html_element['minute']->getCheck())
+            {
+                $errors['minute'] = 'Ошибка в поле "'.$html_element['minute']->getCaption().'".<br />Должно быть целым числом от 0 до 59.';
+            }
+
+            if (!$app_validate->checkInt($html_element['second']->getValue(), true, true, 0, 59))
+            {
+                $html_element['second']->setCheck(false);
+            }
+
+            if (!$html_element['second']->getCheck())
+            {
+                $errors['second'] = 'Ошибка в поле "'.$html_element['second']->getCaption().'".<br />Должно быть целым числом от 0 до 59.';
+            }
+
+            if ($errors === false)
+            {
+                $time['hour'] = $html_element['hour']->getValue();
+                $time['minute'] = $html_element['minute']->getValue();
+                $time['second'] = $html_element['second']->getValue();
+                $question['question_time'] = $app_validate->getTimeFromArrayInt($time);
+                if (!$question['question_time'])
+                {
+                    $errors['question_time'] = 'Не удалось установить время';
+                }
+
+                if ($errors === false)
+                {
+                    $question['name'] = $html_element['name']->getValue();
+                    $question['number'] = $html_element['number']->getValue();
+                    $question['question_type_id'] = $option_question_type_selected;
+                    $question['explanation'] = $html_element['explanation']->getValue();
+                    $question['comment'] = $html_element['comment']->getValue();
+                    $question['test_id'] = $search['test_id'];
+                    $file_name = $question['path_img'];
+                    $question['path_img'] = '';
+
+                    $file_type = '';
+                    $name = '';
+                    if (!$is_new_file_name)
+                    {
+                        if (!$img_delete)
+                        {
+                            $name = $old_file;
+                        }
+                    }
+                    // question_time значение передано выше
+                    $question['question_time_flag'] = $option_question_time_flag_select;
+                    $question['change_user_id'] = $u_id;
+                    $question['change_datetime'] = $date_time->format('Y-m-d H:i:s');
+                    $question['flag'] = $option_flag_select;
+
+                    Question::edit($question);
+
+                    $old_file_path = ROOT.'\\app\\templates\\images\\questions\\'.$old_file;
+                    if ($img_delete)
+                    {
+                        if (file_exists($old_file_path))
+                        {
+                            unlink($old_file_path);
+                        }
+                        goto _gt_index;
+                    }
+
+                    if ($is_new_file_name)
+                    {
+                        $file = $user_dir.'\\'.$file_name;
+                        if (file_exists($file))
+                        {
+                            if (exif_imagetype($file) == IMAGETYPE_GIF)
+                            {
+                                $file_type = '.gif';
+                            }
+                            if (exif_imagetype($file) == IMAGETYPE_JPEG)
+                            {
+                                $file_type = '.jpg';
+                            }
+                            if (exif_imagetype($file) == IMAGETYPE_PNG)
+                            {
+                                $file_type = '.png';
+                            }
+                            $name = $question['id'].$file_type;
+                            copy($user_dir.'\\'.$file_name, ROOT.'\\app\\templates\\images\\questions\\'.$name);
+                            foreach ($types as $key => $value)
+                            {
+                                if (file_exists($user_dir.'\\path_img'.$value))
+                                {
+                                    unlink($user_dir.'\\path_img'.$value);
+                                }
+                            }
+                        }
+                    }
+
+                    _gt_index:
+                    Question::updatePathImg($question['id'], $name);
+                    header('Location: /question/index?'.$url_param);
+                }
+            }
 
         }
+        $img_src .= $question['path_img'];
 
         if ($is_can)
         {
