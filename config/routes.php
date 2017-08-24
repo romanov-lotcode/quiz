@@ -28,4 +28,5 @@ return [
     'question/index' => ['controller' => 'Question', 'action' => 'index'],
     'question/add' => ['controller' => 'Question', 'action' => 'add'],
     'question/edit' => ['controller' => 'Question', 'action' => 'edit'],
+    'question/delete' => ['controller' => 'Question', 'action' => 'delete'],
 ];

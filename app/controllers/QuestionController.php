@@ -1123,6 +1123,101 @@ class QuestionController extends BaseController
         }
     }
 
+    public function actionDelete()
+    {
+        $user_right = parent::getUserRight();
+        $app_validate = new App_Validate();
+        $url_param = '';
+        $is_can = false;
+        $search = [];
+        $page = 1;
+        $errors = false;
+        $date_time = new DateTime();
+        $question = [];
+        $qid = null;
+
+        foreach ($user_right as $u_r)
+        {
+            if ($u_r['right_name'] == CAN_MODERATOR_QUESTION)
+            {
+                $is_can = true;
+                break;
+            }
+        }
+
+        if (isset($_GET['s_direction']))
+        {
+            $search['direction_id'] = htmlspecialchars($_GET['s_direction']);
+        }
+        if (isset($_GET['tid']))
+        {
+            $search['test_id'] = htmlspecialchars($_GET['tid']);
+        }
+        if (isset($_GET['s_name']))
+        {
+            $search['test_name'] = htmlspecialchars($_GET['s_name']);
+        }
+        if (isset($_GET['page']))
+        {
+            $page = htmlspecialchars($_GET['page']);
+        }
+
+        if ($page < 1)
+        {
+            $page = 1;
+        }
+
+        if (isset($_GET['s_q_name']))
+        {
+            $search['name'] = htmlspecialchars($_GET['s_q_name']);
+        }
+
+        if (isset($_GET['qid']))
+        {
+            $qid = htmlspecialchars($_GET['qid']);
+        }
+
+        $url_param .= 's_direction='.$search['direction_id'].'&s_name='.$search['test_name']
+            .'&tid='.$search['test_id'].'&page='.$page.'&s_q_name='.$search['name'];
+
+        $question = Question::getQuestion($qid);
+
+        if ($question['flag'] == FLAG_NO_CHANGE)
+        {
+            $errors['no_change'] = 'Невозможно изменить данный вопрос';
+        }
+
+        if (isset($_POST['yes']))
+        {
+            if ($qid != $question['id'])
+            {
+                $errors['id'] = 'Невозможно внести изменения для данного вопроса';
+            }
+            if ($errors === false)
+            {
+                $question['change_user_id'] = User::checkLogged();
+                $question['change_datetime'] = $date_time->format('Y-m-d H:i:s');
+                Question::delete($question);
+
+                header('Location: /question/index?'.$url_param);
+            }
+        }
+
+        if (isset($_POST['no']))
+        {
+            header('Location: /question/index?'.$url_param);
+        }
+
+        if ($is_can)
+        {
+            include_once APP_VIEWS.'question/delete.php';
+        }
+        else
+        {
+            header('Location: /main/error');
+        }
+    }
+
     private function parse_size($value) {
         static $sizes = ['K' => 1024, 'M' => 1048576, 'G' => 1073741824];
         $last = substr($value, -1);

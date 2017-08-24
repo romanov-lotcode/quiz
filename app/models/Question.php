@@ -217,6 +217,10 @@ class Question
         $result->execute();
     }
 
+    /**
+     * Изменить запись
+     * @param [] $question - массив с данными
+     */
     public static function edit($question)
     {
         $sql = 'UPDATE question
@@ -240,6 +244,24 @@ class Question
         $result->bindParam(':change_user_id', $question['change_user_id'], PDO::PARAM_INT);
         $result->bindParam(':change_datetime', $question['change_datetime'], PDO::PARAM_STR);
         $result->bindParam(':flag', $question['flag'], PDO::PARAM_INT);
+        $result->execute();
+    }
+
+    /**
+     * Удалить вопрос (изменить флаг)
+     * @param [] $question - массив с данными
+     */
+    public static function delete($question)
+    {
+        $sql = 'UPDATE question
+          SET
+            change_datetime = :change_datetime, change_user_id = :change_user_id, flag = -1
+          WHERE id = :id AND flag > 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $question['id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $question['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $question['change_user_id'], PDO::PARAM_INT);
         $result->execute();
     }
 }
