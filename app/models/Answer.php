@@ -15,6 +15,45 @@ class Answer
      *****************************************************/
 
     /**
+     * Получить информацию по ID
+     * @param int $id - ID ответа
+     * @return bool|array
+     */
+    public static function getAnswer($id)
+    {
+        $sql = 'SELECT
+          answer.id,
+          answer.name,
+          answer.question_id,
+          answer.complexity_coefficient,
+          answer.change_user_id,
+          answer.change_datetime,
+          answer.flag,
+          question.name AS question_name,
+          user.lastname,
+          user.firstname,
+          user.middlename
+        FROM
+          answer
+          INNER JOIN question ON (answer.question_id = question.id)
+          INNER JOIN user ON (answer.change_user_id = user.id)
+        WHERE
+          answer.id = :id';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $id, PDO::PARAM_INT);
+        $result->execute();
+
+        // Обращаемся к записи
+        $answer = $result->fetch(PDO::FETCH_ASSOC);
+
+        if ($answer) {
+            return $answer;
+        }
+        return false;
+    }
+
+    /**
      * Получить ответы по параметрам поиска
      * @param [] $search - параметры поиска
      * @return array
@@ -120,5 +159,45 @@ class Answer
             return $db->lastInsertId();
         }
         return false;
+    }
+
+    /**
+     * Изменить запись
+     * @param [] $answer - массив с данными
+     */
+    public static function edit($answer)
+    {
+        $sql = 'UPDATE answer
+          SET name = :name, question_id = :question_id, complexity_coefficient = :complexity_coefficient,
+          change_user_id = :change_user_id, change_datetime = :change_datetime, flag = :flag
+          WHERE id = :id AND flag > 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $answer['id'], PDO::PARAM_INT);
+        $result->bindParam(':name', $answer['name'], PDO::PARAM_STR);
+        $result->bindParam(':question_id', $answer['question_id'], PDO::PARAM_INT);
+        $result->bindParam(':complexity_coefficient', $answer['complexity_coefficient'], PDO::PARAM_INT);
+        $result->bindParam(':change_user_id', $answer['change_user_id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $answer['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':flag', $answer['flag'], PDO::PARAM_INT);
+        $result->execute();
+    }
+
+    /**
+     * Удалить ответ (изменить флаг)
+     * @param [] $answer - массив с данными
+     */
+    public static function delete($answer)
+    {
+        $sql = 'UPDATE answer
+          SET
+            change_datetime = :change_datetime, change_user_id = :change_user_id, flag = -1
+          WHERE id = :id AND flag > 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $answer['id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $answer['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $answer['change_user_id'], PDO::PARAM_INT);
+        $result->execute();
     }
 }

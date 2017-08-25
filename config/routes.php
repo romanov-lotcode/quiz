@@ -32,4 +32,6 @@ return [
 
     'answer/index' => ['controller' => 'Answer', 'action' => 'index'],
     'answer/add' => ['controller' => 'Answer', 'action' => 'add'],
+    'answer/edit' => ['controller' => 'Answer', 'action' => 'edit'],
+    'answer/delete' => ['controller' => 'Answer', 'action' => 'delete'],
 ];
