@@ -96,4 +96,26 @@ class User_Group
         $result = ($page - 1) * self::SHOW_BY_DEFAULT;
         return $result;
     }
+
+    /**
+     * Добавляет новую группу пользователей
+     * @param [] $user_group - массив с данными
+     * @return bool|int
+     */
+    public static function add($user_group)
+    {
+        $sql = 'INSERT INTO user_group (name, change_user_id, change_datetime, flag)
+          VALUES (:name, :change_user_id, :change_datetime, :flag)';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':name', $user_group['name'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $user_group['change_user_id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $user_group['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':flag', $user_group['flag'], PDO::PARAM_INT);
+        if($result->execute())
+        {
+            return $db->lastInsertId();
+        }
+        return false;
+    }
 }
