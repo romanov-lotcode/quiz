@@ -37,3 +37,4 @@ define('CAN_MODERATOR_TEST', 'CAN_MODERATOR_TEST'); // Может изменят
 define('CAN_MODERATOR_TESTING', 'CAN_MODERATOR_TESTING'); // Может изменять Тестирование
 define('CAN_MODERATOR_QUESTION', 'CAN_MODERATOR_QUESTION'); // Может изменять Вопрос
 define('CAN_MODERATOR_ANSWER', 'CAN_MODERATOR_ANSWER'); // Может изменять Ответ
+define('CAN_MODERATOR_USER_GROUP', 'CAN_MODERATOR_USER_GROUP'); // Может изменять Группы пользователей
