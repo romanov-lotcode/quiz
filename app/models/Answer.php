@@ -38,7 +38,7 @@ class Answer
           INNER JOIN question ON (answer.question_id = question.id)
           INNER JOIN user ON (answer.change_user_id = user.id)
         WHERE
-          answer.id = :id';
+          answer.id = :id AND answer.flag >= 0';
         $db = Database::getConnection();
         $result = $db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);

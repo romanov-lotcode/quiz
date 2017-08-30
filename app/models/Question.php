@@ -44,7 +44,7 @@ class Question
           INNER JOIN test ON (question.test_id = test.id)
           INNER JOIN user ON (question.change_user_id = user.id)
         WHERE
-          question.id = :id';
+          question.id = :id AND question.flag >= 0';
         $db = Database::getConnection();
         $result = $db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);

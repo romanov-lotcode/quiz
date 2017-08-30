@@ -36,7 +36,7 @@ class Direction
         FROM
           direction
           INNER JOIN user ON (direction.change_user_id = user.id)
-        WHERE direction.id = :id';
+        WHERE direction.id = :id AND direction.flag >= 0';
         $db = Database::getConnection();
         $result = $db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
