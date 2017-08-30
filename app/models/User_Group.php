@@ -17,6 +17,41 @@ class User_Group
      *****************************************************/
 
     /**
+     * Возвращает запись о группе пользователе по его ID
+     * @param int $id - ID группы пользователя
+     * @return bool|array()
+     */
+    public static function getUserGroup($id)
+    {
+        $id = intval($id);
+        $sql = 'SELECT
+          user_group.id,
+          user_group.name,
+          user_group.change_user_id,
+          user_group.change_datetime,
+          user_group.flag,
+          user.lastname,
+          user.firstname,
+          user.middlename
+        FROM
+          user_group
+          INNER JOIN user ON (user_group.change_user_id = user.id)
+        WHERE user_group.id = :id';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $id, PDO::PARAM_INT);
+        $result->execute();
+
+        // Обращаемся к записи
+        $user_group = $result->fetch(PDO::FETCH_ASSOC);
+
+        if ($user_group) {
+            return $user_group;
+        }
+        return false;
+    }
+
+    /**
      * Получить данные по параметрам поиска
      * @param [] $search - параметры поиска
      * @param int $page - номер страницы
@@ -117,5 +152,25 @@ class User_Group
             return $db->lastInsertId();
         }
         return false;
+    }
+
+    /**
+     * Изменить запись
+     * @param [] $direction - массив с данными
+     */
+    public static function edit($user_group)
+    {
+        $sql = 'UPDATE user_group
+          SET name = :name, change_user_id = :change_user_id, change_datetime = :change_datetime,
+          flag = :flag
+          WHERE id = :id AND flag > 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $user_group['id'], PDO::PARAM_INT);
+        $result->bindParam(':name', $user_group['name'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $user_group['change_user_id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $user_group['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':flag', $user_group['flag'], PDO::PARAM_INT);
+        $result->execute();
     }
 }
