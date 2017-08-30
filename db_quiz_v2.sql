@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 24 2017 г., 16:31
+-- Время создания: Авг 30 2017 г., 11:41
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.5.33
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `answer` (
   `change_user_id` int(11) NOT NULL,
   `change_datetime` datetime NOT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `answer`
@@ -42,7 +42,9 @@ CREATE TABLE IF NOT EXISTS `answer` (
 
 INSERT INTO `answer` (`id`, `name`, `question_id`, `complexity_coefficient`, `change_user_id`, `change_datetime`, `flag`) VALUES
 (1, 'Правильный', 1, 10, 1, '2017-08-01 00:00:00', 1),
-(2, 'Не правильный', 1, 0, 1, '2017-08-01 00:00:00', 1);
+(2, 'Не правильный', 1, 0, 1, '2017-08-25 15:04:41', 1),
+(3, 'Тоже неправильный ответ', 1, 0, 1, '2017-08-25 14:37:14', 1),
+(4, 'удалить', 1, 3, 1, '2017-08-25 15:43:30', -1);
 
 -- --------------------------------------------------------
 
@@ -56,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `app_right` (
   `right_name` varchar(64) NOT NULL COMMENT 'Наименование правила',
   `description` varchar(512) DEFAULT NULL COMMENT 'Описание',
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `app_right`
@@ -71,7 +73,8 @@ INSERT INTO `app_right` (`id`, `right_value`, `right_name`, `description`, `flag
 (6, 32, 'CAN_MODERATOR_DIRECTION', 'Может работать с направлениями', 1),
 (7, 64, 'CAN_MODERATOR_TESTING', 'Может работать с тестированиями', 1),
 (8, 128, 'CAN_MODERATOR_QUESTION', 'Может работать с вопросами', 1),
-(9, 256, 'CAN_MODERATOR_ANSWER', 'Может работать с ответами', 1);
+(9, 256, 'CAN_MODERATOR_ANSWER', 'Может работать с ответами', 1),
+(10, 512, 'CAN_MODERATOR_USER_GROUP', 'Может работать с группами пользователей', 1);
 
 -- --------------------------------------------------------
 
@@ -118,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `menu_panel` (
   `index_number` int(1) NOT NULL DEFAULT '0' COMMENT 'Порядковый номер',
   `member` int(1) NOT NULL DEFAULT '0' COMMENT 'Член группы',
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `menu_panel`
@@ -130,7 +133,8 @@ INSERT INTO `menu_panel` (`id`, `name`, `page_name`, `icon_name`, `title`, `desc
 (3, 'Модератор', 'moderator', 'gear', 'Настройки модератора', 'Модератор обладает правами настройки тестов, направлений, тестирований и т.п.', 2, '#', 0, 2, 8, 1),
 (4, 'Тест', 'moderator', 'gear', 'Настроить тест', 'Настройки тестов', 1, '/test/index', 3, 2, 16, 1),
 (5, 'Направление', 'moderator', 'gear', 'Настроить направление', 'Настройка направлений', 1, '/direction/index', 3, 1, 32, 1),
-(6, 'Тестирование', 'moderator', 'gear', 'Настроить тест', 'Настройки тестирований', 1, '/testing/index', 3, 3, 64, 1);
+(6, 'Тестирование', 'moderator', 'gear', 'Настроить тестирование', 'Настройки тестирований', 1, '/testing/index', 3, 3, 64, 1),
+(7, 'Группа пользователей', 'moderator', 'gear', 'Настроить группу пользователей', 'Настройки групп пользователей', 1, '/user_group/index', 3, 4, 512, 1);
 
 -- --------------------------------------------------------
 
@@ -152,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `question` (
   `change_user_id` int(11) NOT NULL,
   `change_datetime` datetime NOT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `question`
@@ -281,6 +285,29 @@ INSERT INTO `user` (`id`, `lastname`, `firstname`, `middlename`, `login`, `passw
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `user_group`
+--
+
+CREATE TABLE IF NOT EXISTS `user_group` (
+  `id` int(11) NOT NULL,
+  `name` varchar(256) NOT NULL,
+  `changed_datetime` datetime NOT NULL,
+  `changed_user_id` int(11) NOT NULL,
+  `flag` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `user_group`
+--
+
+INSERT INTO `user_group` (`id`, `name`, `changed_datetime`, `changed_user_id`, `flag`) VALUES
+(0, 'Нет', '2017-08-01 00:00:00', 1, 1),
+(1, 'Группа1', '2017-08-24 00:00:00', 1, 1),
+(2, 'Группа2', '2017-08-02 00:00:00', 1, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `user_or_app_right`
 --
 
@@ -288,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `user_or_app_right` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL DEFAULT '0',
   `app_right_id` int(11) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user_or_app_right`
@@ -306,7 +333,8 @@ INSERT INTO `user_or_app_right` (`id`, `user_id`, `app_right_id`) VALUES
 (9, 1, 8),
 (10, 1, 9),
 (11, 3, 1),
-(12, 3, 2);
+(12, 3, 2),
+(13, 1, 10);
 
 --
 -- Индексы сохранённых таблиц
@@ -368,6 +396,12 @@ ALTER TABLE `user`
   ADD UNIQUE KEY `login` (`login`);
 
 --
+-- Индексы таблицы `user_group`
+--
+ALTER TABLE `user_group`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Индексы таблицы `user_or_app_right`
 --
 ALTER TABLE `user_or_app_right`
@@ -381,12 +415,12 @@ ALTER TABLE `user_or_app_right`
 -- AUTO_INCREMENT для таблицы `answer`
 --
 ALTER TABLE `answer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT для таблицы `app_right`
 --
 ALTER TABLE `app_right`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT для таблицы `direction`
 --
@@ -396,12 +430,12 @@ ALTER TABLE `direction`
 -- AUTO_INCREMENT для таблицы `menu_panel`
 --
 ALTER TABLE `menu_panel`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT для таблицы `question`
 --
 ALTER TABLE `question`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT для таблицы `question_type`
 --
@@ -423,10 +457,15 @@ ALTER TABLE `testing`
 ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
+-- AUTO_INCREMENT для таблицы `user_group`
+--
+ALTER TABLE `user_group`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
 -- AUTO_INCREMENT для таблицы `user_or_app_right`
 --
 ALTER TABLE `user_or_app_right`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
