@@ -197,7 +197,7 @@ class UserGroupController extends BaseController
 
         foreach ($user_right as $u_r)
         {
-            if ($u_r['right_name'] == CAN_MODERATOR_DIRECTION)
+            if ($u_r['right_name'] == CAN_MODERATOR_USER_GROUP)
             {
                 $is_can = true;
                 break;
@@ -312,6 +312,89 @@ class UserGroupController extends BaseController
         if ($is_can)
         {
             include_once APP_VIEWS.'user_group/edit.php';
+        }
+        else
+        {
+            header('Location: /main/error');
+        }
+    }
+
+    public function actionDelete()
+    {
+        $user_right = parent::getUserRight();
+        $url_param = '';
+        $is_can = false;
+        $search = [];
+        $page = 1;
+        $errors = false;
+        $date_time = new DateTime();
+        $user_group = [];
+        $ugid = null;
+
+        foreach ($user_right as $u_r)
+        {
+            if ($u_r['right_name'] == CAN_MODERATOR_USER_GROUP)
+            {
+                $is_can = true;
+                break;
+            }
+        }
+
+        if (isset($_GET['s_name']))
+        {
+            $search['name'] = htmlspecialchars($_GET['s_name']);
+        }
+        if (isset($_GET['page']))
+        {
+            $page = intval(htmlspecialchars($_GET['page']));
+            if ($page < 1)
+            {
+                $page = 1;
+            }
+        }
+        if (isset($_GET['ugid']))
+        {
+            $ugid = htmlspecialchars($_GET['ugid']);
+        }
+
+        $url_param .= 's_name='.$search['name'];
+
+        $user_group = User_Group::getUserGroup($ugid);
+
+        if ($user_group['flag'] == FLAG_NO_CHANGE)
+        {
+            $errors['no_change'] = 'Невозможно изменить данную группу пользователей';
+        }
+
+        if (isset($_POST['yes']))
+        {
+            if ($ugid != $user_group['id'])
+            {
+                $errors['id'] = 'Невозможно внести изменения для данной группы пользователей';
+            }
+            if ($errors === false)
+            {
+                $user_group['change_user_id'] = User::checkLogged();
+                $user_group['change_datetime'] = $date_time->format('Y-m-d H:i:s');
+                User_Group::delete($user_group);
+                $total = User_Group::getTotalUserGroups($search);
+                if ($total <= User_Group::SHOW_BY_DEFAULT)
+                {
+                    $page = 1;
+                }
+                $url_param .= '&page='.$page;
+                header('Location: /user_group/index?'.$url_param);
+            }
+        }
+        $url_param .= '&page='.$page;
+        if (isset($_POST['no']))
+        {
+            header('Location: /user_group/index?'.$url_param);
+        }
+
+        if ($is_can)
+        {
+            include_once APP_VIEWS.'user_group/delete.php';
         }
         else
         {

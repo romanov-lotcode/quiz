@@ -36,7 +36,7 @@ class User_Group
         FROM
           user_group
           INNER JOIN user ON (user_group.change_user_id = user.id)
-        WHERE user_group.id = :id';
+        WHERE user_group.id = :id AND user_group.flag >= 0';
         $db = Database::getConnection();
         $result = $db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
@@ -156,7 +156,7 @@ class User_Group
 
     /**
      * Изменить запись
-     * @param [] $direction - массив с данными
+     * @param [] $user_group - массив с данными
      */
     public static function edit($user_group)
     {
@@ -171,6 +171,24 @@ class User_Group
         $result->bindParam(':change_user_id', $user_group['change_user_id'], PDO::PARAM_INT);
         $result->bindParam(':change_datetime', $user_group['change_datetime'], PDO::PARAM_STR);
         $result->bindParam(':flag', $user_group['flag'], PDO::PARAM_INT);
+        $result->execute();
+    }
+
+    /**
+     * Удалить группу пользователей (изменить флаг)
+     * @param [] $user_group - массив с данными
+     */
+    public static function delete($user_group)
+    {
+        $sql = 'UPDATE user_group
+          SET
+            change_datetime = :change_datetime, change_user_id = :change_user_id, flag = -1
+          WHERE id = :id AND flag > 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $user_group['id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $user_group['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $user_group['change_user_id'], PDO::PARAM_INT);
         $result->execute();
     }
 }
