@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 30 2017 г., 11:41
+-- Время создания: Авг 30 2017 г., 13:11
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.5.33
 
@@ -291,19 +291,21 @@ INSERT INTO `user` (`id`, `lastname`, `firstname`, `middlename`, `login`, `passw
 CREATE TABLE IF NOT EXISTS `user_group` (
   `id` int(11) NOT NULL,
   `name` varchar(256) NOT NULL,
-  `changed_datetime` datetime NOT NULL,
-  `changed_user_id` int(11) NOT NULL,
+  `change_datetime` datetime NOT NULL,
+  `change_user_id` int(11) NOT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user_group`
 --
 
-INSERT INTO `user_group` (`id`, `name`, `changed_datetime`, `changed_user_id`, `flag`) VALUES
+INSERT INTO `user_group` (`id`, `name`, `change_datetime`, `change_user_id`, `flag`) VALUES
 (0, 'Нет', '2017-08-01 00:00:00', 1, 1),
 (1, 'Группа1', '2017-08-24 00:00:00', 1, 1),
-(2, 'Группа2', '2017-08-02 00:00:00', 1, 1);
+(2, 'Группа2', '2017-08-02 00:00:00', 1, 1),
+(3, 'Группа3', '2017-08-30 13:10:22', 1, 1),
+(4, 'Группа4', '2017-08-30 13:10:38', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -460,7 +462,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT для таблицы `user_group`
 --
 ALTER TABLE `user_group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT для таблицы `user_or_app_right`
 --
