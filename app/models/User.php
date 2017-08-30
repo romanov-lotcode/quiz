@@ -106,7 +106,7 @@ class User
         $sql = 'INSERT INTO user '
             .'(lastname, firstname, middlename, login, password, email, registered_datetime, flag) '
             .'VALUES '
-            .'(:lastname, :firstname, :middlename, :login, :password, :email, :registered_datetime, 1)';
+            .'(:lastname, :firstname, :middlename, :login, :password, :email, :registered_datetime, :flag)';
 
         $db = Database::getConnection();
         $result = $db->prepare($sql);
@@ -117,6 +117,7 @@ class User
         $result->bindParam(':password', $user['password'], PDO::PARAM_STR);
         $result->bindParam(':email', $user['email'], PDO::PARAM_STR);
         $result->bindParam(':registered_datetime', $user['registered_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':flag', $user['flag'], PDO::PARAM_INT);
 
         if ($result->execute()) {
             // Если запрос выполенен успешно, возвращаем id добавленной записи

@@ -293,6 +293,7 @@ class MainController extends BaseController
                 $new_user['login'] = $html_element['login']->getValue();
                 $new_user['password'] = md5($html_element['password']->getValue());
                 $new_user['email'] = $html_element['email']->getValue();
+                $new_user['flag'] = 1;
 
                 $new_user_id = User::add($new_user);
                 if ($new_user_id !== false)
