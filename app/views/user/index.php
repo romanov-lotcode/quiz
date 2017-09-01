@@ -50,13 +50,13 @@ include APP_VIEWS . 'layouts/header.php';
                         <td><?= $app_state->getUserFlagState($u_item['flag']) ?></td>
                         <td>
                             <?php
-                            if ($u_item['flag'] != FLAG_NO_CHANGE):
+                            if ($u_item['flag'] != FLAG_NO_CHANGE || $u_item['id'] == $u_id):
                                 ?>
                                 <a href="/user/edit?<?= $url_param . '&uid='.$u_item['id'] ?>" class="action" title="Редактировать"><span class="uk-icon-pencil"></span></a>
                                 <a href="/user/delete?<?= $url_param . '&uid='.$u_item['id'] ?>" class="action" title="Удалить"><span class="uk-icon-trash"></span></a>
                                 <a href="/user/password?<?= $url_param . '&uid='.$u_item['id'] ?>" class="action" title="Изменить пароль"><span class="uk-icon-lock" style="padding-left: 5px; padding-right: 5px;"></span></a>
                                 <?php
-                            endif; //if ($u_item['flag'] != FLAG_NO_CHANGE):
+                            endif; //if ($u_item['flag'] != FLAG_NO_CHANGE || $u_item['id'] == $u_id):
                             ?>
                             <a href="/result/index?<?= $url_param . '&uid='.$u_item['id'].'&pf='.PAGE_FROM_USER_INDEX ?>" class="action" title="Посмотреть результаты тестирования"><span class="uk-icon-sticky-note"></span></a>
                         </td>

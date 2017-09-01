@@ -8,6 +8,7 @@ class UserController extends BaseController
         $app_state = new App_State();
         $url_param = '';
         $is_can = false;
+        $u_id = User::checkLogged();
         $search = [];
         $page = 1;
         $index_number = 1;
