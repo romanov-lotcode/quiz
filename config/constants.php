@@ -42,3 +42,7 @@ define('CAN_MODERATOR_USER', 'CAN_MODERATOR_USER'); // Может изменят
 
 // Страница, с которой был направлен пользователь
 define('PAGE_FROM_USER_INDEX', 'ui');
+
+// Значения ограничений
+define('USER_GROUP_COUNT_DEFAULT', 5); // Количество групп по умолчанию
+define('USER_GROUP_COUNT_NO_LIMIT', 999999999); // Количество групп без лимита
