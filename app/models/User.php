@@ -6,11 +6,192 @@ class User
      ******************** ПОЛЯ КЛАССА ********************
      *****************************************************/
 
-
+    const SHOW_BY_DEFAULT = 20;
 
     /*****************************************************
      ******************* МЕТОДЫ КЛАССА *******************
      *****************************************************/
+
+    /**
+     * Получить пользователей, удовлетворяющих параметрам поиска
+     * @param [] $search - Параметры поиска
+     * @param int $page - Номер страницы
+     * @return array
+     */
+    public static function getUsers($search = null, $page = 1)
+    {
+        $where = '';
+        $segment_count = 0;
+        $user = [
+            'lastname' => '',
+            'firstname' => '',
+            'middlename' => '',
+            'login' => '',
+        ];
+        $where = ' WHERE user.id > 0 AND user.flag >= 0';
+        if ($search['name'] != null)
+        {
+            $segments = explode(" ", $search['name']);
+            if (count($segments) == 3)
+            {
+                $segment_count = 3;
+                $user['lastname'] = '%' .$segments[0] . '%' ;
+                $user['firstname'] = '%' . $segments[1] . '%';
+                $user['middlename'] = '%' . $segments[2] . '%';
+                $where .= ' AND user.lastname LIKE ? AND user.firstname LIKE ? AND user.middlename LIKE ?';
+            }
+            if (count($segments) == 2)
+            {
+                $segment_count = 2;
+                $user['lastname'] = '%' . $segments[0] . '%';
+                $user['firstname'] = '%' . $segments[1] . '%';
+                $where .= ' AND user.lastname LIKE ? AND user.firstname LIKE ?';
+            }
+            if (count($segments) == 1)
+            {
+                $segment_count = 1;
+                $search['name'] = '%' . $search['name'] . '%';
+                $where .= ' AND (user.lastname LIKE ? OR user.firstname LIKE ? OR user.middlename LIKE ? OR user.login LIKE ?)';
+            }
+        }
+
+        $page = intval($page);
+        if ($page < 1) $page = 1;
+
+        $offset = ($page - 1) * self::SHOW_BY_DEFAULT;
+
+        $sql = 'SELECT
+          user.id,
+          user.lastname,
+          user.firstname,
+          user.middlename,
+          user.login,
+          user.email,
+          user.registered_datetime,
+          user.last_test_datetime,
+          user.changed_datetime,
+          user.changed_user_id,
+          user.flag
+        FROM
+          user'.$where
+        .' ORDER BY
+        user.lastname LIMIT '. self::SHOW_BY_DEFAULT .' OFFSET ' . $offset;
+
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+
+        if ($segment_count == 0)
+        {
+            $result->execute();
+        }
+        if ($segment_count == 1)
+        {
+            $result->execute([$search['name'], $search['name'], $search['name'], $search['name']]);
+        }
+        if ($segment_count == 2)
+        {
+            $result->execute([$user['lastname'], $user['firstname']]);
+        }
+        if ($segment_count == 3)
+        {
+            $result->execute([$user['lastname'], $user['firstname'], $user['middlename']]);
+        }
+
+        // Получение и возврат результатов
+        $users = [];
+        $i = 0;
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $users[$i] = $row;
+            $i++;
+        }
+        return $users;
+    }
+
+    /**
+     * Возвращет количество записей, удовлетворяющих параметрам поиска
+     * @param [] $search - параметры поиска
+     * @return int
+     */
+    public static function getTotalUsers($search = null)
+    {
+        $where = '';
+        $segment_count = 0;
+        $user = [
+            'lastname' => '',
+            'firstname' => '',
+            'middlename' => '',
+            'login' => '',
+        ];
+        $where = ' WHERE user.id > 0 AND user.flag >= 0';
+        if ($search['name'] != null)
+        {
+            $segments = explode(" ", $search['name']);
+            if (count($segments) == 3)
+            {
+                $segment_count = 3;
+                $user['lastname'] = '%' .$segments[0] . '%' ;
+                $user['firstname'] = '%' . $segments[1] . '%';
+                $user['middlename'] = '%' . $segments[2] . '%';
+                $where .= ' AND user.lastname LIKE ? AND user.firstname LIKE ? AND user.middlename LIKE ?';
+            }
+            if (count($segments) == 2)
+            {
+                $segment_count = 2;
+                $user['lastname'] = '%' . $segments[0] . '%';
+                $user['firstname'] = '%' . $segments[1] . '%';
+                $where .= ' AND user.lastname LIKE ? AND user.firstname LIKE ?';
+            }
+            if (count($segments) == 1)
+            {
+                $segment_count = 1;
+                $search['name'] = '%' . $search['name'] . '%';
+                $where .= ' AND (user.lastname LIKE ? OR user.firstname LIKE ? OR user.middlename LIKE ? OR user.login LIKE ?)';
+            }
+        }
+        $sql = 'SELECT
+            COUNT(*) AS row_count
+          FROM
+            user'. $where;
+
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+
+        if ($segment_count == 0)
+        {
+            $result->execute();
+        }
+        if ($segment_count == 1)
+        {
+            $result->execute([$search['name'], $search['name'], $search['name'], $search['name']]);
+        }
+        if ($segment_count == 2)
+        {
+            $result->execute([$user['lastname'], $user['firstname']]);
+        }
+        if ($segment_count == 3)
+        {
+            $result->execute([$user['lastname'], $user['firstname'], $user['middlename']]);
+        }
+        // Обращаемся к записи
+        $count = $result->fetch(PDO::FETCH_ASSOC);
+
+        if ($count) {
+            return $count['row_count'];
+        }
+        return 0;
+    }
+
+    /**
+     * Возвращает порядковый номер по номеру страницы
+     * @param int $page - номер страницы
+     * @return int
+     */
+    public static function getIndexNumber($page)
+    {
+        $page = intval($page);
+        $result = ($page - 1) * self::SHOW_BY_DEFAULT;
+        return $result;
+    }
 
     /**
      * Запоминает пользователя и время начала сессии.
@@ -154,7 +335,7 @@ class User
 
 
     /****************************************************/
-    /********* Модели, связанные с пользователем ********/
+    /********* Методы, связанные с пользователем ********/
     /****************************************************/
 
 
