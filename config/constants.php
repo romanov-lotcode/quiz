@@ -38,3 +38,7 @@ define('CAN_MODERATOR_TESTING', 'CAN_MODERATOR_TESTING'); // Может изме
 define('CAN_MODERATOR_QUESTION', 'CAN_MODERATOR_QUESTION'); // Может изменять Вопрос
 define('CAN_MODERATOR_ANSWER', 'CAN_MODERATOR_ANSWER'); // Может изменять Ответ
 define('CAN_MODERATOR_USER_GROUP', 'CAN_MODERATOR_USER_GROUP'); // Может изменять Группы пользователей
+define('CAN_MODERATOR_USER', 'CAN_MODERATOR_USER'); // Может изменять Пользователей
+
+// Страница, с которой был направлен пользователь
+define('PAGE_FROM_USER_INDEX', 'ui');
