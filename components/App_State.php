@@ -32,6 +32,28 @@ class App_State
      * @param int $value - целое значение
      * @return string
      */
+    public function getUserFlagState($value)
+    {
+        $result = 'Не определено';
+        if ($value == 2)
+        {
+            $result = 'Неактивен <span class="uk-icon-close" style="color: red;" title="Неактивен"></span>';
+        }
+        if ($value == 1)
+        {
+            $result = 'Активен <span class="uk-icon-check" style="color: green;" title="Активен"></span>';
+        }
+        if ($value == 0)
+        {
+            $result = 'Н.и. <span class="uk-icon-check" style="color: green;" title="Активен (Невозможно изменить)"></span>';
+        }
+        return $result;
+    }
+
+    /**
+     * @param int $value - целое значение
+     * @return string
+     */
     public function getTimeFlagState($value)
     {
         $result = '';
