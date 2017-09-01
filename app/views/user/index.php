@@ -55,6 +55,7 @@ include APP_VIEWS . 'layouts/header.php';
                                 <a href="/user/edit?<?= $url_param . '&uid='.$u_item['id'] ?>" class="action" title="Редактировать"><span class="uk-icon-pencil"></span></a>
                                 <a href="/user/delete?<?= $url_param . '&uid='.$u_item['id'] ?>" class="action" title="Удалить"><span class="uk-icon-trash"></span></a>
                                 <a href="/user/password?<?= $url_param . '&uid='.$u_item['id'] ?>" class="action" title="Изменить пароль"><span class="uk-icon-lock" style="padding-left: 5px; padding-right: 5px;"></span></a>
+                                <a href="/user/group?<?= $url_param . '&uid='.$u_item['id'] ?>" class="action" title="Группы пользователя"><span class="uk-icon-group"></span></a>
                                 <?php
                             endif; //if ($u_item['flag'] != FLAG_NO_CHANGE || $u_item['id'] == $u_id):
                             ?>
