@@ -625,4 +625,99 @@ class UserController extends BaseController
             header('Location: /main/error');
         }
     }
+
+    public function actionPassword()
+    {
+        $user_right = parent::getUserRight();
+        $validate = new App_Validate();
+        $url_param = '';
+        $is_can = false;
+        $search = [];
+        $page = 1;
+        $errors = false;
+        $date_time = new DateTime();
+        $user = [];
+        $uid = null;
+        $u_id = User::checkLogged();
+
+        foreach ($user_right as $u_r)
+        {
+            if ($u_r['right_name'] == CAN_MODERATOR_USER)
+            {
+                $is_can = true;
+                break;
+            }
+        }
+
+        if (isset($_GET['s_name']))
+        {
+            $search['name'] = htmlspecialchars($_GET['s_name']);
+        }
+        if (isset($_GET['page']))
+        {
+            $page = intval(htmlspecialchars($_GET['page']));
+            if ($page < 1)
+            {
+                $page = 1;
+            }
+        }
+        if (isset($_GET['uid']))
+        {
+            $uid = htmlspecialchars($_GET['uid']);
+        }
+
+        $url_param .= 's_name='.$search['name'].'&page='.$page;
+
+        $user = User::getUser($uid);
+
+        $html_element['password'] = new \HTMLElement\HTMLTextStringElement();
+        $html_element['password']->setName('password');
+        $html_element['password']->setId('password');
+        $html_element['password']->setMin(6);
+        $html_element['password']->setMax(40);
+        $html_element['password']->setCaption('Пароль');
+        $html_element['password']->setConfig('type', 'password');
+        $html_element['password']->setConfig('class', 'uk-width-1-1');
+        $html_element['password']->setConfig('placeholder', 'Пароль');
+        $html_element['password']->setValueFromRequest();
+
+        if ($user['flag'] == FLAG_NO_CHANGE && $user['id'] != $u_id)
+        {
+            $errors['no_change'] = 'Невозможно изменить данного пользователя';
+            $html_element['password']->setConfig('disabled', 'disabled');
+        }
+
+        if (isset($_POST['edit']))
+        {
+            $html_element['password']->check();
+
+            if (!$validate->checkPassword($html_element['password']->getValue()))
+            {
+                $html_element['password']->setCheck(false);
+            }
+            if (!$html_element['password']->getCheck())
+            {
+                $errors['password'] = 'Ошибка в поле "'. $html_element['password']->getCaption() .'".<br />
+                Необходимо заполнить от 6 до 20 символов.';
+            }
+
+            if ($errors === false)
+            {
+                $user['password'] = md5($html_element['password']->getValue());
+                $user['change_user_id'] = $u_id;
+                $user['change_datetime'] = $date_time->format('Y-m-d H:i:s');
+                User::editPassword($user);
+                header('Location: /user/index?'.$url_param);
+            }
+        }
+
+        if ($is_can)
+        {
+            include_once APP_VIEWS.'user/password.php';
+        }
+        else
+        {
+            header('Location: /main/error');
+        }
+    }
 }

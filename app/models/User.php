@@ -390,6 +390,25 @@ class User
     }
 
     /**
+     * Изменить пароль пользователя (изменить флаг)
+     * @param [] $user - массив с данными
+     */
+    public static function editPassword($user)
+    {
+        $sql = 'UPDATE user
+          SET
+            password = :password, change_datetime = :change_datetime, change_user_id = :change_user_id
+          WHERE id = :id AND flag >= 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $user['id'], PDO::PARAM_INT);
+        $result->bindParam(':password', $user['password'], PDO::PARAM_STR);
+        $result->bindParam(':change_datetime', $user['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $user['change_user_id'], PDO::PARAM_INT);
+        $result->execute();
+    }
+
+    /**
      * Првоеряет данные пользователя.
      * @param array() $user_data - данные о пользователе
      * @return bool||int

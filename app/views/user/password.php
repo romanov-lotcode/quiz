@@ -5,7 +5,6 @@ $page_id = 'page_moderator';
 //Подключаем шапку
 include APP_VIEWS . 'layouts/header.php';
 ?>
-
     <h1><?= $pagetitle ?></h1>
     <a class="back" href="/user/index?<?= $url_param ?>">&larr; Вернуться назад</a>
     <script src="<?= APP_TEMPLATES ?>js/form-password.min.js"></script>
@@ -21,20 +20,13 @@ include APP_VIEWS . 'layouts/header.php';
 
         <form method="POST" class="uk-form">
             <div class="uk-form-row">
-                <legend class="app">Добавить</legend>
+                <legend class="app">Редактировать</legend>
             </div>
+            <?php if ($user['this_lastname'] != null): ?>
             <div class="uk-form-row uk-width-1-1 uk-width-small-1-2">
-                <?= $html_element['lastname']->render(); ?>
+                <?= trim($user['this_lastname']. ' ' .$user['this_firstname'].' '.$user['this_middlename']) ?>
             </div>
-            <div class="uk-form-row uk-width-1-1 uk-width-small-1-2">
-                <?= $html_element['firstname']->render(); ?>
-            </div>
-            <div class="uk-form-row uk-width-1-1 uk-width-small-1-2">
-                <?= $html_element['middlename']->render(); ?>
-            </div>
-            <div class="uk-form-row uk-width-1-1 uk-width-small-1-2">
-                <?= $html_element['login']->render(); ?>
-            </div>
+            <?php endif; //if ($user['this_lastname'] != null): ?>
             <div class="uk-form-row">
                 <div class="uk-form-password uk-width-1-1 uk-width-small-1-2">
                     <?= $html_element['password']->render(); ?>
@@ -43,16 +35,16 @@ include APP_VIEWS . 'layouts/header.php';
                     </a>
                 </div>
             </div>
-            <div class="uk-form-row uk-width-1-1 uk-width-small-1-2">
-                <?= $html_element['email']->render(); ?>
-            </div>
-            <div class="uk-form-row uk-width-1-1">
-                <?= $html_element['flag']->render($option_flag, $optgroup_flag) ?>
-            </div>
 
-            <div class="uk-form-row">
-                <button class="uk-button" name="add">Добавить</button>
-            </div>
+            <?php
+            include APP_VIEWS . 'layouts/description.php';
+            echo renderDescriptionDatetimeFIO($user);
+            ?>
+            <?php if ($user['flag'] != FLAG_NO_CHANGE || $user['id'] == $u_id): ?>
+                <div class="uk-form-row uk-width-1-1">
+                    <button class="uk-button" name="edit">Редактировать</button>
+                </div>
+            <?php endif; //if ($user['flag'] == NO_CHANGE || $user['id'] == $u_id): ?>
 
         </form>
     </div>

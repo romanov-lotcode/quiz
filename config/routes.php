@@ -44,4 +44,5 @@ return [
     'user/add' => ['controller' => 'User', 'action' => 'add'],
     'user/edit' => ['controller' => 'User', 'action' => 'edit'],
     'user/delete' => ['controller' => 'User', 'action' => 'delete'],
+    'user/password' => ['controller' => 'User', 'action' => 'password'],
 ];
