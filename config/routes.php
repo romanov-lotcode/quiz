@@ -42,4 +42,6 @@ return [
 
     'user/index' => ['controller' => 'User', 'action' => 'index'],
     'user/add' => ['controller' => 'User', 'action' => 'add'],
+    'user/edit' => ['controller' => 'User', 'action' => 'edit'],
+    'user/delete' => ['controller' => 'User', 'action' => 'delete'],
 ];

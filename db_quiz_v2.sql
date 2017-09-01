@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Авг 30 2017 г., 13:11
+-- Время создания: Сен 01 2017 г., 10:48
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.5.33
 
@@ -44,7 +44,7 @@ INSERT INTO `answer` (`id`, `name`, `question_id`, `complexity_coefficient`, `ch
 (1, 'Правильный', 1, 10, 1, '2017-08-01 00:00:00', 1),
 (2, 'Не правильный', 1, 0, 1, '2017-08-25 15:04:41', 1),
 (3, 'Тоже неправильный ответ', 1, 0, 1, '2017-08-25 14:37:14', 1),
-(4, 'удалить', 1, 3, 1, '2017-08-25 15:43:30', -1);
+(4, 'удалить', 1, 3, 1, '2017-08-30 13:55:40', -1);
 
 -- --------------------------------------------------------
 
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `app_right` (
   `right_name` varchar(64) NOT NULL COMMENT 'Наименование правила',
   `description` varchar(512) DEFAULT NULL COMMENT 'Описание',
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `app_right`
@@ -74,7 +74,8 @@ INSERT INTO `app_right` (`id`, `right_value`, `right_name`, `description`, `flag
 (7, 64, 'CAN_MODERATOR_TESTING', 'Может работать с тестированиями', 1),
 (8, 128, 'CAN_MODERATOR_QUESTION', 'Может работать с вопросами', 1),
 (9, 256, 'CAN_MODERATOR_ANSWER', 'Может работать с ответами', 1),
-(10, 512, 'CAN_MODERATOR_USER_GROUP', 'Может работать с группами пользователей', 1);
+(10, 512, 'CAN_MODERATOR_USER_GROUP', 'Может работать с группами пользователей', 1),
+(11, 1024, 'CAN_MODERATOR_USER', 'Может работать с пользователями', 1);
 
 -- --------------------------------------------------------
 
@@ -99,7 +100,7 @@ INSERT INTO `direction` (`id`, `name`, `change_user_id`, `change_datetime`, `fla
 (2, 'А12', 1, '2017-08-09 16:27:14', 1),
 (3, 'Б2', 1, '2017-08-09 16:08:53', 1),
 (4, 'В3', 1, '2017-08-09 16:10:44', 2),
-(5, 'Направление 5', 1, '2017-08-09 10:49:05', -1),
+(5, 'Направление 5', 1, '2017-08-30 13:57:45', -1),
 (6, 'А222', 1, '2017-08-09 16:27:38', 1);
 
 -- --------------------------------------------------------
@@ -121,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `menu_panel` (
   `index_number` int(1) NOT NULL DEFAULT '0' COMMENT 'Порядковый номер',
   `member` int(1) NOT NULL DEFAULT '0' COMMENT 'Член группы',
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `menu_panel`
@@ -134,7 +135,8 @@ INSERT INTO `menu_panel` (`id`, `name`, `page_name`, `icon_name`, `title`, `desc
 (4, 'Тест', 'moderator', 'gear', 'Настроить тест', 'Настройки тестов', 1, '/test/index', 3, 2, 16, 1),
 (5, 'Направление', 'moderator', 'gear', 'Настроить направление', 'Настройка направлений', 1, '/direction/index', 3, 1, 32, 1),
 (6, 'Тестирование', 'moderator', 'gear', 'Настроить тестирование', 'Настройки тестирований', 1, '/testing/index', 3, 3, 64, 1),
-(7, 'Группа пользователей', 'moderator', 'gear', 'Настроить группу пользователей', 'Настройки групп пользователей', 1, '/user_group/index', 3, 4, 512, 1);
+(7, 'Группа пользователей', 'moderator', 'gear', 'Настроить группу пользователей', 'Настройки групп пользователей', 1, '/user_group/index', 3, 4, 512, 1),
+(8, 'Пользователь', 'moderator', 'gear', 'Настроить пользователя', 'Настройки пользователей', 1, '/user/index', 3, 5, 1024, 1);
 
 -- --------------------------------------------------------
 
@@ -165,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `question` (
 INSERT INTO `question` (`id`, `name`, `number`, `question_type_id`, `explanation`, `comment`, `test_id`, `path_img`, `question_time`, `question_time_flag`, `change_user_id`, `change_datetime`, `flag`) VALUES
 (1, 'Вопрос А', 1, 0, NULL, NULL, 1, NULL, '00:00:00', 2, 0, '2017-08-18 00:00:00', 0),
 (2, 'Какая машина изображена на рисунке?', 2, 0, 'На изображении изображена Audi A4', '', 1, '', '00:00:00', 2, 1, '2017-08-22 12:43:18', 1),
-(8, 'фыв', 0, 0, '', '', 1, '8.jpg', '00:00:00', 2, 1, '2017-08-24 15:17:59', -1),
+(8, 'Удалить', 0, 0, '', '', 1, '8.jpg', '00:00:00', 2, 1, '2017-08-30 13:59:44', -1),
 (12, '22244', 40, 1, '1', '2', 1, '12.jpg', '00:01:00', 1, 1, '2017-08-24 14:31:21', 1),
 (13, 'Вопрос', 0, 0, '', '', 1, '', '00:20:00', 1, 1, '2017-08-23 15:57:17', 2);
 
@@ -215,7 +217,7 @@ INSERT INTO `test` (`id`, `name`, `comment`, `direction_id`, `change_user_id`, `
 (2, 'Тест для А12', 'Проба', 1, 1, '2017-08-14 16:51:05', 1),
 (3, 'Тест2', 'Какой-то коммент', 1, 1, '2017-08-14 15:25:03', 2),
 (4, 'Удалите меня1', 'тухлый комментарий', 2, 1, '2017-08-15 09:20:39', 1),
-(5, 'Тест "ааа"', '', 1, 1, '2017-08-15 09:59:31', -1);
+(5, 'Тест "ааа"', '', 1, 1, '2017-08-30 14:01:40', -1);
 
 -- --------------------------------------------------------
 
@@ -245,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `testing` (
 
 INSERT INTO `testing` (`id`, `name`, `test_id`, `testing_count`, `question_count`, `is_question_random`, `is_answer_random`, `minimum_score`, `testing_time`, `testing_time_flag`, `change_user_id`, `change_datetime`, `flag`) VALUES
 (1, 'Тестирование 1', 1, 1, 100, 1, 2, 49, '00:11:00', 2, 1, '2017-08-18 11:59:12', 2),
-(2, '22', 1, 5, 3, 2, 1, 12, '111:00:00', 1, 1, '2017-08-18 11:51:59', -1),
+(2, '22', 1, 5, 3, 2, 1, 12, '111:00:00', 1, 1, '2017-08-30 14:03:10', -1),
 (3, 'Тестирование2', 1, 3, 5, 2, 1, 30, '00:05:00', 1, 1, '2017-08-17 15:49:32', 1),
 (4, 'Тестирование А12', 2, 1, 20, 2, 2, 100, '00:00:50', 2, 1, '2017-08-17 15:56:21', 2),
 (5, 'Тестирование3', 1, 30, 3, 1, 1, 10, '00:10:00', 2, 1, '2017-08-18 08:16:51', 1),
@@ -267,20 +269,23 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` varchar(128) DEFAULT NULL,
   `registered_datetime` datetime NOT NULL,
   `last_test_datetime` datetime DEFAULT NULL,
-  `changed_datetime` datetime DEFAULT NULL,
-  `changed_user_id` int(11) DEFAULT NULL,
+  `change_datetime` datetime DEFAULT NULL,
+  `change_user_id` int(11) DEFAULT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user`
 --
 
-INSERT INTO `user` (`id`, `lastname`, `firstname`, `middlename`, `login`, `password`, `email`, `registered_datetime`, `last_test_datetime`, `changed_datetime`, `changed_user_id`, `flag`) VALUES
-(0, 'Нет', '', NULL, '', '123456', NULL, '2017-08-01 00:00:00', NULL, NULL, NULL, 1),
-(1, 'Романов', 'Сергей', 'Сергеевич', 'romanovss', 'dca20cd83717c9596b17e66822f7f507', '', '2017-05-13 22:32:42', NULL, NULL, NULL, 1),
-(2, 'Романов', 'Сергей', 'По Умолчанию', 'defromanov', 'dca20cd83717c9596b17e66822f7f507', 's.nichipurenko@yandex.ru', '2017-05-31 18:39:03', NULL, NULL, NULL, 1),
-(3, 'Романов', 'Серж', '', 'serjserj', 'dca20cd83717c9596b17e66822f7f507', '', '2017-08-21 09:15:46', NULL, NULL, NULL, 1);
+INSERT INTO `user` (`id`, `lastname`, `firstname`, `middlename`, `login`, `password`, `email`, `registered_datetime`, `last_test_datetime`, `change_datetime`, `change_user_id`, `flag`) VALUES
+(0, 'Нет', '', NULL, 'нет', '123456', NULL, '2017-08-01 00:00:00', NULL, NULL, 0, 0),
+(1, 'Романов', 'Сергей', 'Сергеевич', 'romanovss', 'dca20cd83717c9596b17e66822f7f507', '', '2017-05-13 22:32:42', NULL, '2017-09-01 10:25:22', 1, 1),
+(2, 'Романов', 'Сергей', 'По Умолчанию', 'defromanov', 'dca20cd83717c9596b17e66822f7f507', 's.nichipurenko@yandex.ru', '2017-05-31 18:39:03', NULL, NULL, 0, 0),
+(3, 'Романов', 'Серж', '', 'serjserj', 'dca20cd83717c9596b17e66822f7f507', '', '2017-08-21 09:15:46', NULL, NULL, 0, 1),
+(4, 'Можно', 'Будет', 'Удалить', 'deletyaev', 'e10adc3949ba59abbe56e057f20f883e', '', '2017-08-30 16:36:42', NULL, '2017-09-01 10:26:58', 1, 2),
+(5, 'Куку-Ку', 'Леня1', 'Фыв', 'nikoss', 'da4665ee27bcfb399a74e0ceb48f48ed', '', '2017-09-01 08:34:39', NULL, '2017-09-01 10:45:35', 1, -1),
+(6, 'Не', 'Забудь', 'Удалить', 'deletyaev1', 'e10adc3949ba59abbe56e057f20f883e', '', '2017-09-01 08:36:09', NULL, '2017-09-01 10:45:04', 1, -1);
 
 -- --------------------------------------------------------
 
@@ -294,18 +299,19 @@ CREATE TABLE IF NOT EXISTS `user_group` (
   `change_datetime` datetime NOT NULL,
   `change_user_id` int(11) NOT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user_group`
 --
 
 INSERT INTO `user_group` (`id`, `name`, `change_datetime`, `change_user_id`, `flag`) VALUES
-(0, 'Нет', '2017-08-01 00:00:00', 1, 1),
-(1, 'Группа1', '2017-08-24 00:00:00', 1, 1),
+(0, 'Нет', '2017-08-01 00:00:00', 1, 0),
+(1, 'Группа1', '2017-08-24 00:00:00', 1, 0),
 (2, 'Группа2', '2017-08-02 00:00:00', 1, 1),
 (3, 'Группа3', '2017-08-30 13:10:22', 1, 1),
-(4, 'Группа4', '2017-08-30 13:10:38', 1, 2);
+(4, 'Группа4', '2017-08-30 13:47:11', 1, 2),
+(5, 'Удалите меня', '2017-08-30 13:48:29', 1, -1);
 
 -- --------------------------------------------------------
 
@@ -317,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `user_or_app_right` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL DEFAULT '0',
   `app_right_id` int(11) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user_or_app_right`
@@ -336,7 +342,14 @@ INSERT INTO `user_or_app_right` (`id`, `user_id`, `app_right_id`) VALUES
 (10, 1, 9),
 (11, 3, 1),
 (12, 3, 2),
-(13, 1, 10);
+(13, 1, 10),
+(14, 4, 1),
+(15, 4, 2),
+(16, 1, 11),
+(17, 5, 1),
+(18, 5, 2),
+(19, 6, 1),
+(20, 6, 2);
 
 --
 -- Индексы сохранённых таблиц
@@ -422,7 +435,7 @@ ALTER TABLE `answer`
 -- AUTO_INCREMENT для таблицы `app_right`
 --
 ALTER TABLE `app_right`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT для таблицы `direction`
 --
@@ -432,7 +445,7 @@ ALTER TABLE `direction`
 -- AUTO_INCREMENT для таблицы `menu_panel`
 --
 ALTER TABLE `menu_panel`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT для таблицы `question`
 --
@@ -457,17 +470,17 @@ ALTER TABLE `testing`
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT для таблицы `user_group`
 --
 ALTER TABLE `user_group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT для таблицы `user_or_app_right`
 --
 ALTER TABLE `user_or_app_right`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

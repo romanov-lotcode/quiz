@@ -13,6 +13,45 @@ class User
      *****************************************************/
 
     /**
+     * Получить информацию о пользователе
+     * @param int $id - ID пользователя
+     * @return bool|mixed
+     */
+    public static function getUser($id)
+    {
+        $sql = 'SELECT
+          user.id,
+          user.lastname AS this_lastname,
+          user.firstname AS this_firstname,
+          user.middlename AS this_middlename,
+          user.login,
+          user.email,
+          user.change_datetime,
+          user.change_user_id,
+          user.flag,
+          user1.lastname,
+          user1.firstname,
+          user1.middlename
+        FROM
+          user
+          INNER JOIN user user1 ON (user.change_user_id = user1.id)
+        WHERE
+          user.id = :id AND user.flag >= 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $id, PDO::PARAM_INT);
+        $result->execute();
+
+        // Обращаемся к записи
+        $user = $result->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            return $user;
+        }
+        return false;
+    }
+
+    /**
      * Получить пользователей, удовлетворяющих параметрам поиска
      * @param [] $search - Параметры поиска
      * @param int $page - Номер страницы
@@ -69,8 +108,8 @@ class User
           user.email,
           user.registered_datetime,
           user.last_test_datetime,
-          user.changed_datetime,
-          user.changed_user_id,
+          user.change_datetime,
+          user.change_user_id,
           user.flag
         FROM
           user'.$where
@@ -305,6 +344,49 @@ class User
             return $db->lastInsertId();
         }
         return false;
+    }
+
+    /**
+     * Изменить данные
+     * @param array() $user - информация о пользователе
+     */
+    public static function edit($user)
+    {
+        $sql = 'UPDATE user
+          SET lastname = :lastname, firstname = :firstname, middlename = :middlename,
+          login = :login, email = :email, change_user_id = :change_user_id,
+          change_datetime = :change_datetime, flag = :flag
+          WHERE id = :id AND flag >= 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $user['id'], PDO::PARAM_INT);
+        $result->bindParam(':lastname', $user['lastname'], PDO::PARAM_STR);
+        $result->bindParam(':firstname', $user['firstname'], PDO::PARAM_STR);
+        $result->bindParam(':middlename', $user['middlename'], PDO::PARAM_STR);
+        $result->bindParam(':login', $user['login'], PDO::PARAM_STR);
+        $result->bindParam(':email', $user['email'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $user['change_user_id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $user['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':flag', $user['flag'], PDO::PARAM_INT);
+        $result->execute();
+    }
+
+    /**
+     * Удалить пользователя (изменить флаг)
+     * @param [] $user - массив с данными
+     */
+    public static function delete($user)
+    {
+        $sql = 'UPDATE user
+          SET
+            change_datetime = :change_datetime, change_user_id = :change_user_id, flag = -1
+          WHERE id = :id AND flag > 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $user['id'], PDO::PARAM_INT);
+        $result->bindParam(':change_datetime', $user['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $user['change_user_id'], PDO::PARAM_INT);
+        $result->execute();
     }
 
     /**
