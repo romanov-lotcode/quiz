@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Сен 01 2017 г., 10:48
+-- Время создания: Сен 01 2017 г., 15:13
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.5.33
 
@@ -280,10 +280,10 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `lastname`, `firstname`, `middlename`, `login`, `password`, `email`, `registered_datetime`, `last_test_datetime`, `change_datetime`, `change_user_id`, `flag`) VALUES
 (0, 'Нет', '', NULL, 'нет', '123456', NULL, '2017-08-01 00:00:00', NULL, NULL, 0, 0),
-(1, 'Романов', 'Сергей', 'Сергеевич', 'romanovss', 'dca20cd83717c9596b17e66822f7f507', '', '2017-05-13 22:32:42', NULL, '2017-09-01 10:25:22', 1, 1),
+(1, 'Романов', 'Сергей', 'Сергеевич', 'romanovss', 'dca20cd83717c9596b17e66822f7f507', '', '2017-05-13 22:32:42', NULL, '2017-09-01 12:07:02', 1, 1),
 (2, 'Романов', 'Сергей', 'По Умолчанию', 'defromanov', 'dca20cd83717c9596b17e66822f7f507', 's.nichipurenko@yandex.ru', '2017-05-31 18:39:03', NULL, NULL, 0, 0),
 (3, 'Романов', 'Серж', '', 'serjserj', 'dca20cd83717c9596b17e66822f7f507', '', '2017-08-21 09:15:46', NULL, NULL, 0, 1),
-(4, 'Можно', 'Будет', 'Удалить', 'deletyaev', 'e10adc3949ba59abbe56e057f20f883e', '', '2017-08-30 16:36:42', NULL, '2017-09-01 10:26:58', 1, 2),
+(4, 'Можно', 'Будет', 'Удалить', 'deletyaev', 'e10adc3949ba59abbe56e057f20f883e', '', '2017-08-30 16:36:42', NULL, '2017-09-01 13:53:03', 1, -1),
 (5, 'Куку-Ку', 'Леня1', 'Фыв', 'nikoss', 'da4665ee27bcfb399a74e0ceb48f48ed', '', '2017-09-01 08:34:39', NULL, '2017-09-01 10:45:35', 1, -1),
 (6, 'Не', 'Забудь', 'Удалить', 'deletyaev1', 'e10adc3949ba59abbe56e057f20f883e', '', '2017-09-01 08:36:09', NULL, '2017-09-01 10:45:04', 1, -1);
 
@@ -350,6 +350,23 @@ INSERT INTO `user_or_app_right` (`id`, `user_id`, `app_right_id`) VALUES
 (18, 5, 2),
 (19, 6, 1),
 (20, 6, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `user_or_user_group`
+--
+
+CREATE TABLE IF NOT EXISTS `user_or_user_group` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_group_id` int(11) NOT NULL,
+  `date_admission` date DEFAULT NULL,
+  `date_deduction` date DEFAULT NULL,
+  `change_datetime` datetime DEFAULT NULL,
+  `change_user_id` int(11) NOT NULL DEFAULT '0',
+  `flag` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Индексы сохранённых таблиц
@@ -423,6 +440,12 @@ ALTER TABLE `user_or_app_right`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `user_or_user_group`
+--
+ALTER TABLE `user_or_user_group`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT для сохранённых таблиц
 --
 
@@ -481,6 +504,11 @@ ALTER TABLE `user_group`
 --
 ALTER TABLE `user_or_app_right`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT для таблицы `user_or_user_group`
+--
+ALTER TABLE `user_or_user_group`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
