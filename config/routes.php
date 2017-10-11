@@ -47,4 +47,5 @@ return [
     'user/password' => ['controller' => 'User', 'action' => 'password'],
 
     'user_user_group/index' => ['controller' => 'UserUserGroup', 'action' => 'index'],
+    'user_user_group/add' => ['controller' => 'UserUserGroup', 'action' => 'add'],
 ];

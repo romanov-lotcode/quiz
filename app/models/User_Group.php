@@ -52,6 +52,47 @@ class User_Group
     }
 
     /**
+     * Возвращает группы пользователя без тех, в которых он уже состоит
+     * @param array() $groups - группы
+     * @param array() $search - параметры поиска (на данный момент не используется)
+     * @return array
+     */
+    public static function getUserGroupsForUser($groups = null, $search = null)
+    {
+        $where = '';
+        if (is_array($groups) && count($groups) > 0)
+        {
+            foreach ($groups as $g_item)
+            {
+                $g_item = intval($g_item);
+                $where .= ' AND user_group.id <> '.$g_item;
+            }
+        }
+        $sql = 'SELECT
+          user_group.id,
+          user_group.name,
+          user_group.flag
+        FROM
+          user_group
+        WHERE
+          user_group.flag >= 0 AND
+          user_group.id > 0'.$where
+        .' ORDER BY
+            user_group.name';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->execute();
+        // Получение и возврат результатов
+        $user_groups = [];
+        $i = 0;
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $user_groups[$i] = $row;
+            $i++;
+        }
+        return $user_groups;
+    }
+
+    /**
      * Получить данные по параметрам поиска
      * @param [] $search - параметры поиска
      * @param int $page - номер страницы
