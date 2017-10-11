@@ -45,4 +45,6 @@ return [
     'user/edit' => ['controller' => 'User', 'action' => 'edit'],
     'user/delete' => ['controller' => 'User', 'action' => 'delete'],
     'user/password' => ['controller' => 'User', 'action' => 'password'],
+
+    'user_user_group/index' => ['controller' => 'UserUserGroup', 'action' => 'index'],
 ];
