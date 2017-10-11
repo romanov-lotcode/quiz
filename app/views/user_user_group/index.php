@@ -46,7 +46,7 @@ include APP_VIEWS . 'layouts/header.php';
                             <?php
                             if ($g_item['flag'] != FLAG_NO_CHANGE):
                                 ?>
-                                <a href="/user_user_group/delete?<?= $url_param .'&uid='.$search['uid']. '&uugid='.$g_item['id'] ?>" class="action" title="Удалить"><span class="uk-icon-trash"></span></a>
+                                <a href="/user_user_group/delete?<?= $url_param .'&uid='.$search['uid']. '&uugid='.$g_item['id'] ?>" class="action" title="Исключить"><span class="uk-icon-trash"></span></a>
                                 <?php
                             endif; //if ($g_item['flag'] != FLAG_NO_CHANGE):
                             ?>

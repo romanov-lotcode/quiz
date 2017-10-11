@@ -15,6 +15,46 @@ class User_User_Group
      *****************************************************/
 
     /**
+     * Получить информацию о пользователе и его группе
+     * @param int $id - ID записи
+     * @return bool|mixed
+     */
+    public static function getUserUserGroup($id)
+    {
+        $sql = 'SELECT
+          user_or_user_group.id,
+          user_or_user_group.flag,
+          user_or_user_group.change_datetime,
+          user_or_user_group.change_user_id,
+          user.lastname,
+          user.firstname,
+          user.middlename,
+          user.flag AS user_flag,
+          user_group.name,
+          user_group.flag AS user_group_flag
+        FROM
+          user_or_user_group
+          INNER JOIN user ON (user_or_user_group.user_id = user.id)
+          INNER JOIN user_group ON (user_or_user_group.user_group_id = user_group.id)
+        WHERE
+          user_or_user_group.id = :id AND
+          user_or_user_group.flag = 1 AND
+          user.flag >= 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $id, PDO::PARAM_INT);
+        $result->execute();
+
+        // Обращаемся к записи
+        $user_group = $result->fetch(PDO::FETCH_ASSOC);
+
+        if ($user_group) {
+            return $user_group;
+        }
+        return false;
+    }
+
+    /**
      * Получить данные по параметрам поиска
      * @param [] $search - параметры поиска
      * @return array
@@ -100,5 +140,24 @@ class User_User_Group
             return $db->lastInsertId();
         }
         return false;
+    }
+
+    /**
+     * Удалить запись пользователя и его группы (изменить флаг)
+     * @param [] $user_group - массив с данными
+     */
+    public static function delete($user_group)
+    {
+        $sql = 'UPDATE user_or_user_group
+          SET
+            date_deduction = :date_deduction, change_datetime = :change_datetime, change_user_id = :change_user_id, flag = -1
+          WHERE id = :id AND flag > 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $user_group['id'], PDO::PARAM_INT);
+        $result->bindParam(':date_deduction', $user_group['date_deduction'], PDO::PARAM_STR);
+        $result->bindParam(':change_datetime', $user_group['change_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':change_user_id', $user_group['change_user_id'], PDO::PARAM_INT);
+        $result->execute();
     }
 }

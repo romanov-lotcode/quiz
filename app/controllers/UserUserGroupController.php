@@ -198,4 +198,84 @@ class UserUserGroupController extends BaseController
             header('Location: /main/error');
         }
     }
+
+    public function actionDelete()
+    {
+        $user_right = parent::getUserRight();
+        $url_param = '';
+        $is_can = false;
+        $search = [];
+        $page = 1;
+        $errors = false;
+        $date_time = new DateTime();
+        $user_group = [];
+        $uugid = null;
+
+        foreach ($user_right as $u_r)
+        {
+            if ($u_r['right_name'] == CAN_MODERATOR_USER)
+            {
+                $is_can = true;
+                break;
+            }
+        }
+
+        if (isset($_GET['s_name']))
+        {
+            $search['s_name'] = htmlspecialchars($_GET['s_name']);
+        }
+
+        if (isset($_GET['page']))
+        {
+            $page = htmlspecialchars($_GET['page']);
+        }
+        if ($page < 1)
+        {
+            $page = 1;
+        }
+
+        if (isset($_GET['uid']))
+        {
+            $search['uid'] = htmlspecialchars($_GET['uid']);
+        }
+
+        if (isset($_GET['uugid']))
+        {
+            $search['uugid'] = htmlspecialchars($_GET['uugid']);
+        }
+
+        $url_param .= 's_name='.$search['s_name'].'&page='.$page
+            . '&uid=' .$search['uid'];
+
+        $user_group = User_User_Group::getUserUserGroup($search['uugid']);
+
+        if (isset($_POST['yes']))
+        {
+            if ($search['uugid'] != $user_group['id'])
+            {
+                $errors['id'] = 'Невозможно внести изменения для данной записи';
+            }
+            if ($errors === false)
+            {
+                $user_group['date_deduction'] = $date_time->format('Y-m-d');
+                $user_group['change_user_id'] = User::checkLogged();
+                $user_group['change_datetime'] = $date_time->format('Y-m-d H:i:s');
+                User_User_Group::delete($user_group);
+                header('Location: /user_user_group/index?'.$url_param);
+            }
+        }
+        if (isset($_POST['no']))
+        {
+            header('Location: /user_user_group/index?'.$url_param);
+        }
+
+        if ($is_can)
+        {
+            include_once APP_VIEWS.'user_user_group/delete.php';
+        }
+        else
+        {
+            header('Location: /main/error');
+        }
+    }
 }
