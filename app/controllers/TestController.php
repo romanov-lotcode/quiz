@@ -8,8 +8,10 @@ class TestController extends BaseController
         $user_right = parent::getUserRight();
         $app_state = new App_State();
         $url_param = '';
+        $url_testing_param = '';
         $is_can = false;
         $is_can_question = false;
+        $is_can_testing = false;
         $search = [];
         $page = 1;
         $index_number = 1;
@@ -28,7 +30,11 @@ class TestController extends BaseController
             {
                 $is_can_question = true;
             }
-            if ($is_can === true && $is_can_question === true)
+            if ($u_r['right_name'] == CAN_MODERATOR_TESTING)
+            {
+                $is_can_testing = true;
+            }
+            if ($is_can === true && $is_can_question === true && $is_can_testing === true)
             {
                 break;
             }
@@ -109,6 +115,7 @@ class TestController extends BaseController
         if ($is_can)
         {
             $url_param .= 's_direction='.$search['direction_id'].'&s_name='.$search['name'].'&page='.$page;
+            $url_testing_param .= 's_direction='.$search['direction_id'].'&s_test_name='.$search['name'].'&test_page='.$page;
 
             include_once APP_VIEWS.'test/index.php';
         }
@@ -133,7 +140,7 @@ class TestController extends BaseController
 
         foreach ($user_right as $u_r)
         {
-            if ($u_r['right_name'] == CAN_MODERATOR_DIRECTION)
+            if ($u_r['right_name'] == CAN_MODERATOR_TEST)
             {
                 $is_can = true;
                 break;
@@ -337,7 +344,7 @@ class TestController extends BaseController
 
         foreach ($user_right as $u_r)
         {
-            if ($u_r['right_name'] == CAN_MODERATOR_DIRECTION)
+            if ($u_r['right_name'] == CAN_MODERATOR_TEST)
             {
                 $is_can = true;
                 break;
@@ -561,7 +568,7 @@ class TestController extends BaseController
 
         foreach ($user_right as $u_r)
         {
-            if ($u_r['right_name'] == CAN_MODERATOR_DIRECTION)
+            if ($u_r['right_name'] == CAN_MODERATOR_TEST)
             {
                 $is_can = true;
                 break;

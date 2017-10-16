@@ -79,7 +79,12 @@ include APP_VIEWS . 'layouts/header.php';
                             if ($is_can_question):
                             ?>
                                 <a href="/question/index?<?= $url_param .'&tid='.$t_item['id'] ?>" class="action" title="Вопросы"><span class="uk-icon-question-circle"></span></a>
-                            <?php endif; //if ($is_can_question): ?>
+                            <?php
+                            endif; //if ($is_can_question):
+                            if ($is_can_testing):
+                            ?>
+                                <a href="/testing/index?<?= $url_testing_param .'&s_test='.$t_item['id'] ?>" class="action" title="Тестирование"><span class="uk-icon-gear"></span></a>
+                            <?php endif; //if ($is_can_testing): ?>
                         </td>
                     </tr>
                     <?php
