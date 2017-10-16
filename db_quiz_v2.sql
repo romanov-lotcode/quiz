@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Сен 01 2017 г., 15:13
+-- Время создания: Окт 16 2017 г., 14:53
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.5.33
 
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `app_right` (
   `right_name` varchar(64) NOT NULL COMMENT 'Наименование правила',
   `description` varchar(512) DEFAULT NULL COMMENT 'Описание',
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `app_right`
@@ -75,7 +75,8 @@ INSERT INTO `app_right` (`id`, `right_value`, `right_name`, `description`, `flag
 (8, 128, 'CAN_MODERATOR_QUESTION', 'Может работать с вопросами', 1),
 (9, 256, 'CAN_MODERATOR_ANSWER', 'Может работать с ответами', 1),
 (10, 512, 'CAN_MODERATOR_USER_GROUP', 'Может работать с группами пользователей', 1),
-(11, 1024, 'CAN_MODERATOR_USER', 'Может работать с пользователями', 1);
+(11, 1024, 'CAN_MODERATOR_USER', 'Может работать с пользователями', 1),
+(12, 2048, 'CAN_MODERATOR_USER_TESTING', 'Может назначать прохождения тестирований', 1);
 
 -- --------------------------------------------------------
 
@@ -134,8 +135,8 @@ INSERT INTO `menu_panel` (`id`, `name`, `page_name`, `icon_name`, `title`, `desc
 (3, 'Модератор', 'moderator', 'gear', 'Настройки модератора', 'Модератор обладает правами настройки тестов, направлений, тестирований и т.п.', 2, '#', 0, 2, 8, 1),
 (4, 'Тест', 'moderator', 'gear', 'Настроить тест', 'Настройки тестов', 1, '/test/index', 3, 2, 16, 1),
 (5, 'Направление', 'moderator', 'gear', 'Настроить направление', 'Настройка направлений', 1, '/direction/index', 3, 1, 32, 1),
-(6, 'Тестирование', 'moderator', 'gear', 'Настроить тестирование', 'Настройки тестирований', 1, '/testing/index', 3, 3, 64, 1),
-(7, 'Группа пользователей', 'moderator', 'gear', 'Настроить группу пользователей', 'Настройки групп пользователей', 1, '/user_group/index', 3, 4, 512, 1),
+(6, 'Назначить тестирование', 'moderator', 'gear', 'Назначить тестирование пользователю', 'Назначения тестирований', 1, '/user_testing/index', 3, 4, 2048, 1),
+(7, 'Группа пользователей', 'moderator', 'gear', 'Настроить группу пользователей', 'Настройки групп пользователей', 1, '/user_group/index', 3, 3, 512, 1),
 (8, 'Пользователь', 'moderator', 'gear', 'Настроить пользователя', 'Настройки пользователей', 1, '/user/index', 3, 5, 1024, 1);
 
 -- --------------------------------------------------------
@@ -323,7 +324,7 @@ CREATE TABLE IF NOT EXISTS `user_or_app_right` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL DEFAULT '0',
   `app_right_id` int(11) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user_or_app_right`
@@ -349,7 +350,21 @@ INSERT INTO `user_or_app_right` (`id`, `user_id`, `app_right_id`) VALUES
 (17, 5, 1),
 (18, 5, 2),
 (19, 6, 1),
-(20, 6, 2);
+(20, 6, 2),
+(21, 1, 12);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `user_or_testing`
+--
+
+CREATE TABLE IF NOT EXISTS `user_or_testing` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `testing_id` int(11) NOT NULL,
+  `user_group_id` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -366,7 +381,15 @@ CREATE TABLE IF NOT EXISTS `user_or_user_group` (
   `change_datetime` datetime DEFAULT NULL,
   `change_user_id` int(11) NOT NULL DEFAULT '0',
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `user_or_user_group`
+--
+
+INSERT INTO `user_or_user_group` (`id`, `user_id`, `user_group_id`, `date_admission`, `date_deduction`, `change_datetime`, `change_user_id`, `flag`) VALUES
+(1, 1, 1, '2017-10-10', '2017-10-12', NULL, 0, 1),
+(2, 1, 2, '2017-10-11', '2017-10-11', '2017-10-11 15:08:35', 1, -1);
 
 --
 -- Индексы сохранённых таблиц
@@ -440,6 +463,12 @@ ALTER TABLE `user_or_app_right`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `user_or_testing`
+--
+ALTER TABLE `user_or_testing`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Индексы таблицы `user_or_user_group`
 --
 ALTER TABLE `user_or_user_group`
@@ -458,7 +487,7 @@ ALTER TABLE `answer`
 -- AUTO_INCREMENT для таблицы `app_right`
 --
 ALTER TABLE `app_right`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT для таблицы `direction`
 --
@@ -503,12 +532,17 @@ ALTER TABLE `user_group`
 -- AUTO_INCREMENT для таблицы `user_or_app_right`
 --
 ALTER TABLE `user_or_app_right`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+--
+-- AUTO_INCREMENT для таблицы `user_or_testing`
+--
+ALTER TABLE `user_or_testing`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT для таблицы `user_or_user_group`
 --
 ALTER TABLE `user_or_user_group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
