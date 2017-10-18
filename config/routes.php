@@ -49,4 +49,6 @@ return [
     'user_user_group/index' => ['controller' => 'UserUserGroup', 'action' => 'index'],
     'user_user_group/add' => ['controller' => 'UserUserGroup', 'action' => 'add'],
     'user_user_group/delete' => ['controller' => 'UserUserGroup', 'action' => 'delete'],
+
+    'user_testing/index' => ['controller' => 'UserTesting', 'action' => 'index'],
 ];

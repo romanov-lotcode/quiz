@@ -15,7 +15,7 @@ class User_User_Group
      *****************************************************/
 
     /**
-     * Получить информацию о пользователе и его группе
+     * Возращает информацию о пользователе и его группе
      * @param int $id - ID записи
      * @return bool|mixed
      */
@@ -55,7 +55,7 @@ class User_User_Group
     }
 
     /**
-     * Получить данные по параметрам поиска
+     * Возращает данные по параметрам поиска
      * @param [] $search - параметры поиска
      * @return array
      */
@@ -87,6 +87,92 @@ class User_User_Group
             $i++;
         }
         return $user_groups;
+    }
+
+    /**
+     * Возращает пользователей по группе и параметрам поиска(группа обязательна)
+     * @param [] $search - Параметры поиска
+     * @return array
+     */
+    public static function getUsersByGroupIDBySearch($search = null)
+    {
+        $where = '';
+        $segment_count = 0;
+        $user = [
+            'lastname' => '',
+            'firstname' => '',
+            'middlename' => '',
+            'login' => '',
+        ];
+        if ($search['name'] != null)
+        {
+            $segments = explode(" ", $search['name']);
+            if (count($segments) == 3)
+            {
+                $segment_count = 3;
+                $user['lastname'] = '%' .$segments[0] . '%' ;
+                $user['firstname'] = '%' . $segments[1] . '%';
+                $user['middlename'] = '%' . $segments[2] . '%';
+                $where .= ' AND user.lastname LIKE ? AND user.firstname LIKE ? AND user.middlename LIKE ? ';
+            }
+            if (count($segments) == 2)
+            {
+                $segment_count = 2;
+                $user['lastname'] = '%' . $segments[0] . '%';
+                $user['firstname'] = '%' . $segments[1] . '%';
+                $where .= ' AND user.lastname LIKE ? AND user.firstname LIKE ? ';
+            }
+            if (count($segments) == 1)
+            {
+                $segment_count = 1;
+                $search['name'] = '%' . $search['name'] . '%';
+                $where .= ' AND (user.lastname LIKE ? OR user.firstname LIKE ? OR user.middlename LIKE ? OR user.login LIKE ?)';
+            }
+        }
+        $sql = 'SELECT
+          user_or_user_group.id,
+          user_or_user_group.user_id,
+          user_or_user_group.flag,
+          user.lastname,
+          user.firstname,
+          user.middlename,
+          user.login,
+          user.last_test_datetime,
+          user.flag AS user_flag
+        FROM
+          user_or_user_group
+          INNER JOIN user ON (user_or_user_group.user_id = user.id)
+        WHERE
+          user_or_user_group.user_group_id = ? '. $where .'
+        ORDER BY
+          user.lastname';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        if ($segment_count == 0)
+        {
+            $result->execute([$search['user_group_id']]);
+        }
+        if ($segment_count == 1)
+        {
+            $result->execute([$search['user_group_id'], $search['name'], $search['name'], $search['name'], $search['name']]);
+        }
+        if ($segment_count == 2)
+        {
+            $result->execute([$search['user_group_id'], $user['lastname'], $user['firstname']]);
+        }
+        if ($segment_count == 3)
+        {
+            $result->execute([$search['user_group_id'], $user['lastname'], $user['firstname'], $user['middlename']]);
+        }
+
+        // Получение и возврат результатов
+        $users = [];
+        $i = 0;
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $users[$i] = $row;
+            $i++;
+        }
+        return $users;
     }
 
     /**
@@ -143,7 +229,7 @@ class User_User_Group
     }
 
     /**
-     * Удалить запись пользователя и его группы (изменить флаг)
+     * Удаляет запись пользователя и его группы (изменить флаг)
      * @param [] $user_group - массив с данными
      */
     public static function delete($user_group)
