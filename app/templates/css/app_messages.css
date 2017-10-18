@@ -15,3 +15,21 @@ i.app_message_type_error{
 /*
 ===== ERROR End
 */
+
+/*
+===== SUCCESS Begin
+*/
+
+div.app_message_type_success {
+    border: 1px solid #9dde8c;
+    padding: 10px;
+}
+
+i.app_message_type_success{
+    font-size: 1.2em;
+    color: #9dde8c;
+}
+
+/*
+===== SUCCESS End
+*/
