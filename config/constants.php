@@ -44,6 +44,7 @@ define('CAN_MODERATOR_USER_TESTING', 'CAN_MODERATOR_USER_TESTING'); // Може�
 
 // Страница, с которой был направлен пользователь
 define('PAGE_FROM_USER_INDEX', 'ui');
+define('PAGE_FROM_USER_TESTING_INDEX', 'uti');
 
 // Значения ограничений
 define('USER_GROUP_COUNT_DEFAULT', 5); // Количество групп по умолчанию
