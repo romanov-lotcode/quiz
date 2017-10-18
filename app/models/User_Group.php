@@ -68,6 +68,10 @@ class User_Group
                 $where .= ' AND user_group.id <> '.$g_item;
             }
         }
+        if ($search['state'] == STATE_ON)
+        {
+            $where .= ' AND user_group.flag <> 2';
+        }
         $sql = 'SELECT
           user_group.id,
           user_group.name,
