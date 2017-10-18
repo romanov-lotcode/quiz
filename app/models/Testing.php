@@ -158,6 +158,43 @@ class Testing
     }
 
     /**
+     * Возвращает тестирования по направлению
+     * @param [] $search - Параметры поиска
+     * @return array
+     */
+    public static function getTestingListByDirection($search)
+    {
+        $sql = 'SELECT
+              testing.id,
+              testing.name
+            FROM
+              testing
+              INNER JOIN test ON (testing.test_id = test.id)
+              INNER JOIN direction ON (test.direction_id = direction.id)
+            WHERE
+              direction.id = :direction_id AND
+              (direction.flag = 0 OR
+              direction.flag = 1) AND
+              (test.flag = 0 OR
+              test.flag = 1) AND
+              (testing.flag = 0 OR
+              testing.flag = 1)';
+
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':direction_id', $search['direction_id'], PDO::PARAM_INT);
+        $result->execute();
+        // Получение и возврат результатов
+        $testing_list = [];
+        $i = 0;
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $testing_list[$i] = $row;
+            $i++;
+        }
+        return $testing_list;
+    }
+
+    /**
      * Возвращает порядковый номер по номеру страницы
      * @param int $page - номер страницы
      * @return int
