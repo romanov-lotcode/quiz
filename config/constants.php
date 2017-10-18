@@ -30,6 +30,7 @@ define('DEFAULT_ENCODING_UPPERCASE', 'UTF-8');
 
 // Типы сообщений для пользователя
 define('MESSAGE_TYPE_ERROR', 'error'); // Ошибка
+define('MESSAGE_TYPE_SUCCESS', 'success'); // Истина||Успех
 
 // Права пользователя
 define('CAN_MODERATOR_DIRECTION', 'CAN_MODERATOR_DIRECTION'); // Может изменять Направление
@@ -39,6 +40,7 @@ define('CAN_MODERATOR_QUESTION', 'CAN_MODERATOR_QUESTION'); // Может изм
 define('CAN_MODERATOR_ANSWER', 'CAN_MODERATOR_ANSWER'); // Может изменять Ответ
 define('CAN_MODERATOR_USER_GROUP', 'CAN_MODERATOR_USER_GROUP'); // Может изменять Группы пользователей
 define('CAN_MODERATOR_USER', 'CAN_MODERATOR_USER'); // Может изменять Пользователей
+define('CAN_MODERATOR_USER_TESTING', 'CAN_MODERATOR_USER_TESTING'); // Может назначать тестирования
 
 // Страница, с которой был направлен пользователь
 define('PAGE_FROM_USER_INDEX', 'ui');
