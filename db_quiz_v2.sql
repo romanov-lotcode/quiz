@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Окт 16 2017 г., 14:53
+-- Время создания: Окт 19 2017 г., 11:02
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.5.33
 
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `app_right` (
 --
 
 INSERT INTO `app_right` (`id`, `right_value`, `right_name`, `description`, `flag`) VALUES
-(1, 1, 'CAN_TEST_PASS', 'Может проходить тест', 1),
+(1, 1, 'CAN_TESTING_PASS', 'Может проходить тест', 1),
 (2, 2, 'CAN_RESULT_VIEW', 'Может просматривать результат', 1),
 (3, 4, 'CAN_VIEW_CORRECT_ANSWER', 'Может просматривать правильные ответы', 1),
 (4, 8, 'CAN_MODERATOR', 'Обладает правами модератора', 1),
@@ -214,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `test` (
 --
 
 INSERT INTO `test` (`id`, `name`, `comment`, `direction_id`, `change_user_id`, `change_datetime`, `flag`) VALUES
-(1, 'Тест1', '32', 1, 0, NULL, 0),
+(1, 'Тест1', '32', 1, 0, NULL, 1),
 (2, 'Тест для А12', 'Проба', 1, 1, '2017-08-14 16:51:05', 1),
 (3, 'Тест2', 'Какой-то коммент', 1, 1, '2017-08-14 15:25:03', 2),
 (4, 'Удалите меня1', 'тухлый комментарий', 2, 1, '2017-08-15 09:20:39', 1),
@@ -257,6 +257,22 @@ INSERT INTO `testing` (`id`, `name`, `test_id`, `testing_count`, `question_count
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `testing_result`
+--
+
+CREATE TABLE IF NOT EXISTS `testing_result` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `testing_id` int(11) NOT NULL,
+  `user_group_id` int(11) NOT NULL DEFAULT '0',
+  `begin_datetime` datetime NOT NULL,
+  `end_datetime` datetime NOT NULL,
+  `flag` int(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `user`
 --
 
@@ -282,9 +298,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 INSERT INTO `user` (`id`, `lastname`, `firstname`, `middlename`, `login`, `password`, `email`, `registered_datetime`, `last_test_datetime`, `change_datetime`, `change_user_id`, `flag`) VALUES
 (0, 'Нет', '', NULL, 'нет', '123456', NULL, '2017-08-01 00:00:00', NULL, NULL, 0, 0),
 (1, 'Романов', 'Сергей', 'Сергеевич', 'romanovss', 'dca20cd83717c9596b17e66822f7f507', '', '2017-05-13 22:32:42', NULL, '2017-09-01 12:07:02', 1, 1),
-(2, 'Романов', 'Сергей', 'По Умолчанию', 'defromanov', 'dca20cd83717c9596b17e66822f7f507', 's.nichipurenko@yandex.ru', '2017-05-31 18:39:03', NULL, NULL, 0, 0),
-(3, 'Романов', 'Серж', '', 'serjserj', 'dca20cd83717c9596b17e66822f7f507', '', '2017-08-21 09:15:46', NULL, NULL, 0, 1),
-(4, 'Можно', 'Будет', 'Удалить', 'deletyaev', 'e10adc3949ba59abbe56e057f20f883e', '', '2017-08-30 16:36:42', NULL, '2017-09-01 13:53:03', 1, -1),
+(2, 'Романов', 'Сергей', 'По Умолчанию', 'defromanov', 'dca20cd83717c9596b17e66822f7f507', 's.nichipurenko@yandex.ru', '2017-05-31 18:39:03', NULL, NULL, 0, 1),
+(3, 'Аакин', 'Серж', '', 'serjserj', 'dca20cd83717c9596b17e66822f7f507', '', '2017-08-21 09:15:46', NULL, NULL, 0, 1),
+(4, 'Можно', 'Будет', 'Удалить', 'deletyaev', 'e10adc3949ba59abbe56e057f20f883e', '', '2017-08-30 16:36:42', NULL, '2017-09-01 13:53:03', 1, 1),
 (5, 'Куку-Ку', 'Леня1', 'Фыв', 'nikoss', 'da4665ee27bcfb399a74e0ceb48f48ed', '', '2017-09-01 08:34:39', NULL, '2017-09-01 10:45:35', 1, -1),
 (6, 'Не', 'Забудь', 'Удалить', 'deletyaev1', 'e10adc3949ba59abbe56e057f20f883e', '', '2017-09-01 08:36:09', NULL, '2017-09-01 10:45:04', 1, -1);
 
@@ -364,7 +380,19 @@ CREATE TABLE IF NOT EXISTS `user_or_testing` (
   `user_id` int(11) NOT NULL,
   `testing_id` int(11) NOT NULL,
   `user_group_id` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `user_or_testing`
+--
+
+INSERT INTO `user_or_testing` (`id`, `user_id`, `testing_id`, `user_group_id`) VALUES
+(7, 2, 4, 1),
+(8, 1, 4, 1),
+(45, 2, 5, 1),
+(69, 3, 3, 1),
+(70, 4, 3, 1),
+(71, 1, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -381,7 +409,7 @@ CREATE TABLE IF NOT EXISTS `user_or_user_group` (
   `change_datetime` datetime DEFAULT NULL,
   `change_user_id` int(11) NOT NULL DEFAULT '0',
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user_or_user_group`
@@ -389,7 +417,10 @@ CREATE TABLE IF NOT EXISTS `user_or_user_group` (
 
 INSERT INTO `user_or_user_group` (`id`, `user_id`, `user_group_id`, `date_admission`, `date_deduction`, `change_datetime`, `change_user_id`, `flag`) VALUES
 (1, 1, 1, '2017-10-10', '2017-10-12', NULL, 0, 1),
-(2, 1, 2, '2017-10-11', '2017-10-11', '2017-10-11 15:08:35', 1, -1);
+(2, 1, 2, '2017-10-11', '2017-10-11', '2017-10-11 15:08:35', 1, -1),
+(3, 2, 1, '2017-10-17', NULL, '2017-10-17 15:14:06', 1, 1),
+(4, 3, 1, '2017-10-17', NULL, '2017-10-17 15:14:15', 1, 1),
+(5, 4, 1, '2017-10-02', NULL, '2017-10-21 00:00:00', 1, 1);
 
 --
 -- Индексы сохранённых таблиц
@@ -441,6 +472,12 @@ ALTER TABLE `test`
 -- Индексы таблицы `testing`
 --
 ALTER TABLE `testing`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `testing_result`
+--
+ALTER TABLE `testing_result`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -519,6 +556,11 @@ ALTER TABLE `test`
 ALTER TABLE `testing`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
+-- AUTO_INCREMENT для таблицы `testing_result`
+--
+ALTER TABLE `testing_result`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
@@ -537,12 +579,12 @@ ALTER TABLE `user_or_app_right`
 -- AUTO_INCREMENT для таблицы `user_or_testing`
 --
 ALTER TABLE `user_or_testing`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=72;
 --
 -- AUTO_INCREMENT для таблицы `user_or_user_group`
 --
 ALTER TABLE `user_or_user_group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
