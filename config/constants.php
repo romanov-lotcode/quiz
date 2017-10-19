@@ -33,6 +33,7 @@ define('MESSAGE_TYPE_ERROR', 'error'); // Ошибка
 define('MESSAGE_TYPE_SUCCESS', 'success'); // Истина||Успех
 
 // Права пользователя
+define('CAN_TESTING_PASS', 'CAN_TESTING_PASS'); // Может проходить тестирование
 define('CAN_MODERATOR_DIRECTION', 'CAN_MODERATOR_DIRECTION'); // Может изменять Направление
 define('CAN_MODERATOR_TEST', 'CAN_MODERATOR_TEST'); // Может изменять Тест
 define('CAN_MODERATOR_TESTING', 'CAN_MODERATOR_TESTING'); // Может изменять Тестирование
