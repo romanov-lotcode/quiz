@@ -5,13 +5,120 @@ class MainController extends BaseController
 {
     public function actionIndex()
     {
-        //include_once ROOT . '/config/rights_rules.php';
-
         if (!USER_ID)
         {
             header('Location: /main/login');
         }
+        $user_right = parent::getUserRight();
+        $app_state = new App_State();
+        $is_can = false;
+        $search = [];
+        $page = 1;
+        $index_number = 1;
+        $directions = [];
+        $option_direction_selected = null;
+        $testing_list = [];
+        $testing_results = [];
+        $total = 0;
 
+        foreach ($user_right as $u_r)
+        {
+            if ($u_r['right_name'] == CAN_TESTING_PASS)
+            {
+                $is_can = true;
+                break;
+            }
+        }
+
+        if (isset($_GET['s_direction']))
+        {
+            $option_direction_selected = htmlspecialchars($_GET['s_direction']);
+        }
+
+        if (isset($_GET['page']))
+        {
+            $page = htmlspecialchars($_GET['page']);
+        }
+
+        if ($page < 1)
+        {
+            $page = 1;
+        }
+
+        $directions = Direction::getDirectionsByState(STATE_ON);
+        $option_direction = [];
+        $optgroup_direction = [];
+
+        $i = 0;
+        $option_direction[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_direction[$i]->setValue(0);
+        $option_direction[$i]->setText('[выбрать]');
+
+        $i = 1;
+
+        foreach ($directions as $value)
+        {
+            $option_direction[$i] = new \HTMLElement\HTMLSelectOptionElement();
+            $option_direction[$i]->setValue($value['id']);
+            $option_direction[$i]->setText($value['name']);
+
+            if ($option_direction_selected == $option_direction[$i]->getValue())
+            {
+                $option_direction[$i]->setSelected(true);
+            }
+
+            $i++;
+        }
+
+        $html_element['direction'] = new \HTMLElement\HTMLSelectElement();
+        $html_element['direction']->setCaption('Направление');
+        $html_element['direction']->setName('s_direction');
+        $html_element['direction']->setId('s_direction');
+        $html_element['direction']->setConfig('data-placeholder', 'Не выбрано');
+        $html_element['direction']->setConfig('onchange', 'this.form.submit();');
+        $html_element['direction']->setConfig('class', 'uk-width-1-1');
+
+        $html_element['name'] = new \HTMLElement\HTMLTextStringElement();
+        $html_element['name']->setName('s_name');
+        $html_element['name']->setId('s_name');
+        $html_element['name']->setCaption('Тестирование');
+        $html_element['name']->setConfig('type', 'text');
+        $html_element['name']->setConfig('class', 'uk-width-1-1');
+        $html_element['name']->setConfig('placeholder', 'Тестирование');
+        $html_element['name']->setValueFromRequest();
+
+        if ($option_direction_selected > 0)
+        {
+            $search['direction_id'] = $option_direction_selected;
+
+            if ($html_element['name']->getValue() != null)
+            {
+                $search['name'] = trim($html_element['name']->getValue());
+            }
+            $search['user_id'] = USER_ID;
+
+            $testing_list = User_Testing::getTestingListBySearchParam($search, $page);
+            foreach ($testing_list as $tl_item)
+            {
+                $search_result['user_id'] = USER_ID;
+                $search_result['testing_id'] = $tl_item['testing_id'];
+                $search_result['user_group_id'] = $tl_item['user_group_id'];
+                $res_count = Testing_Result::getUserTestingCount($search_result);
+                $testing_results[] = [
+                    'testing_id' => $tl_item['testing_id'],
+                    'user_group_id' => $tl_item['user_group_id'],
+                    'count' => $res_count
+                ];
+            }
+            $total = User_Testing::getTotalTestingListBySearchParam($search);
+            $index_number = User_Testing::getIndexNumber($page);
+            $pagination = new Pagination($total, $page, User_Testing::SHOW_BY_DEFAULT, 'page=');
+
+            if (isset($_POST['begin']))
+            {
+                // Запустить начало тестирования
+            }
+        }
 
 
         include_once APP_VIEWS.'main/index.php';
