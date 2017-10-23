@@ -45,4 +45,27 @@ class Testing_Result
         }
         return 0;
     }
+
+    /**
+     * Добавляет новую запись
+     * @param [] $testing_result - Массив с данными
+     * @return bool|string
+     */
+    public static function add($testing_result)
+    {
+        $sql = 'INSERT INTO testing_result (user_id, testing_id, user_group_id, begin_datetime, flag)
+          VALUES (:user_id, :testing_id, :user_group_id, :begin_datetime, :flag)';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':user_id', $testing_result['user_id'], PDO::PARAM_INT);
+        $result->bindParam(':testing_id', $testing_result['testing_id'], PDO::PARAM_INT);
+        $result->bindParam(':user_group_id', $testing_result['user_group_id'], PDO::PARAM_INT);
+        $result->bindParam(':begin_datetime', $testing_result['begin_datetime'], PDO::PARAM_STR);
+        $result->bindParam(':flag', $testing_result['flag'], PDO::PARAM_INT);
+        if($result->execute())
+        {
+            return $db->lastInsertId();
+        }
+        return false;
+    }
 }
