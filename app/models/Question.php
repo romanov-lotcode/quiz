@@ -149,6 +149,28 @@ class Question
     }
 
     /**
+     * Возвращает вопросы по ID теста
+     * @param int $test_id - ID теста
+     * @return array
+     */
+    public static function getQuestionsByTest($test_id)
+    {
+        $sql = 'SELECT question.id FROM question WHERE question.test_id = :test_id';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':test_id', $test_id, PDO::PARAM_INT);
+        $result->execute();
+        // Получение и возврат результатов
+        $questions = [];
+        $i = 0;
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $questions[$i] = $row;
+            $i++;
+        }
+        return $questions;
+    }
+
+    /**
      * Получить типы вопросов
      * @return array
      */
