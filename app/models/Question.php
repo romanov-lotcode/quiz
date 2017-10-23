@@ -155,7 +155,13 @@ class Question
      */
     public static function getQuestionsByTest($test_id)
     {
-        $sql = 'SELECT question.id FROM question WHERE question.test_id = :test_id';
+        $sql = 'SELECT
+            question.id
+          FROM
+            question
+          WHERE
+            question.test_id = :test_id AND question.flag = 1
+          ORDER BY question.number ASC';
         $db = Database::getConnection();
         $result = $db->prepare($sql);
         $result->bindParam(':test_id', $test_id, PDO::PARAM_INT);
