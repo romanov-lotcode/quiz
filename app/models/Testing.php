@@ -195,6 +195,69 @@ class Testing
     }
 
     /**
+     * Начинает тестирование
+     * @param [] $testing_begin_info - инфомрация, необходимая для тестирования
+     * @return bool
+     */
+    public static function startTesting($testing_begin_info)
+    {
+        if (!is_array($testing_begin_info))
+        {
+            return false;
+        }
+
+        if ($testing_begin_info['testing_result_id'] == null)
+        {
+            return false;
+        }
+        $_SESSION['testing_result_id'] = $testing_begin_info['testing_result_id'];
+        $_SESSION['questions'] = null;
+        $_SESSION['answers'] = null;
+
+        if (!is_array($testing_begin_info['questions']))
+        {
+            return false;
+        }
+        $k = 0; // Счетчик
+        $filtered_questions = []; // Отфильтрованные вопросы
+        if ($testing_begin_info['testing']['is_question_random'] == APP_YES)
+        {
+            while (true)
+            {
+                $i = rand(0, count($testing_begin_info['questions'])-1);
+                if ($testing_begin_info['questions'][$i]['id'] != null)
+                {
+                    $filtered_questions[] = $testing_begin_info['questions'][$i]['id'];
+                    $testing_begin_info['questions'][$i]['id'] = null;
+                    $k++;
+                    if ($k == $testing_begin_info['testing']['question_count'])
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            foreach ($testing_begin_info['questions'] as $tbi_item)
+            {
+                $filtered_questions[] = $tbi_item['id'];
+            }
+        }
+        $counter = 0;
+        foreach($filtered_questions as $value)
+        {
+            $counter++;
+            $_SESSION['questions'][] = $value;
+            $_SESSION['answers'][] = [$value => null];
+        }
+        $_SESSION['testing_id'] = $testing_begin_info['testing_result']['testing_id'];
+        $_SESSION['time']['start'] = $testing_begin_info['testing_result']['begin_datetime'];
+        $_SESSION['testing_started'] = true; // Тестирование началось
+        header('Location: /main/quiz?qid='.$_SESSION['questions'][0]);
+    }
+
+    /**
      * Возвращает порядковый номер по номеру страницы
      * @param int $page - номер страницы
      * @return int
