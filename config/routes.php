@@ -6,6 +6,7 @@ return [
     '' => ['controller' => 'Main', 'action' => 'index'],
 
     'main/test' => ['controller' => 'Main', 'action' => 'test'],
+    'main/quiz' => ['controller' => 'Main', 'action' => 'quiz'],
 
     'main/login' => ['controller' => 'Main', 'action' => 'login'],
     'main/logout' => ['controller' => 'Main', 'action' => 'logout'],

@@ -10,6 +10,13 @@ include APP_VIEWS . 'layouts/header.php';
     <h1><?= $pagetitle ?></h1>
     <div class="uk-width-8-10" align="left">
     <?php if ($is_can): ?>
+        <?php
+        if (is_array($errors) && count($errors) > 0):
+            foreach ($errors as $error):
+                echo App_Message::getMessage($error, MESSAGE_TYPE_ERROR);
+            endforeach; // foreach ($errors as $error):
+        endif; //if (is_array($errors) && count($errors) > 0):
+        ?>
         <form method="GET" class="uk-form simple">
             <table class="uk-width-1-1 search_param">
                 <tr>
@@ -89,7 +96,6 @@ include APP_VIEWS . 'layouts/header.php';
                                 $testing_count = 0;
                                 if (is_array($testing_results) && count($testing_results) > 0)
                                 {
-
                                     foreach ($testing_results as $tr_item)
                                     {
                                         if ($tr_item['testing_id'] == $t_item['testing_id']
@@ -102,10 +108,12 @@ include APP_VIEWS . 'layouts/header.php';
                                 }
                                 if ($t_item['testing_count'] > $testing_count):
                                 ?>
-                                    <button name="begin" value="<?= $t_item['id'] ?>" class="action" title="Начать тестирование"><span class="uk-icon-play"></span></button>
+                                    <button name="start" value="<?= $t_item['id'] ?>" class="action" title="Начать тестирование"><span class="uk-icon-play"></span></button>
                                 <?php
-                                else:
-                                    echo 'Тест пройден';
+                                else: // if ($t_item['testing_count'] > $testing_count):
+                                ?>
+                                    Лимит тестирований исчерпан
+                                <?php
                                 endif; // if ($t_item['testing_count'] > $testing_count):
                                 ?>
 

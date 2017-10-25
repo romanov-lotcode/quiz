@@ -12,6 +12,7 @@ class MainController extends BaseController
         $user_right = parent::getUserRight();
         $app_state = new App_State();
         $is_can = false;
+        $errors = false;
         $search = [];
         $page = 1;
         $index_number = 1;
@@ -114,12 +115,86 @@ class MainController extends BaseController
             $index_number = User_Testing::getIndexNumber($page);
             $pagination = new Pagination($total, $page, User_Testing::SHOW_BY_DEFAULT, 'page=');
 
-            if (isset($_POST['begin']))
+            if (isset($_POST['start']))
             {
-                // Запустить начало тестирования
+                $user_or_testing_id = htmlspecialchars($_POST['start']);
+                $user_testing = User_Testing::getUserTestingByID($user_or_testing_id);
+                if ($user_testing['user_id'] == $search['user_id']
+                    && $user_testing['testing_id'] != null
+                    && $user_testing['user_group_id'] != null)
+                {
+                    $testing_count = 0;
+                    if (is_array($testing_results) && count($testing_results) > 0)
+                    {
+                        foreach ($testing_results as $tr_item)
+                        {
+                            if ($tr_item['testing_id'] == $user_testing['testing_id']
+                                && $user_testing['user_group_id'])
+                            {
+                                $testing_count = $tr_item['count'];
+                                break;
+                            }
+                        }
+                    }
+
+                    $testing_result['user_id'] = $user_testing['user_id'];
+                    $testing_result['testing_id'] = $user_testing['testing_id'];
+                    $testing_result['user_group_id'] = $user_testing['user_group_id'];
+                    $date_time = new DateTime();
+                    $testing_result['begin_datetime'] = $date_time->format('Y-m-d H:i:s');
+                    /*$testing_result['change_user_id	'] = $user_testing['user_id'];
+                    $testing_result['change_datetime'] = $date_time->format('Y-m-d H:i:s');*/
+                    $testing_result['flag'] = '1';
+                    $testing_begin_info['testing_result'] = $testing_result;
+
+                    $testing = Testing::getTesting($testing_result['testing_id']);
+                    $testing_begin_info['testing'] = $testing;
+                    $questions = null;
+                    if ($testing['testing_count'] > $testing_count)
+                    {
+                        if (is_array($testing) && $testing['test_id'] != null)
+                        {
+                            $questions = Question::getQuestionsByTest($testing['test_id']);
+                        }
+                        else
+                        {
+                            $errors['no_testing'] = 'Не удалось получить информацию о тестировании. Обратитесь к администратору за помощью';
+                        }
+                    }
+                    else
+                    {
+                        $errors['testing_count'] = 'Превышен лимит прохождения данного тестирования';
+                    }
+                    if ($testing['question_count'] > count($questions))
+                    {
+                        $errors['no_questions'] = 'Недостаточно вопросов для прохождения тестирования. Обратитесь к администратору за помощью';
+                    }
+                    $testing_begin_info['questions'] = $questions;
+
+                    if ($errors === false)
+                    {
+                        $testing_result_id = Testing_Result::add($testing_result);
+                        if (!$testing_result_id)
+                        {
+                            $errors['add_testing_result'] = 'Не удалось внести информацию, необходимую для тестирования';
+                        }
+                        if ($errors === false)
+                        {
+                            $testing_begin_info['testing_result_id'] = $testing_result_id;
+                            $start_testing = Testing::startTesting($testing_begin_info);
+                            if (!$start_testing)
+                            {
+                                $errors['start_testing'] = 'Не удалось начать тестирование. Обратитесь к администратору';
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    $errors['user_testing'] = 'Вы не можете проходить выбранное тестирование. Обратитесь к администратору за помощью';
+                }
             }
         }
-
 
         include_once APP_VIEWS.'main/index.php';
     }
@@ -427,5 +502,32 @@ class MainController extends BaseController
 
         _gt_view:
         include_once APP_VIEWS . 'main/registration.php';
+    }
+
+    public function actionQuiz()
+    {
+        $user_right = parent::getUserRight();
+        $is_can = false;
+        $errors = false;
+        $search = [];
+
+
+        foreach ($user_right as $u_r)
+        {
+            if ($u_r['right_name'] == CAN_TESTING_PASS)
+            {
+                $is_can = true;
+                break;
+            }
+        }
+
+        if ($is_can)
+        {
+            include_once APP_VIEWS.'main/quiz.php';
+        }
+        else
+        {
+            header('Location: /main/error');
+        }
     }
 }
