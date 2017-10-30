@@ -110,6 +110,10 @@ table.view tr.srow:nth-child(even) {
 END
 */
 
+#content{
+    vertical-align: text-top;
+}
+
 #header{
     height: 34px;
     background: #9AB6BA;
