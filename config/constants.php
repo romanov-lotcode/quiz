@@ -50,3 +50,7 @@ define('PAGE_FROM_USER_TESTING_INDEX', 'uti');
 // Значения ограничений
 define('USER_GROUP_COUNT_DEFAULT', 5); // Количество групп по умолчанию
 define('USER_GROUP_COUNT_NO_LIMIT', 999999999); // Количество групп без лимита
+
+// Типы вопросов
+define('QUESTION_TYPE_ONE_TO_ONE', 0); // Один к одному
+define('QUESTION_TYPE_ONE_TO_MANY', 1); // Один ко многим
