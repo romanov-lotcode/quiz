@@ -510,7 +510,45 @@ class MainController extends BaseController
         $is_can = false;
         $errors = false;
         $search = [];
+        $questions = []; // Вопросы из сессии
+        $answers = []; // Ответы из сессии
+        $testing = []; // Информация о тестирвоании
+        $question = []; // Информация о вопросе
+        $question_answers = []; // Ответы к вопросу
+        $question_number = 0; // Номер текущего вопроса
+        $question_count = 0; // Общее количество вопросов
+        $qid = null; // ID вопроса
+        $progress_percentagle = 0; // Прогресс прохождения
+        $datetime_is_day_view = false; // Показывать ли дни в при отсчете времени тестирования
+        $modal_message = ''; // Сообщение для модального окна
+        $is_testing_complete = false; // Тестирование пройдено
 
+        $answered_question_numbers = null;
+
+        $img_src = '';
+        $is_question_answered = false;
+
+
+        $testing_start_time = Testing::getSessionTestingStartTime();
+        $date_time = new DateTime($testing_start_time);
+
+        $testing_countdown = null;
+        $question_countdown = null;
+
+        $tid = Testing::getSessionTesting(); // ID тестирования
+
+        if ($tid != false)
+        {
+            $testing = Testing::getTesting($tid);
+        }
+        else{
+            $errors['testing_id'] = 'Не удалось получить информацию о тестировании';
+        }
+
+        if (isset($_GET['qid']))
+        {
+            $qid = htmlspecialchars($_GET['qid']);
+        }
 
         foreach ($user_right as $u_r)
         {
@@ -520,6 +558,232 @@ class MainController extends BaseController
                 break;
             }
         }
+
+        $questions = Testing::getSessionTestingQuestions();
+        $question_count = count($questions);
+        $answers = Testing::getSessionTestingAnswers();
+
+        if (in_array($qid, $questions))
+        {
+            if ($testing['testing_time_flag'] == FLAG_ON)
+            {
+                if ($testing['testing_time'] != null)
+                {
+                    $hours = 0;
+                    $minutes = 0;
+                    $seconds = 0;
+                    $segments = explode(':', $testing['testing_time']);
+                    if (count($segments) == 3)
+                    {
+                        $hours = intval($segments[0]);
+                        $minutes = intval($segments[1]);
+                        $seconds = intval($segments[2]);
+                    }
+                    if ($hours > 23)
+                    {
+                        $datetime_is_day_view = true;
+                    }
+                    $date_time->add(new DateInterval('PT'.$hours.'H'.$minutes.'M'.$seconds.'S'));
+                    $testing_countdown = $date_time->format('Y/m/d H:i:s');
+                }
+            }
+
+            $question = Question::getQuestion($qid);
+
+            if ($question['question_time_flag'] == FLAG_ON)
+            {
+                if ($question['question_time'] != null)
+                {
+                    $hours = 0;
+                    $minutes = 0;
+                    $seconds = 0;
+                    $segments = explode(':', $question['question_time']);
+                    if (count($segments) == 3)
+                    {
+                        $hours = intval($segments[0]);
+                        $minutes = intval($segments[1]);
+                        $seconds = intval($segments[2]);
+                    }
+                    if ($hours > 23)
+                    {
+                        $datetime_is_day_view = true;
+                    }
+                    $date_time->add(new DateInterval('PT'.$hours.'H'.$minutes.'M'.$seconds.'S'));
+                    $question_countdown = $date_time->format('Y/m/d H:i:s');
+                }
+            }
+
+            $img_src = 'http://quiz-v2/app/templates/images/questions/'.$question['path_img'];
+            $question_number = array_search($qid, $questions);
+            $question_number++;
+            $question_answers = Answer::getAnswers($qid);
+
+            $question_start_datetime = new DateTime();
+
+            if ($question['question_time_flag'] == FLAG_ON)
+            {
+
+            }
+
+
+
+            if (isset($_POST['skip']))
+            {
+                if ($question_number != $question_count)
+                {
+                    $next_qid = $questions[$question_number];
+                    if ($next_qid != null)
+                    {
+                        header('Location: /main/quiz?qid='.$next_qid);
+                    }
+                }
+            }
+
+            if (isset($_POST['respond']))
+            {
+                $next_qid = null;
+                $respond_question_answers = null;
+                if ($question_number != $question_count)
+                {
+                    $next_qid = $questions[$question_number];
+                }
+
+                if (isset($_POST['answer']))
+                {
+                    if (intval($_POST['answer']) > 0)
+                    {
+                        $respond_question_answers[0] = intval($_POST['answer']);
+                    }
+                }
+
+                if (isset($_POST['answers']))
+                {
+                    if (is_array($_POST['answers']))
+                    {
+                        $temp_array = null;
+                        foreach ($_POST['answers'] as $p_item)
+                        {
+                            $p_item = intval($p_item);
+                            if ($p_item > 0)
+                            {
+                                $temp_array[] = $p_item;
+                            }
+                        }
+                    }
+                    $respond_question_answers = $temp_array;
+                }
+
+                Testing::setSessionAnswerRespond($question_number, $qid, $respond_question_answers);
+                if ($question_number != $question_count)
+                {
+                    $next_qid = $questions[$question_number];
+                    if ($next_qid != null)
+                    {
+                        header('Location: /main/quiz?qid='.$next_qid);
+                    }
+                }
+            }
+
+            if (isset($_POST['previous']))
+            {
+                if ($question_number > 1)
+                {
+                    $previous_qid = $questions[$question_number-2];
+                    if ($previous_qid != null)
+                    {
+                        header('Location: /main/quiz?qid='.$previous_qid);
+                    }
+                }
+            }
+
+            $answers = Testing::getSessionTestingAnswers();
+            $n = 0;
+            if ($question['question_type_id'] == QUESTION_TYPE_ONE_TO_ONE)
+            {
+                foreach ($question_answers as $qa_item)
+                {
+                    $html_element['answer_'.$n] = new \HTMLElement\HTMLCheckboxAndRadioRadioElement();
+                    $html_element['answer_'.$n]->setName('answer');
+                    $html_element['answer_'.$n]->setId('answer_'.$n);
+                    $html_element['answer_'.$n]->setValue($qa_item['id']);
+                    $html_element['answer_'.$n]->setCaption($qa_item['name']);
+                    $html_element['answer_'.$n]->setConfig('style', 'margin-right: 5px;');
+                    $html_element['answer_'.$n]->setConfig('onchange', 'changeButtonState()');
+                    foreach ($answers as $a_key => $a_array)
+                    {
+                        if ($a_key == $question_number)
+                        {
+                            if ($a_array[$qid][0] == $html_element['answer_'.$n]->getValue())
+                            {
+                                $html_element['answer_'.$n]->setChecked(true);
+                                $is_question_answered = true;
+                                break;
+                            }
+                        }
+                    }
+                    $n++;
+                }
+            }
+
+            if ($question['question_type_id'] == QUESTION_TYPE_ONE_TO_MANY)
+            {
+                foreach ($question_answers as $qa_item)
+                {
+                    $html_element['answer_'.$n] = new \HTMLElement\HTMLCheckboxAndRadioCheckboxElement();
+                    $html_element['answer_'.$n]->setName('answers['.$qa_item['id'].']');
+                    $html_element['answer_'.$n]->setId('answer_'.$n);
+                    $html_element['answer_'.$n]->setValue($qa_item['id']);
+                    $html_element['answer_'.$n]->setCaption($qa_item['name']);
+                    $html_element['answer_'.$n]->setConfig('style', 'margin-right: 5px;');
+                    $html_element['answer_'.$n]->setConfig('onchange', 'changeButtonState()');
+                    foreach ($answers as $a_key => $a_array)
+                    {
+                        if ($a_key == $question_number)
+                        {
+                            foreach ($a_array as $aa_key => $aa_array)
+                            {
+                                foreach ($aa_array as $aa_item)
+                                {
+                                    if ($aa_item == $html_element['answer_'.$n]->getValue())
+                                    {
+                                        $html_element['answer_'.$n]->setChecked(true);
+                                        $is_question_answered = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $n++;
+                }
+            }
+
+            foreach ($answers as $a_key => $a_array)
+            {
+                foreach ($a_array as $aa_key => $aa_array)
+                {
+                    if ($aa_array != null)
+                    {
+                        $answered_question_numbers[] = $a_key;
+                    }
+                }
+            }
+            $progress_percentagle = (count($answered_question_numbers)/$question_count) * 100;
+            if ($progress_percentagle == 100)
+            {
+                $is_testing_complete = true;
+                $modal_message = 'Вы ответили на все вопросы.';
+            }
+            if (isset($_POST['complete']))
+            {
+                echo 'Нажато Завершить';
+            }
+        }
+        else
+        {
+            $errors['question'] = 'Данного вопроса не существует';
+        }
+
 
         if ($is_can)
         {

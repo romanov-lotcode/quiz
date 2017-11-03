@@ -249,7 +249,7 @@ class Testing
         {
             $counter++;
             $_SESSION['questions'][] = $value;
-            $_SESSION['answers'][] = [$value => null];
+            $_SESSION['answers'][$counter] = [$value => null];
         }
         $_SESSION['testing_id'] = $testing_begin_info['testing_result']['testing_id'];
         $_SESSION['time']['start'] = $testing_begin_info['testing_result']['begin_datetime'];
@@ -347,5 +347,73 @@ class Testing
         $result->bindParam(':change_datetime', $testing['change_datetime'], PDO::PARAM_STR);
         $result->bindParam(':change_user_id', $testing['change_user_id'], PDO::PARAM_INT);
         $result->execute();
+    }
+
+    /**
+     * Возвращает ID тестирования из сессии
+     * @return int|bool
+     */
+    public static function getSessionTesting()
+    {
+        session_start();
+        if (isset($_SESSION['testing_id']))
+        {
+            return $_SESSION['testing_id'];
+        }
+        return false;
+    }
+
+    /**
+     * Возвращает время начала тестирования из сессии
+     * @return string|bool
+     */
+    public static function getSessionTestingStartTime()
+    {
+        session_start();
+        if (isset($_SESSION['time']['start']))
+        {
+            return $_SESSION['time']['start'];
+        }
+        return false;
+    }
+
+    /**
+     * Возвращает вопросы из сессии
+     * @return array|bool
+     */
+    public static function getSessionTestingQuestions()
+    {
+        session_start();
+        if (isset($_SESSION['questions']))
+        {
+            return $_SESSION['questions'];
+        }
+        return false;
+    }
+
+    /**
+     * Возвращает ответы из сессии
+     * @return array|bool
+     */
+    public static function getSessionTestingAnswers()
+    {
+        session_start();
+        if (isset($_SESSION['answers']))
+        {
+            return $_SESSION['answers'];
+        }
+        return false;
+    }
+
+    public static function setSessionAnswerRespond($question_number, $question_id, $answers)
+    {
+        session_start();
+        if (!isset($_SESSION['answers'][$question_number]))
+        {
+            return false;
+        }
+
+        $_SESSION['answers'][$question_number] = [$question_id => $answers];
+        return true;
     }
 }

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Окт 19 2017 г., 11:02
+-- Время создания: Ноя 03 2017 г., 14:51
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.5.33
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `answer` (
   `change_user_id` int(11) NOT NULL,
   `change_datetime` datetime NOT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `answer`
@@ -44,7 +44,18 @@ INSERT INTO `answer` (`id`, `name`, `question_id`, `complexity_coefficient`, `ch
 (1, 'Правильный', 1, 10, 1, '2017-08-01 00:00:00', 1),
 (2, 'Не правильный', 1, 0, 1, '2017-08-25 15:04:41', 1),
 (3, 'Тоже неправильный ответ', 1, 0, 1, '2017-08-25 14:37:14', 1),
-(4, 'удалить', 1, 3, 1, '2017-08-30 13:55:40', -1);
+(4, 'удалить', 1, 3, 1, '2017-08-30 13:55:40', -1),
+(5, 'Правильный', 12, 5, 1, '2017-10-27 08:35:28', 1),
+(6, 'Неправильный', 12, -5, 1, '2017-10-27 08:35:35', 1),
+(7, 'Положительный', 13, 10, 1, '2017-10-27 08:33:05', 1),
+(8, 'Отрицательный 1', 13, 0, 1, '2017-10-27 08:33:26', 1),
+(9, 'Отрицательный 2', 13, 0, 1, '2017-10-27 08:33:38', 1),
+(10, 'Правильный 2', 12, 5, 1, '2017-10-27 08:35:23', 1),
+(11, 'Не правильный 2', 12, -5, 1, '2017-10-27 08:35:14', 1),
+(12, 'Audi', 2, 10, 1, '2017-10-27 08:43:26', 1),
+(13, 'BMW', 2, 0, 1, '2017-10-27 08:43:38', 1),
+(14, 'ВАЗ', 2, 0, 1, '2017-10-27 08:43:49', 1),
+(15, 'Datsun', 2, 0, 1, '2017-10-27 08:44:16', 1);
 
 -- --------------------------------------------------------
 
@@ -166,11 +177,11 @@ CREATE TABLE IF NOT EXISTS `question` (
 --
 
 INSERT INTO `question` (`id`, `name`, `number`, `question_type_id`, `explanation`, `comment`, `test_id`, `path_img`, `question_time`, `question_time_flag`, `change_user_id`, `change_datetime`, `flag`) VALUES
-(1, 'Вопрос А', 1, 0, NULL, NULL, 1, NULL, '00:00:00', 2, 0, '2017-08-18 00:00:00', 0),
-(2, 'Какая машина изображена на рисунке?', 2, 0, 'На изображении изображена Audi A4', '', 1, '', '00:00:00', 2, 1, '2017-08-22 12:43:18', 1),
+(1, 'Данный вопрос будет иметь длинную надпись, для того, чтобы проверить на сколько симпатично будет он выглядеть при выводе его на дисплей пользователю при его тестировании в автоматизированной системе тестирования. Ну а в конце данного вопроса будет добавлен вопросительный знак?', 1, 0, '', '', 1, '', '00:00:00', 2, 1, '2017-10-27 10:50:10', 1),
+(2, 'Какая машина изображена на рисунке?', 3, 0, 'На изображении изображена Audi A4', '', 1, '2.jpg', '00:00:00', 2, 1, '2017-10-27 08:43:02', 1),
 (8, 'Удалить', 0, 0, '', '', 1, '8.jpg', '00:00:00', 2, 1, '2017-08-30 13:59:44', -1),
-(12, '22244', 40, 1, '1', '2', 1, '12.jpg', '00:01:00', 1, 1, '2017-08-24 14:31:21', 1),
-(13, 'Вопрос', 0, 0, '', '', 1, '', '00:20:00', 1, 1, '2017-08-23 15:57:17', 2);
+(12, '22244', 2, 1, '1', '2', 1, '', '00:01:00', 2, 1, '2017-10-31 14:32:16', 1),
+(13, 'Вопрос', 0, 0, '', '', 1, '', '00:20:00', 1, 1, '2017-10-23 15:24:33', 1);
 
 -- --------------------------------------------------------
 
@@ -249,7 +260,7 @@ CREATE TABLE IF NOT EXISTS `testing` (
 INSERT INTO `testing` (`id`, `name`, `test_id`, `testing_count`, `question_count`, `is_question_random`, `is_answer_random`, `minimum_score`, `testing_time`, `testing_time_flag`, `change_user_id`, `change_datetime`, `flag`) VALUES
 (1, 'Тестирование 1', 1, 1, 100, 1, 2, 49, '00:11:00', 2, 1, '2017-08-18 11:59:12', 2),
 (2, '22', 1, 5, 3, 2, 1, 12, '111:00:00', 1, 1, '2017-08-30 14:03:10', -1),
-(3, 'Тестирование2', 1, 3, 5, 2, 1, 30, '00:05:00', 1, 1, '2017-08-17 15:49:32', 1),
+(3, 'Тестирование2', 1, 30, 4, 1, 1, 30, '78:05:00', 1, 1, '2017-10-27 13:01:10', 1),
 (4, 'Тестирование А12', 2, 1, 20, 2, 2, 100, '00:00:50', 2, 1, '2017-08-17 15:56:21', 2),
 (5, 'Тестирование3', 1, 30, 3, 1, 1, 10, '00:10:00', 2, 1, '2017-08-18 08:16:51', 1),
 (6, 'Тестирование4', 1, 4, 40, 1, 2, 20, '543:10:00', 1, 1, '2017-08-18 08:59:53', 2);
@@ -265,10 +276,36 @@ CREATE TABLE IF NOT EXISTS `testing_result` (
   `user_id` int(11) NOT NULL,
   `testing_id` int(11) NOT NULL,
   `user_group_id` int(11) NOT NULL DEFAULT '0',
-  `begin_datetime` datetime NOT NULL,
-  `end_datetime` datetime NOT NULL,
+  `begin_datetime` datetime DEFAULT NULL,
+  `end_datetime` datetime DEFAULT NULL,
+  `change_user_id` int(11) NOT NULL DEFAULT '0',
+  `change_datetime` datetime DEFAULT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `testing_result`
+--
+
+INSERT INTO `testing_result` (`id`, `user_id`, `testing_id`, `user_group_id`, `begin_datetime`, `end_datetime`, `change_user_id`, `change_datetime`, `flag`) VALUES
+(1, 1, 3, 1, '2017-10-23 16:31:58', NULL, 0, NULL, 1),
+(2, 1, 3, 1, '2017-10-23 16:50:01', NULL, 0, NULL, 1),
+(3, 1, 3, 1, '2017-10-23 16:50:03', NULL, 0, NULL, 1),
+(4, 1, 3, 1, '2017-10-23 16:50:04', NULL, 0, NULL, 1),
+(5, 1, 3, 1, '2017-10-23 16:50:06', NULL, 0, NULL, 1),
+(6, 1, 3, 1, '2017-10-23 16:50:07', NULL, 0, NULL, 1),
+(7, 1, 3, 1, '2017-10-23 16:53:21', NULL, 0, NULL, 1),
+(8, 1, 3, 1, '2017-10-24 07:52:51', NULL, 0, NULL, 1),
+(9, 1, 3, 1, '2017-10-24 08:19:16', NULL, 0, NULL, 1),
+(10, 1, 3, 1, '2017-10-24 09:56:22', NULL, 0, NULL, 1),
+(11, 1, 3, 1, '2017-10-24 09:56:22', NULL, 0, NULL, 1),
+(12, 1, 3, 1, '2017-10-27 13:59:37', NULL, 0, NULL, 1),
+(13, 1, 3, 1, '2017-10-30 09:54:30', NULL, 0, NULL, 1),
+(14, 1, 3, 1, '2017-10-30 15:40:26', NULL, 0, NULL, 1),
+(15, 1, 3, 1, '2017-11-01 08:34:39', NULL, 0, NULL, 1),
+(16, 1, 3, 1, '2017-11-01 16:16:05', NULL, 0, NULL, 1),
+(17, 1, 3, 1, '2017-11-02 15:50:09', NULL, 0, NULL, 1),
+(18, 1, 3, 1, '2017-11-03 09:15:52', NULL, 0, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -380,7 +417,7 @@ CREATE TABLE IF NOT EXISTS `user_or_testing` (
   `user_id` int(11) NOT NULL,
   `testing_id` int(11) NOT NULL,
   `user_group_id` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `user_or_testing`
@@ -389,10 +426,11 @@ CREATE TABLE IF NOT EXISTS `user_or_testing` (
 INSERT INTO `user_or_testing` (`id`, `user_id`, `testing_id`, `user_group_id`) VALUES
 (7, 2, 4, 1),
 (8, 1, 4, 1),
-(45, 2, 5, 1),
 (69, 3, 3, 1),
 (70, 4, 3, 1),
-(71, 1, 3, 1);
+(71, 1, 3, 1),
+(72, 1, 5, 1),
+(73, 2, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -519,7 +557,7 @@ ALTER TABLE `user_or_user_group`
 -- AUTO_INCREMENT для таблицы `answer`
 --
 ALTER TABLE `answer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT для таблицы `app_right`
 --
@@ -559,7 +597,7 @@ ALTER TABLE `testing`
 -- AUTO_INCREMENT для таблицы `testing_result`
 --
 ALTER TABLE `testing_result`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT для таблицы `user`
 --
@@ -579,7 +617,7 @@ ALTER TABLE `user_or_app_right`
 -- AUTO_INCREMENT для таблицы `user_or_testing`
 --
 ALTER TABLE `user_or_testing`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=72;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=74;
 --
 -- AUTO_INCREMENT для таблицы `user_or_user_group`
 --
