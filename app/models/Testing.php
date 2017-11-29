@@ -201,6 +201,13 @@ class Testing
      */
     public static function startTesting($testing_begin_info)
     {
+        $testing_state = self::getSessionTestingState();
+        if ($testing_state == true)
+        {
+            header('Location: /main/quiz?qid='.$_SESSION['questions'][0]);
+            return;
+        }
+
         if (!is_array($testing_begin_info))
         {
             return false;
@@ -210,6 +217,7 @@ class Testing
         {
             return false;
         }
+
         $_SESSION['testing_result_id'] = $testing_begin_info['testing_result_id'];
         $_SESSION['questions'] = null;
         $_SESSION['answers'] = null;
@@ -359,6 +367,20 @@ class Testing
         if (isset($_SESSION['testing_id']))
         {
             return $_SESSION['testing_id'];
+        }
+        return false;
+    }
+
+    /**
+     * Возвращает состояние тестирования из сессии
+     * @return bool
+     */
+    public static function getSessionTestingState()
+    {
+        session_start();
+        if (isset($_SESSION['testing_started']))
+        {
+            return $_SESSION['testing_started'];
         }
         return false;
     }
