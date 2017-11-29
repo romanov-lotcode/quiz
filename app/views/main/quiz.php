@@ -118,11 +118,11 @@
                                                             <button class="uk-button q_b fl" name="previous">Предыдущий</button>
                                                         <?php
                                                         endif; //if ($question_number > 1):
-                                                        if ($question_number != $question_count):
+                                                        //if ($question_number != $question_count):
                                                         ?>
                                                         <button class="uk-button q_b skip" name="skip" id="skip">Пропустить</button>
                                                         <?php
-                                                        endif; //if ($question_number != $question_count):
+                                                        //endif; //if ($question_number != $question_count):
                                                         ?>
                                                         <button class="uk-button q_b answer" name="respond" id="respond">Ответить</button>
                                                     </td>
@@ -213,15 +213,15 @@
                                     </td>
                                 </tr>
                             </table>
-                            <a href="#quiz_modal" data-uk-modal style="" id="show_modal">Открыть</a>
+                            <a href="#quiz_modal" data-uk-modal style="" class="show_modal" id="show_modal">Открыть</a>
 
                             <div id="quiz_modal" class="uk-modal">
 
                                 <div class="uk-modal-dialog">
-                                    <a href="" class="uk-close uk-close-alt" style="position:relative; top: -20px; right: -20px;"></a>
+                                    <a href="" class="uk-modal-close uk-close uk-close-alt" style="position:relative; top: -20px; right: -20px;"></a>
                                     <?= $modal_message ?>
                                     <?php
-                                    if ($is_testing_complete):
+                                    if (1 > 2):
                                     ?>
 
                                         <button class="uk-button complete fr" name="complete" title="Завершить тестирование">
@@ -254,7 +254,8 @@
         var b_respond = document.getElementById('respond');
         var b_skip = document.getElementById('skip');
         var is_question_answered = <?php echo ($is_question_answered)? 1: 0; ?>;
-        var progress = <?php echo ($is_question_answered)? 100: 0; ?>;
+        var progress = <?php echo ($is_testing_complete)? 100: 0; ?>;
+
 
         if (document.querySelectorAll(":checked").length || is_question_answered == 1)
         {
@@ -273,7 +274,6 @@
         }
         /*b_respond.style.display = document.querySelectorAll(":checked").length ? 'inline-block': 'none';
         b_skip.style.display = document.querySelectorAll(":checked").length ? 'none': 'inline-block';*/
-
     }
 </script>
 </body>

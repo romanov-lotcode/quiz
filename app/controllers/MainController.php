@@ -117,6 +117,14 @@ class MainController extends BaseController
 
             if (isset($_POST['start']))
             {
+                $testing_state = Testing::getSessionTestingState();
+                if ($testing_state == true)
+                {
+                    $testing_begin_info = array();
+                    Testing::startTesting($testing_begin_info);
+                    goto _gt_view;
+                }
+
                 $user_or_testing_id = htmlspecialchars($_POST['start']);
                 $user_testing = User_Testing::getUserTestingByID($user_or_testing_id);
                 if ($user_testing['user_id'] == $search['user_id']
@@ -146,7 +154,6 @@ class MainController extends BaseController
                     $testing_result['change_datetime'] = $date_time->format('Y-m-d H:i:s');*/
                     $testing_result['flag'] = '1';
                     $testing_begin_info['testing_result'] = $testing_result;
-
                     $testing = Testing::getTesting($testing_result['testing_id']);
                     $testing_begin_info['testing'] = $testing;
                     $questions = null;
@@ -196,6 +203,7 @@ class MainController extends BaseController
             }
         }
 
+        _gt_view:
         include_once APP_VIEWS.'main/index.php';
     }
 
@@ -528,6 +536,9 @@ class MainController extends BaseController
         $img_src = '';
         $is_question_answered = false;
 
+        $is_question_time_ok = true;
+        $is_question_complete_ok = true;
+
 
         $testing_start_time = Testing::getSessionTestingStartTime();
         $date_time = new DateTime($testing_start_time);
@@ -673,14 +684,21 @@ class MainController extends BaseController
                     $respond_question_answers = $temp_array;
                 }
 
-                Testing::setSessionAnswerRespond($question_number, $qid, $respond_question_answers);
-                if ($question_number != $question_count)
+                if ($is_question_time_ok)
                 {
-                    $next_qid = $questions[$question_number];
-                    if ($next_qid != null)
+                    Testing::setSessionAnswerRespond($question_number, $qid, $respond_question_answers);
+                    if ($question_number != $question_count)
                     {
-                        header('Location: /main/quiz?qid='.$next_qid);
+                        $next_qid = $questions[$question_number];
+                        if ($next_qid != null)
+                        {
+                            header('Location: /main/quiz?qid='.$next_qid);
+                        }
                     }
+                }
+                else
+                {
+                    $errors['question_time_is_over'] = 'Ответ не будет засчитан. <br />Время истекло для овета на данный вопрос истекло';
                 }
             }
 
@@ -777,6 +795,10 @@ class MainController extends BaseController
             if (isset($_POST['complete']))
             {
                 echo 'Нажато Завершить';
+                if ($is_question_complete_ok)
+                {
+                    // Заврешить
+                }
             }
         }
         else
