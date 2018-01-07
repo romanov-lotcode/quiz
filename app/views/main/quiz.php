@@ -1,15 +1,18 @@
+<?php
+$rand_param = rand(10000, 33333);
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?= DEFAULT_ENCODING_UPPERCASE ?>" />
-    <link rel="shortcut icon" href="/favicon.ico?00001" type="image/x-icon">
-    <link href="<?= APP_TEMPLATES ?>css/uikit.css?00001" rel="stylesheet">
-    <link href="<?= APP_TEMPLATES ?>css/chosen/chosen.css?00004" rel="stylesheet">
-    <link href="<?= APP_TEMPLATES ?>css/quiz_main.css?00004" rel="stylesheet">
-    <link href="<?= APP_TEMPLATES ?>css/nav.css?00001" rel="stylesheet">
-    <link href="<?= APP_TEMPLATES ?>css/font-awesome.min.css?00001" rel="stylesheet">
-    <link href="<?= APP_TEMPLATES ?>css/app_messages.css?00003" rel="stylesheet">
-    <link href="<?= APP_TEMPLATES ?>css/progress.css?00003" rel="stylesheet">
+    <link rel="shortcut icon" href="/favicon.ico?<?= $rand_param ?>" type="image/x-icon">
+    <link href="<?= APP_TEMPLATES ?>css/uikit.css?<?= $rand_param ?>" rel="stylesheet">
+    <link href="<?= APP_TEMPLATES ?>css/chosen/chosen.css?<?= $rand_param ?>" rel="stylesheet">
+    <link href="<?= APP_TEMPLATES ?>css/quiz_main.css?<?= $rand_param ?>" rel="stylesheet">
+    <link href="<?= APP_TEMPLATES ?>css/nav.css?<?= $rand_param ?>" rel="stylesheet">
+    <link href="<?= APP_TEMPLATES ?>css/font-awesome.min.css?<?= $rand_param ?>" rel="stylesheet">
+    <link href="<?= APP_TEMPLATES ?>css/app_messages.css?<?= $rand_param ?>" rel="stylesheet">
+    <link href="<?= APP_TEMPLATES ?>css/progress.css?<?= $rand_param ?>" rel="stylesheet">
 
     <script src="<?= APP_TEMPLATES ?>js/nav.js"></script>
     <script src="<?= APP_TEMPLATES ?>js/offcanvas.js"></script>
