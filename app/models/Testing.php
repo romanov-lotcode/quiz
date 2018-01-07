@@ -219,8 +219,11 @@ class Testing
         }
 
         $_SESSION['testing_result_id'] = $testing_begin_info['testing_result_id'];
-        $_SESSION['questions'] = null;
-        $_SESSION['answers'] = null;
+        $_SESSION['questions'] = null; // Вопросы
+        $_SESSION['answers'] = null; // Ответы к вопросу
+        $_SESSION['question_start_datetime'] = null; // Стартовая метка времени вопроса
+        $_SESSION['question_now'] = null; // Текущий вопрос
+        $_SESSION['question_time'] = null; // Время ответа на вопрос (в секундах)
 
         if (!is_array($testing_begin_info['questions']))
         {
@@ -258,6 +261,9 @@ class Testing
             $counter++;
             $_SESSION['questions'][] = $value;
             $_SESSION['answers'][$counter] = [$value => null];
+            $_SESSION['question_start_datetime'][$value] = null;
+            $_SESSION['question_now'] = $value;
+            $_SESSION['question_time'][$value] = 0;
         }
         $_SESSION['testing_id'] = $testing_begin_info['testing_result']['testing_id'];
         $_SESSION['time']['start'] = $testing_begin_info['testing_result']['begin_datetime'];
@@ -372,6 +378,48 @@ class Testing
     }
 
     /**
+     * Удаляет ID тестирования из сессии
+     * @return bool
+     */
+    public static function unsetSessionTesting()
+    {
+        session_start();
+        if (isset($_SESSION['testing_id']))
+        {
+            unset($_SESSION['testing_id']);
+        }
+        return false;
+    }
+
+    /**
+     * Возвращает ID результата тестирования из сессии
+     * @return bool|int
+     */
+    public static function getSessionTestingResultId()
+    {
+        session_start();
+        if (isset($_SESSION['testing_result_id']))
+        {
+            return $_SESSION['testing_result_id'];
+        }
+        return false;
+    }
+
+    /**
+     * Удаляет ID результата тестирования из сессии
+     * @return bool
+     */
+    public static function unsetSessionTestingResultId()
+    {
+        session_start();
+        if (isset($_SESSION['testing_result_id']))
+        {
+            unset($_SESSION['testing_result_id']);
+        }
+        return false;
+    }
+
+    /**
      * Возвращает состояние тестирования из сессии
      * @return bool
      */
@@ -381,6 +429,20 @@ class Testing
         if (isset($_SESSION['testing_started']))
         {
             return $_SESSION['testing_started'];
+        }
+        return false;
+    }
+
+    /**
+     * Удаляет состояние тестирования из сессии
+     * @return bool
+     */
+    public static function unsetSessionTestingState()
+    {
+        session_start();
+        if (isset($_SESSION['testing_started']))
+        {
+            unset($_SESSION['testing_started']);
         }
         return false;
     }
@@ -400,6 +462,20 @@ class Testing
     }
 
     /**
+     * Удаляет время начала тестирования из сессии
+     * @return bool
+     */
+    public static function unsetSessionTestingStartTime()
+    {
+        session_start();
+        if (isset($_SESSION['time']['start']))
+        {
+            unset($_SESSION['time']['start']);
+        }
+        return false;
+    }
+
+    /**
      * Возвращает вопросы из сессии
      * @return array|bool
      */
@@ -409,6 +485,20 @@ class Testing
         if (isset($_SESSION['questions']))
         {
             return $_SESSION['questions'];
+        }
+        return false;
+    }
+
+    /**
+     * Удаляет вопросы из сессии
+     * @return bool
+     */
+    public static function unsetSessionTestingQuestions()
+    {
+        session_start();
+        if (isset($_SESSION['questions']))
+        {
+            unset($_SESSION['questions']);
         }
         return false;
     }
@@ -427,6 +517,27 @@ class Testing
         return false;
     }
 
+    /**
+     * Удаляет ответы из сессии
+     * @return bool
+     */
+    public static function unsetSessionTestingAnswers()
+    {
+        session_start();
+        if (isset($_SESSION['answers']))
+        {
+            unset($_SESSION['answers']);
+        }
+        return false;
+    }
+
+    /**
+     * Устанавливает ответ/ответы
+     * @param int $question_number - номер вопроса
+     * @param int $question_id - ID вопроса
+     * @param [] $answers - массив с ответом/ответами
+     * @return bool
+     */
     public static function setSessionAnswerRespond($question_number, $question_id, $answers)
     {
         session_start();
@@ -437,5 +548,172 @@ class Testing
 
         $_SESSION['answers'][$question_number] = [$question_id => $answers];
         return true;
+    }
+
+    /**
+     * Устанавливает метку времени начала на вопрос
+     * @param int $q_id - ID вопроса
+     * @param string $datetime - время
+     * @return bool
+     */
+    public static function setSessionQuestionStartdatetime($q_id, $datetime)
+    {
+        session_start();
+        if ($q_id == null)
+        {
+            return false;
+        }
+
+        if ($datetime == null)
+        {
+            return false;
+        }
+
+        $_SESSION['question_start_datetime'][$q_id] = $datetime;
+        return true;
+    }
+
+    /**
+     * Возвращает метку времени начала на вопрос
+     * @param int $q_id - ID вопроса
+     * @return bool|string
+     */
+    public static function getSessionQuestionStartdatetime($q_id)
+    {
+        session_start();
+        if ($q_id == null)
+        {
+            return false;
+        }
+        if (isset($_SESSION['question_start_datetime'][$q_id]))
+        {
+            return $_SESSION['question_start_datetime'][$q_id];
+        }
+        return false;
+    }
+
+    /**
+     * Удаляет время начала вопроса из сессии
+     * @return bool
+     */
+    public static function unsetSessionQuestionStartdatetime()
+    {
+        session_start();
+        if (isset($_SESSION['question_start_datetime']))
+        {
+            unset($_SESSION['question_start_datetime']);
+        }
+        return false;
+    }
+
+    /**
+     * Устанавливает текущий вопрос
+     * @param int $q_id - ID вопроса
+     * @return bool
+     */
+    public static function setSessionQuestionNow($q_id)
+    {
+        session_start();
+        if ($q_id == null)
+        {
+            return false;
+        }
+
+        if (!isset($_SESSION['question_now']))
+        {
+            return false;
+        }
+
+        $_SESSION['question_now'] = $q_id;
+        return true;
+    }
+
+    /**
+     * Возвращает текущий вопрос
+     * @return bool|int
+     */
+    public static function getSessionQuestionNow()
+    {
+        session_start();
+        if (isset($_SESSION['question_now']))
+        {
+            return $_SESSION['question_now'];
+        }
+        return false;
+    }
+
+    /**
+     * Удаляет текущий вопрос из сессии
+     * @return bool
+     */
+    public static function unsetSessionQuestionNow()
+    {
+        session_start();
+        if (isset($_SESSION['question_now']))
+        {
+            unset($_SESSION['question_now']);
+        }
+        return false;
+    }
+
+    /**
+     * Устанавливает время для вопроса
+     * @param int $q_id - ID вопроса
+     * @param int $q_time - количество секунд
+     * @return bool
+     */
+    public static  function setSessionQuestionTime($q_id, $q_time)
+    {
+        session_start();
+        if ($q_id == null)
+        {
+            return false;
+        }
+
+        /*if (!isset($_SESSION['question_time'][$q_id]))
+        {
+            return false;
+        }*/
+
+        if ($q_time == null)
+        {
+            return false;
+        }
+
+        $_SESSION['question_time'][$q_id] = $q_time;
+        return true;
+    }
+
+    /**
+     * Возвращает время для вопроса
+     * @param int $q_id - ID вопроса
+     * @return bool|int
+     */
+    public static function getSessionQuestionTime($q_id)
+    {
+        session_start();
+        if ($q_id == null)
+        {
+            return false;
+        }
+        if (isset($_SESSION['question_time'][$q_id]))
+        {
+            return $_SESSION['question_time'][$q_id];
+        }
+        return false;
+    }
+
+    /**
+     * Удаляет время ответа на вопросы из сессии
+     * @return bool
+     */
+    public static function unsetSessionQuestionTime()
+    {
+        session_start();
+        if (isset($_SESSION['question_time']))
+        {
+            unset($_SESSION['question_time']);
+        }
+        return false;
     }
 }
