@@ -68,4 +68,26 @@ class Testing_Result
         }
         return false;
     }
+
+    /**
+     * Изменяет дату завершения тестирования
+     * @param [] $testing_result - Массив с данными
+     * @return bool|string
+     */
+    public static function editEndDateTime($testing_result)
+    {
+        $sql = 'UPDATE testing_result
+          SET
+            end_datetime = :end_datetime
+          WHERE id = :id AND flag > 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $testing_result['id'], PDO::PARAM_INT);
+        $result->bindParam(':end_datetime', $testing_result['end_datetime'], PDO::PARAM_STR);
+        if($result->execute())
+        {
+            return $db->lastInsertId();
+        }
+        return false;
+    }
 }
