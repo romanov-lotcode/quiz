@@ -150,7 +150,7 @@ class MainController extends BaseController
                     $testing_result['user_group_id'] = $user_testing['user_group_id'];
                     $date_time = new DateTime();
                     $testing_result['begin_datetime'] = $date_time->format('Y-m-d H:i:s');
-                    /*$testing_result['change_user_id	'] = $user_testing['user_id'];
+                    /*$testing_result['change_user_id'] = $user_testing['user_id'];
                     $testing_result['change_datetime'] = $date_time->format('Y-m-d H:i:s');*/
                     $testing_result['flag'] = '1';
                     $testing_begin_info['testing_result'] = $testing_result;
@@ -528,17 +528,20 @@ class MainController extends BaseController
         $qid = null; // ID вопроса
         $progress_percentagle = 0; // Прогресс прохождения
         $datetime_is_day_view = false; // Показывать ли дни в при отсчете времени тестирования
+        $question_datetime_is_day_view = false; // Показывать ли дни в при отсчете времени вопроса
         $modal_message = ''; // Сообщение для модального окна
         $is_testing_complete = false; // Тестирование пройдено
 
+        $answer_allow = true; // Разрешить отвечать на вопрос (false - запретить)
+
         $answered_question_numbers = null;
+
+        $all_testing_time = 0;
 
         $img_src = '';
         $is_question_answered = false;
 
-        $is_question_time_ok = true;
         $is_question_complete_ok = true;
-
 
         $testing_start_time = Testing::getSessionTestingStartTime();
         $date_time = new DateTime($testing_start_time);
@@ -595,11 +598,47 @@ class MainController extends BaseController
                         $datetime_is_day_view = true;
                     }
                     $date_time->add(new DateInterval('PT'.$hours.'H'.$minutes.'M'.$seconds.'S'));
+
+                    $now_dt = new DateTime();
+
+                    $testing_dt1 = $date_time->format('Y-m-d H:i:s');
+                    $testing_dt2 = $now_dt->format('Y-m-d H:i:s');
+                    $sec_testing_dt1 = strtotime($testing_dt1);
+                    $sec_testing_dt2 = strtotime($testing_dt2);
+                    $all_testing_time = abs($sec_testing_dt1 - $sec_testing_dt2);
+
+                    if ($testing_dt2 >= $testing_dt1)
+                    {
+                        goto _gt_complete;
+                    }
                     $testing_countdown = $date_time->format('Y/m/d H:i:s');
                 }
             }
 
             $question = Question::getQuestion($qid);
+
+            $img_src = 'http://quiz-v2/app/templates/images/questions/'.$question['path_img'];
+            $question_number = array_search($qid, $questions);
+            $question_number++;
+            $question_answers = Answer::getAnswers($qid);
+
+            $last_question_now = Testing::getSessionQuestionNow(); // Получаем последний засекаемый вопрос
+
+            $question_session_start_datetime = Testing::getSessionQuestionStartdatetime($last_question_now); // Получаем начало времени вопроса
+
+            if ($question_session_start_datetime != null)
+            {
+                // Вычисляем количество секунд, которые были затрачены на ответ
+                // и прибавляем их к конечному времени
+                $t1 = strtotime($question_session_start_datetime); // Переводим время начала вопроса в секунды
+                $t2 = strtotime('now'); // Текущее время в секундах
+                $interval_t2_t1 = $t2 - $t1; // Получаем разницу по времени в секундах
+                $old_q_time = Testing::getSessionQuestionTime($last_question_now);
+                // Запоминаем время ответа на предыдущий вопрос
+                Testing::setSessionQuestionTime($last_question_now, $old_q_time+$interval_t2_t1);
+            }
+
+            $question_time = Testing::getSessionQuestionTime($qid); // Получаем, затраченное время на текущий вопрос
 
             if ($question['question_time_flag'] == FLAG_ON)
             {
@@ -619,21 +658,31 @@ class MainController extends BaseController
                     {
                         $datetime_is_day_view = true;
                     }
-                    $date_time->add(new DateInterval('PT'.$hours.'H'.$minutes.'M'.$seconds.'S'));
-                    $question_countdown = $date_time->format('Y/m/d H:i:s');
+                    $qt_all = new DateTime();
+                    $start_q_dt = new DateTime();
+                    $qt_all->add(new DateInterval('PT'.$hours.'H'.$minutes.'M'.$seconds.'S'));
+
+
+                    $qt_hours = floor($question_time/3600);
+                    $qt_minutes = ($question_time/3600 - $qt_hours)*60;
+                    $qt_seconds = ceil(($qt_minutes - floor($qt_minutes))*60);
+
+                    $qt_hours = intval($qt_hours);
+                    $qt_minutes = intval($qt_minutes);
+                    $qt_seconds = intval($qt_seconds);
+
+                    $max_q_dt = $qt_all;
+                    $qt_all->sub(new DateInterval('PT'.$qt_hours.'H'.$qt_minutes.'M'.$qt_seconds.'S'));
+                    $q_dt_eq1 = $start_q_dt->format('Y-m-d H:i:s');
+                    $q_dt_eq2 = $qt_all->format('Y-m-d H:i:s');
+
+                    if ($q_dt_eq2 < $q_dt_eq1)
+                    {
+                        $answer_allow = false;
+                    }
+
+                    $question_countdown = $qt_all->format('Y/m/d H:i:s');
                 }
-            }
-
-            $img_src = 'http://quiz-v2/app/templates/images/questions/'.$question['path_img'];
-            $question_number = array_search($qid, $questions);
-            $question_number++;
-            $question_answers = Answer::getAnswers($qid);
-
-            $question_start_datetime = new DateTime();
-
-            if ($question['question_time_flag'] == FLAG_ON)
-            {
-
             }
 
 
@@ -684,9 +733,28 @@ class MainController extends BaseController
                     $respond_question_answers = $temp_array;
                 }
 
-                if ($is_question_time_ok)
+                if ($answer_allow)
                 {
                     Testing::setSessionAnswerRespond($question_number, $qid, $respond_question_answers);
+                    // Сделать проверку - все ли вопросы отвечены и если все, то перейти в пройденно
+                    $answers = Testing::getSessionTestingAnswers();
+                    $is_complete = true;
+                    foreach ($answers as $a_key => $a_array)
+                    {
+                        foreach ($a_array as $a_question_id => $a_answers)
+                        {
+                            if ($a_answers == null)
+                            {
+                                $is_complete = false;
+                            }
+                        }
+                    }
+                    // Если нет неотвеченных вопросов, то переходим в завершению
+                    if ($is_complete)
+                    {
+                        $is_testing_complete = true;
+                        goto _gt_complete;
+                    }
                     if ($question_number != $question_count)
                     {
                         $next_qid = $questions[$question_number];
@@ -715,6 +783,7 @@ class MainController extends BaseController
             }
 
             $answers = Testing::getSessionTestingAnswers();
+
             $n = 0;
             if ($question['question_type_id'] == QUESTION_TYPE_ONE_TO_ONE)
             {
@@ -786,18 +855,73 @@ class MainController extends BaseController
                     }
                 }
             }
-            $progress_percentagle = (count($answered_question_numbers)/$question_count) * 100;
+            _gt_complete:
+            $progress_percentagle = intval((count($answered_question_numbers)/$question_count) * 100);
             if ($progress_percentagle == 100)
             {
                 $is_testing_complete = true;
                 $modal_message = 'Вы ответили на все вопросы.';
             }
-            if (isset($_POST['complete']))
+            if (isset($_POST['complete']) || $is_testing_complete)
             {
-                echo 'Нажато Завершить';
                 if ($is_question_complete_ok)
                 {
-                    // Заврешить
+                    $testing_complete_info = null; // Массив с данными тестирования
+                    $end_datetime = new DateTime();
+                    $testing_complete_info['end_datetime'] = $end_datetime->format('Y-m-d H:i:s'); // Дата-время завершения тестирования
+                    $testing_complete_info['testing_result_id'] = Testing::getSessionTestingResultId(); // ID результата тестирования
+                    $testing_complete_info['answers'] = null; // Результаты ответа/вопрос/затраченное время
+                    $answers = Testing::getSessionTestingAnswers(); // Получаем ответы из сессии
+                    foreach ($answers as $q_number => $a_array)
+                    {
+                        foreach ($a_array as $a_question_id => $a_answers)
+                        {
+                            $temp_array = null;
+                            $temp_array['testing_result_id'] = $testing_complete_info['testing_result_id'];
+                            $temp_array['question_id'] = $a_question_id;
+                            $temp_array['question_time'] = Testing::getSessionQuestionTime($a_question_id);
+                            if ($a_answers == null)
+                            {
+                                $temp_array['answer_id'] = 0;
+                                Testing_Result_Report::add($temp_array);
+                            }
+                            else
+                            {
+                                foreach($a_answers as $a_a_key => $a_a_answer_id)
+                                {
+                                    $temp_array['answer_id'] = $a_a_answer_id;
+                                    Testing_Result_Report::add($temp_array);
+                                }
+                            }
+                        }
+                    }
+                    // Вносим дату завершения тестирования в результат
+                    $temp_array = null;
+                    $temp_array['id'] = $testing_complete_info['testing_result_id'];
+                    $temp_array['end_datetime'] = $testing_complete_info['end_datetime'];
+                    Testing_Result::editEndDateTime($temp_array);
+
+                    $u_id = User::checkLogged();
+                    // Вносим дату последнего тестирования пользователя
+                    $temp_array = null;
+                    $temp_array['id'] = $u_id;
+                    $temp_array['last_test_datetime'] = $testing_complete_info['end_datetime'];
+                    User::editLastTestDateTime($temp_array);
+
+                    // Обнуляем
+                    Testing::unsetSessionQuestionNow();
+                    Testing::unsetSessionTestingState();
+                    Testing::unsetSessionTestingQuestions();
+                    Testing::unsetSessionTestingAnswers();
+                    Testing::unsetSessionQuestionStartdatetime();
+                    Testing::unsetSessionTestingStartTime();
+                    Testing::unsetSessionTesting();
+                    // ID результата тестирования
+                    header('Location: /result/view?testing_result_id='.$testing_complete_info['testing_result_id'].'&user_id='.$u_id);
+                }
+                else
+                {
+                    $errors['complete'] = 'Невозможно завершить тестирование из-за возникших ошибок';
                 }
             }
         }
@@ -806,9 +930,11 @@ class MainController extends BaseController
             $errors['question'] = 'Данного вопроса не существует';
         }
 
-
         if ($is_can)
         {
+            Testing::setSessionQuestionNow($qid);
+            $temp = new DateTime();
+            Testing::setSessionQuestionStartdatetime($qid, $temp->format('Y-m-d H:i:s'));
             include_once APP_VIEWS.'main/quiz.php';
         }
         else

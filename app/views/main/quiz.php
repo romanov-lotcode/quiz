@@ -53,7 +53,11 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                <tr class="content">
+                                                <tr class="content"
+                                                    <?php if (!$answer_allow): ?>
+                                                    style="pointer-events: none; background: rgba(0, 0, 0, .3);"
+                                                    <?php endif; //if (!$answer_allow): ?>
+                                                    >
                                                     <td>
                                                         <div class="container">
                                                             <div class="question"><?= $question_number . '. '. $question['name']; ?></div>
@@ -148,6 +152,16 @@
                                                                                 event.strftime('<?php if ($datetime_is_day_view) echo '%D дней '; ?>%H:%M:%S')
                                                                             );
                                                                         });
+
+                                                                    var all_testing_time = <?= $all_testing_time ?>;
+                                                                    $(document).ready(function () {
+                                                                        setInterval(function () {
+                                                                            all_testing_time = all_testing_time - 1;
+                                                                            if (all_testing_time == 0) {
+                                                                                document.getElementById('complete').click();
+                                                                            }
+                                                                        }, 1000);
+                                                                    });
                                                                 </script>
                                                                 <?php
                                                             endif; // if ($testing['testing_time_flag'] == FLAG_ON):
@@ -224,7 +238,7 @@
                                     if (1 > 2):
                                     ?>
 
-                                        <button class="uk-button complete fr" name="complete" title="Завершить тестирование">
+                                        <button class="uk-button complete fr" name="complete" id="complete" title="Завершить тестирование">
                                             <span class="uk-form-icon uk-icon-power-off"></span>
                                             Завершить
                                         </button>
