@@ -409,6 +409,23 @@ class User
     }
 
     /**
+     * Изменить время последнего тестирования
+     * @param [] $user - массив с данными
+     */
+    public static function editLastTestDateTime($user)
+    {
+        $sql = 'UPDATE user
+          SET
+            last_test_datetime = :last_test_datetime
+          WHERE id = :id AND flag >= 0';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':id', $user['id'], PDO::PARAM_INT);
+        $result->bindParam(':last_test_datetime', $user['last_test_datetime'], PDO::PARAM_STR);
+        $result->execute();
+    }
+
+    /**
      * Првоеряет данные пользователя.
      * @param array() $user_data - данные о пользователе
      * @return bool||int
