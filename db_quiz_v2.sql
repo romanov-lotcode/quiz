@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Ноя 03 2017 г., 14:51
+-- Время создания: Янв 07 2018 г., 18:26
 -- Версия сервера: 5.7.11
--- Версия PHP: 5.5.33
+-- Версия PHP: 5.6.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `menu_panel` (
 
 INSERT INTO `menu_panel` (`id`, `name`, `page_name`, `icon_name`, `title`, `description`, `type`, `url_address`, `parent_id`, `index_number`, `member`, `flag`) VALUES
 (1, 'Пройти тестирование', 'index', 'home', 'Пройти тестирование', 'Страница для прохождения тестирования', 1, '/main/index', 0, 0, 1, 1),
-(2, 'Результаты', 'result', 'circle', 'Результаты пройденных тестов', NULL, 1, '/main/result', 0, 1, 2, 1),
+(2, 'Результаты', 'result', 'circle', 'Результаты пройденных тестов', NULL, 1, '/result/index', 0, 1, 2, 1),
 (3, 'Модератор', 'moderator', 'gear', 'Настройки модератора', 'Модератор обладает правами настройки тестов, направлений, тестирований и т.п.', 2, '#', 0, 2, 8, 1),
 (4, 'Тест', 'moderator', 'gear', 'Настроить тест', 'Настройки тестов', 1, '/test/index', 3, 2, 16, 1),
 (5, 'Направление', 'moderator', 'gear', 'Настроить направление', 'Настройка направлений', 1, '/direction/index', 3, 1, 32, 1),
@@ -260,7 +260,7 @@ CREATE TABLE IF NOT EXISTS `testing` (
 INSERT INTO `testing` (`id`, `name`, `test_id`, `testing_count`, `question_count`, `is_question_random`, `is_answer_random`, `minimum_score`, `testing_time`, `testing_time_flag`, `change_user_id`, `change_datetime`, `flag`) VALUES
 (1, 'Тестирование 1', 1, 1, 100, 1, 2, 49, '00:11:00', 2, 1, '2017-08-18 11:59:12', 2),
 (2, '22', 1, 5, 3, 2, 1, 12, '111:00:00', 1, 1, '2017-08-30 14:03:10', -1),
-(3, 'Тестирование2', 1, 30, 4, 1, 1, 30, '78:05:00', 1, 1, '2017-10-27 13:01:10', 1),
+(3, 'Тестирование2', 1, 30, 4, 1, 1, 30, '00:02:00', 1, 1, '2018-01-07 18:19:17', 1),
 (4, 'Тестирование А12', 2, 1, 20, 2, 2, 100, '00:00:50', 2, 1, '2017-08-17 15:56:21', 2),
 (5, 'Тестирование3', 1, 30, 3, 1, 1, 10, '00:10:00', 2, 1, '2017-08-18 08:16:51', 1),
 (6, 'Тестирование4', 1, 4, 40, 1, 2, 20, '543:10:00', 1, 1, '2017-08-18 08:59:53', 2);
@@ -281,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `testing_result` (
   `change_user_id` int(11) NOT NULL DEFAULT '0',
   `change_datetime` datetime DEFAULT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `testing_result`
@@ -305,7 +305,48 @@ INSERT INTO `testing_result` (`id`, `user_id`, `testing_id`, `user_group_id`, `b
 (15, 1, 3, 1, '2017-11-01 08:34:39', NULL, 0, NULL, 1),
 (16, 1, 3, 1, '2017-11-01 16:16:05', NULL, 0, NULL, 1),
 (17, 1, 3, 1, '2017-11-02 15:50:09', NULL, 0, NULL, 1),
-(18, 1, 3, 1, '2017-11-03 09:15:52', NULL, 0, NULL, 1);
+(18, 1, 3, 1, '2017-11-03 09:15:52', NULL, 0, NULL, 1),
+(19, 1, 3, 1, '2018-01-05 21:57:03', NULL, 0, NULL, 1),
+(20, 1, 3, 1, '2018-01-06 11:56:30', NULL, 0, NULL, 1),
+(21, 1, 3, 1, '2018-01-06 12:08:20', NULL, 0, NULL, 1),
+(22, 1, 3, 1, '2018-01-06 12:12:15', NULL, 0, NULL, 1),
+(23, 1, 3, 1, '2018-01-07 00:48:50', NULL, 0, NULL, 1),
+(24, 1, 3, 1, '2018-01-07 16:20:43', '2018-01-07 16:21:12', 0, NULL, 1),
+(25, 1, 3, 1, '2018-01-07 16:31:15', '2018-01-07 16:31:29', 0, NULL, 1),
+(26, 1, 3, 1, '2018-01-07 18:19:31', '2018-01-07 18:21:32', 0, NULL, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `testing_result_report`
+--
+
+CREATE TABLE IF NOT EXISTS `testing_result_report` (
+  `id` int(11) NOT NULL,
+  `testing_result_id` int(11) NOT NULL,
+  `question_id` int(11) NOT NULL,
+  `answer_id` int(11) NOT NULL,
+  `question_time` int(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `testing_result_report`
+--
+
+INSERT INTO `testing_result_report` (`id`, `testing_result_id`, `question_id`, `answer_id`, `question_time`) VALUES
+(1, 24, 1, 1, 4),
+(2, 24, 13, 7, 3),
+(3, 24, 12, 6, 4),
+(4, 24, 12, 10, 4),
+(5, 24, 2, 12, 17),
+(6, 25, 2, 12, 4),
+(7, 25, 12, 5, 4),
+(8, 25, 13, 8, 3),
+(9, 25, 1, 2, 3),
+(10, 26, 2, 12, 75),
+(11, 26, 13, 7, 6),
+(12, 26, 1, 0, 0),
+(13, 26, 12, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -334,7 +375,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `lastname`, `firstname`, `middlename`, `login`, `password`, `email`, `registered_datetime`, `last_test_datetime`, `change_datetime`, `change_user_id`, `flag`) VALUES
 (0, 'Нет', '', NULL, 'нет', '123456', NULL, '2017-08-01 00:00:00', NULL, NULL, 0, 0),
-(1, 'Романов', 'Сергей', 'Сергеевич', 'romanovss', 'dca20cd83717c9596b17e66822f7f507', '', '2017-05-13 22:32:42', NULL, '2017-09-01 12:07:02', 1, 1),
+(1, 'Романов', 'Сергей', 'Сергеевич', 'romanovss', 'dca20cd83717c9596b17e66822f7f507', '', '2017-05-13 22:32:42', '2018-01-07 18:21:32', '2017-09-01 12:07:02', 1, 1),
 (2, 'Романов', 'Сергей', 'По Умолчанию', 'defromanov', 'dca20cd83717c9596b17e66822f7f507', 's.nichipurenko@yandex.ru', '2017-05-31 18:39:03', NULL, NULL, 0, 1),
 (3, 'Аакин', 'Серж', '', 'serjserj', 'dca20cd83717c9596b17e66822f7f507', '', '2017-08-21 09:15:46', NULL, NULL, 0, 1),
 (4, 'Можно', 'Будет', 'Удалить', 'deletyaev', 'e10adc3949ba59abbe56e057f20f883e', '', '2017-08-30 16:36:42', NULL, '2017-09-01 13:53:03', 1, 1),
@@ -519,6 +560,12 @@ ALTER TABLE `testing_result`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `testing_result_report`
+--
+ALTER TABLE `testing_result_report`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Индексы таблицы `user`
 --
 ALTER TABLE `user`
@@ -597,7 +644,12 @@ ALTER TABLE `testing`
 -- AUTO_INCREMENT для таблицы `testing_result`
 --
 ALTER TABLE `testing_result`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=27;
+--
+-- AUTO_INCREMENT для таблицы `testing_result_report`
+--
+ALTER TABLE `testing_result_report`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT для таблицы `user`
 --
