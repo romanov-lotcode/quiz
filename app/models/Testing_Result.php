@@ -31,7 +31,7 @@ class Testing_Result
           user.middlename,
           testing.question_count,
           testing.minimum_score,
-          direction.name
+          direction.name AS direction_name
         FROM
           testing_result
           INNER JOIN testing ON (testing_result.testing_id = testing.id)
