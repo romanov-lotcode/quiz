@@ -42,6 +42,8 @@ define('CAN_MODERATOR_ANSWER', 'CAN_MODERATOR_ANSWER'); // Может измен
 define('CAN_MODERATOR_USER_GROUP', 'CAN_MODERATOR_USER_GROUP'); // Может изменять Группы пользователей
 define('CAN_MODERATOR_USER', 'CAN_MODERATOR_USER'); // Может изменять Пользователей
 define('CAN_MODERATOR_USER_TESTING', 'CAN_MODERATOR_USER_TESTING'); // Может назначать тестирования
+define('CAN_RESULT_VIEW', 'CAN_RESULT_VIEW'); // Может просматривать результат
+define('CAN_OTHER_RESULT_VIEW', 'CAN_OTHER_RESULT_VIEW'); // Может просматривать результат других пользователей
 
 // Страница, с которой был направлен пользователь
 define('PAGE_FROM_USER_INDEX', 'ui');
