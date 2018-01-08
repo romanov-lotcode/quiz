@@ -52,4 +52,7 @@ return [
     'user_user_group/delete' => ['controller' => 'UserUserGroup', 'action' => 'delete'],
 
     'user_testing/index' => ['controller' => 'UserTesting', 'action' => 'index'],
+
+    'result/index' => ['controller' => 'Result', 'action' => 'index'],
+    'result/view' => ['controller' => 'Result', 'action' => 'view'],
 ];

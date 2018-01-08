@@ -70,6 +70,27 @@ table.search_param td{
     vertical-align: bottom;
 }
 
+table.result{
+    background: rgba(154, 182, 186, .1);
+    height: 100%;
+}
+
+table.result table{
+    border: 0px;
+    padding: 5px;
+    padding-top: 10px;
+}
+
+table.result table td{
+    vertical-align: text-top;
+}
+
+table.result div.extra{
+    color: #808080;
+    display: inline;
+    margin-right: 5px;
+}
+
 /*
 Таблица для просмотра информации
 BEGIN
