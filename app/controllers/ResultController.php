@@ -77,6 +77,10 @@ class ResultController extends BaseController
         $is_can = false;
         $is_can_other_result_view = false;
 
+        $count_wrong = 0;
+        $count_scip = 0;
+        $count_correct = 0;
+
         foreach ($user_right as $u_r)
         {
             if ($u_r['right_name'] == CAN_OTHER_RESULT_VIEW)

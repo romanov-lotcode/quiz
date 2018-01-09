@@ -62,6 +62,20 @@ include APP_VIEWS . 'layouts/header.php';
                             </td>
                         </tr>
                     </table>
+
+                    <table class="uk-form-row uk-width-1-1" cellspacing="0" style="margin-top: -5px">
+                        <tr>
+                            <td class="uk-width-1-3 uk-alert uk-alert-success">
+                                Правильные ответы: <b><?= $count_correct ?></b>
+                            </td>
+                            <td class="uk-width-1-3 uk-alert uk-alert-danger">
+                                Неправильные ответы: <b><?= $count_wrong ?></b>
+                            </td>
+                            <td class="uk-width-1-3 uk-alert">
+                                Пропущенные вопросы: <b><?= $count_scip ?></b>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
