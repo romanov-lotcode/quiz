@@ -134,4 +134,47 @@ class Date_Converter
 
         return $date_array;
     }
+
+    /**
+     * Возвращает название месяца по его порядковому номеру
+     * @param int $month - месяц
+     * @param int $flag_value - параметр, указывающий в каком виде вернуть месяц
+     * @return string
+     */
+    public function getMonthName($month, $flag_value = 1)
+    {
+        $result = '';
+
+        $months_short = array( 1 => 'янв' , 'фев' , 'мар' , 'апр' , 'мая' , 'июн' , 'июл' , 'авг' , 'сен' , 'окт' , 'ноя' , 'дек');
+        $months_rp_1 = array( 1 => 'Января' , 'Февраля' , 'Марта' , 'Апреля' , 'Мая' , 'Июня' , 'Июля' , 'Августа' , 'Сентября' , 'Октября' , 'Ноября' , 'Декабря');
+        $months_rp_2 = array( 1 => 'января' , 'февраля' , 'марта' , 'апреля' , 'мая' , 'июня' , 'июля' , 'августа' , 'сентября' , 'октября' , 'ноября' , 'декабря');
+
+        $flag_value = intval($flag_value);
+        if ($flag_value <= 0)
+        {
+            $flag_value = 1;
+        }
+
+        $month = intval($month);
+
+        if ($month == 0)
+        {
+            return $result;
+        }
+
+        if ($flag_value == 1)
+        {
+            $result = $months_short[$month];
+        }
+        if ($flag_value == 2)
+        {
+            $result = $months_rp_1[$month];
+        }
+        if ($flag_value == 3)
+        {
+            $result = $months_rp_2[$month];
+        }
+
+        return $result;
+    }
 }
