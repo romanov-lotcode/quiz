@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Янв 08 2018 г., 22:30
+-- Время создания: Янв 11 2018 г., 10:47
 -- Версия сервера: 5.7.11
 -- Версия PHP: 5.6.19
 
@@ -249,6 +249,7 @@ CREATE TABLE IF NOT EXISTS `testing` (
   `minimum_score` int(1) NOT NULL,
   `testing_time` time NOT NULL,
   `testing_time_flag` int(1) NOT NULL,
+  `is_result_view` int(1) NOT NULL DEFAULT '1',
   `change_user_id` int(11) NOT NULL,
   `change_datetime` datetime NOT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
@@ -258,13 +259,13 @@ CREATE TABLE IF NOT EXISTS `testing` (
 -- Дамп данных таблицы `testing`
 --
 
-INSERT INTO `testing` (`id`, `name`, `test_id`, `testing_count`, `question_count`, `is_question_random`, `is_answer_random`, `minimum_score`, `testing_time`, `testing_time_flag`, `change_user_id`, `change_datetime`, `flag`) VALUES
-(1, 'Тестирование 1', 1, 1, 100, 1, 2, 49, '00:11:00', 2, 1, '2017-08-18 11:59:12', 2),
-(2, '22', 1, 5, 3, 2, 1, 12, '111:00:00', 1, 1, '2017-08-30 14:03:10', -1),
-(3, 'Тестирование2', 1, 30, 4, 1, 1, 30, '00:02:00', 1, 1, '2018-01-07 18:19:17', 1),
-(4, 'Тестирование А12', 2, 1, 20, 2, 2, 100, '00:00:50', 2, 1, '2017-08-17 15:56:21', 2),
-(5, 'Тестирование3', 1, 30, 3, 1, 1, 10, '00:10:00', 2, 1, '2017-08-18 08:16:51', 1),
-(6, 'Тестирование4', 1, 4, 40, 1, 2, 20, '543:10:00', 1, 1, '2017-08-18 08:59:53', 2);
+INSERT INTO `testing` (`id`, `name`, `test_id`, `testing_count`, `question_count`, `is_question_random`, `is_answer_random`, `minimum_score`, `testing_time`, `testing_time_flag`, `is_result_view`, `change_user_id`, `change_datetime`, `flag`) VALUES
+(1, 'Тестирование 1', 1, 1, 100, 1, 2, 49, '00:11:00', 2, 1, 1, '2017-08-18 11:59:12', 2),
+(2, '22', 1, 5, 3, 2, 1, 12, '111:00:00', 1, 1, 1, '2017-08-30 14:03:10', -1),
+(3, 'Тестирование2', 1, 30, 4, 1, 1, 30, '00:02:00', 1, 1, 1, '2018-01-07 18:19:17', 1),
+(4, 'Тестирование А12', 2, 1, 20, 2, 2, 100, '00:00:50', 2, 1, 1, '2017-08-17 15:56:21', 2),
+(5, 'Тестирование3', 1, 30, 3, 1, 1, 10, '00:10:00', 2, 1, 1, '2017-08-18 08:16:51', 1),
+(6, 'Тестирование4', 1, 4, 40, 1, 2, 20, '543:10:00', 1, 1, 1, '2017-08-18 08:59:53', 2);
 
 -- --------------------------------------------------------
 
@@ -282,7 +283,7 @@ CREATE TABLE IF NOT EXISTS `testing_result` (
   `change_user_id` int(11) NOT NULL DEFAULT '0',
   `change_datetime` datetime DEFAULT NULL,
   `flag` int(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `testing_result`
@@ -315,7 +316,9 @@ INSERT INTO `testing_result` (`id`, `user_id`, `testing_id`, `user_group_id`, `b
 (24, 1, 3, 1, '2018-01-07 16:20:43', '2018-01-07 16:21:12', 0, NULL, 1),
 (25, 1, 3, 1, '2018-01-07 16:31:15', '2018-01-07 16:31:29', 0, NULL, 1),
 (26, 1, 3, 1, '2018-01-07 18:19:31', '2018-01-07 18:21:32', 0, NULL, 1),
-(27, 1, 3, 1, '2018-01-07 19:01:53', '2018-01-07 19:03:53', 0, NULL, 1);
+(27, 1, 3, 1, '2018-01-07 19:01:53', '2018-01-07 19:03:53', 0, NULL, 1),
+(28, 1, 3, 1, '2018-01-09 09:25:57', '2018-01-09 09:26:14', 0, NULL, 1),
+(29, 1, 3, 1, '2018-01-09 09:28:06', '2018-01-09 09:30:07', 0, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -329,7 +332,7 @@ CREATE TABLE IF NOT EXISTS `testing_result_report` (
   `question_id` int(11) NOT NULL,
   `answer_id` int(11) NOT NULL,
   `question_time` int(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `testing_result_report`
@@ -352,7 +355,16 @@ INSERT INTO `testing_result_report` (`id`, `testing_result_id`, `question_id`, `
 (14, 27, 12, 5, 14),
 (15, 27, 13, 7, 5),
 (16, 27, 2, 0, 55),
-(17, 27, 1, 0, 2);
+(17, 27, 1, 0, 2),
+(18, 28, 12, 5, 5),
+(19, 28, 13, 8, 3),
+(20, 28, 2, 12, 6),
+(21, 28, 1, 1, 3),
+(22, 29, 2, 12, 15),
+(23, 29, 1, 0, 13),
+(24, 29, 12, 5, 21),
+(25, 29, 12, 10, 21),
+(26, 29, 13, 7, 46);
 
 -- --------------------------------------------------------
 
@@ -381,7 +393,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `lastname`, `firstname`, `middlename`, `login`, `password`, `email`, `registered_datetime`, `last_test_datetime`, `change_datetime`, `change_user_id`, `flag`) VALUES
 (0, 'Нет', '', NULL, 'нет', '123456', NULL, '2017-08-01 00:00:00', NULL, NULL, 0, 0),
-(1, 'Романов', 'Сергей', 'Сергеевич', 'romanovss', 'dca20cd83717c9596b17e66822f7f507', '', '2017-05-13 22:32:42', '2018-01-07 19:03:53', '2017-09-01 12:07:02', 1, 1),
+(1, 'Романов', 'Сергей', 'Сергеевич', 'romanovss', 'dca20cd83717c9596b17e66822f7f507', '', '2017-05-13 22:32:42', '2018-01-09 09:30:07', '2017-09-01 12:07:02', 1, 1),
 (2, 'Романов', 'Сергей', 'По Умолчанию', 'defromanov', 'dca20cd83717c9596b17e66822f7f507', 's.nichipurenko@yandex.ru', '2017-05-31 18:39:03', NULL, NULL, 0, 1),
 (3, 'Аакин', 'Серж', '', 'serjserj', 'dca20cd83717c9596b17e66822f7f507', '', '2017-08-21 09:15:46', NULL, NULL, 0, 1),
 (4, 'Можно', 'Будет', 'Удалить', 'deletyaev', 'e10adc3949ba59abbe56e057f20f883e', '', '2017-08-30 16:36:42', NULL, '2017-09-01 13:53:03', 1, 1),
@@ -650,12 +662,12 @@ ALTER TABLE `testing`
 -- AUTO_INCREMENT для таблицы `testing_result`
 --
 ALTER TABLE `testing_result`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT для таблицы `testing_result_report`
 --
 ALTER TABLE `testing_result_report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=27;
 --
 -- AUTO_INCREMENT для таблицы `user`
 --
