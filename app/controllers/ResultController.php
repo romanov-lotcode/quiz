@@ -75,6 +75,7 @@ class ResultController extends BaseController
 
         $testing_result_info = []; // Массив с данными отчета результата
         $testing_result_report = []; // Массив с вопросами и ответами результата
+        $filtered_result_report = []; // Отфильтрованный массив с данными
 
         $user_id_to_view = 0;
 
@@ -169,7 +170,39 @@ class ResultController extends BaseController
             goto _gt_view;
         }
 
-
+        $question_id_temp = 0;
+        foreach ($testing_result_report as $trr_key => $trr_value)
+        {
+            if ($question_id_temp == 0)
+            {
+                $filtered_result_report[$trr_value['question_id']]['question_name'] = $trr_value['question_name'];
+                $filtered_result_report[$trr_value['question_id']]['question_type_id'] = $trr_value['question_type_id'];
+                $filtered_result_report[$trr_value['question_id']]['question_explanation'] = $trr_value['question_explanation'];
+                $filtered_result_report[$trr_value['question_id']]['question_path_img'] = $trr_value['question_path_img'];
+                $filtered_result_report[$trr_value['question_id']]['question_time'] = $trr_value['question_time'];
+                $filtered_result_report[$trr_value['question_id']]['answers'][] = $trr_value['answer_id'];
+                $filtered_result_report[$trr_value['question_id']]['all_answers'] = Answer::getAnswers($trr_value['question_id'], 1);
+            }
+            else
+            {
+                if ($trr_value['question_id'] == $question_id_temp)
+                {
+                    $filtered_result_report[$trr_value['question_id']]['answers'][] = $trr_value['answer_id'];
+                }
+                else
+                {
+                    $filtered_result_report[$trr_value['question_id']]['question_name'] = $trr_value['question_name'];
+                    $filtered_result_report[$trr_value['question_id']]['question_type_id'] = $trr_value['question_type_id'];
+                    $filtered_result_report[$trr_value['question_id']]['question_explanation'] = $trr_value['question_explanation'];
+                    $filtered_result_report[$trr_value['question_id']]['question_path_img'] = $trr_value['question_path_img'];
+                    $filtered_result_report[$trr_value['question_id']]['question_time'] = $trr_value['question_time'];
+                    $filtered_result_report[$trr_value['question_id']]['answers'][] = $trr_value['answer_id'];
+                    $filtered_result_report[$trr_value['question_id']]['all_answers'] = Answer::getAnswers($trr_value['question_id'], 1);
+                }
+            }
+            $question_id_temp = $trr_value['question_id'];
+        }
+        print_r($filtered_result_report);
 
 
 
