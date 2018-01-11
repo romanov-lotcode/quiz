@@ -31,6 +31,7 @@ class Testing_Result
           user.middlename,
           testing.question_count,
           testing.minimum_score,
+          testing.is_result_view,
           direction.name AS direction_name
         FROM
           testing_result
