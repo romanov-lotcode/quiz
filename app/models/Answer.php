@@ -56,59 +56,84 @@ class Answer
     /**
      * Получить ответы по параметрам поиска
      * @param []|int $search - параметры поиска
+     * @param int $result_param - Параметр (1 - ответы для результата)
      * @return array
      */
-    public static function getAnswers($search)
+    public static function getAnswers($search, $result_param = 0)
     {
-        if (is_array($search))
-        {
-            $sql = 'SELECT
-              answer.id,
-              answer.name,
-              answer.question_id,
-              answer.complexity_coefficient,
-              answer.change_user_id,
-              answer.change_datetime,
-              answer.flag
-            FROM
-              answer
-              INNER JOIN question ON (answer.question_id = question.id)
-              INNER JOIN test ON (question.test_id = test.id)
-              INNER JOIN direction ON (test.direction_id = direction.id)
-            WHERE
-              answer.question_id = ? AND
-              answer.flag >= 0 AND
-              question.test_id = ? AND
-              question.flag >= 0 AND
-              test.direction_id = ? AND
-              (test.flag = 0 OR
-              test.flag = 1) AND
-              (direction.flag = 0 OR
-              direction.flag = 1)';
-
-            $db = Database::getConnection();
-            $result = $db->prepare($sql);
-            $result->execute([$search['question_id'], $search['test_id'], $search['direction_id']]);
-        }
-        else
+        if ($result_param == 1)
         {
             $search = intval($search);
+            if ($search == 0)
+            {
+                return array();
+            }
             $sql = 'SELECT
-              answer.id,
-              answer.name,
-              answer.question_id,
-              answer.complexity_coefficient,
-              answer.change_user_id,
-              answer.change_datetime,
-              answer.flag
-            FROM
-              answer
-            WHERE
-              answer.question_id = ? AND
-              answer.flag >= 0';
+                  answer.id,
+                  answer.name,
+                  answer.question_id,
+                  answer.complexity_coefficient,
+                  answer.flag
+                FROM
+                  answer
+                WHERE
+                  answer.question_id = ?';
             $db = Database::getConnection();
             $result = $db->prepare($sql);
             $result->execute([$search]);
+        }
+        else
+        {
+            if (is_array($search))
+            {
+                $sql = 'SELECT
+                      answer.id,
+                      answer.name,
+                      answer.question_id,
+                      answer.complexity_coefficient,
+                      answer.change_user_id,
+                      answer.change_datetime,
+                      answer.flag
+                    FROM
+                      answer
+                      INNER JOIN question ON (answer.question_id = question.id)
+                      INNER JOIN test ON (question.test_id = test.id)
+                      INNER JOIN direction ON (test.direction_id = direction.id)
+                    WHERE
+                      answer.question_id = ? AND
+                      answer.flag >= 0 AND
+                      question.test_id = ? AND
+                      question.flag >= 0 AND
+                      test.direction_id = ? AND
+                      (test.flag = 0 OR
+                      test.flag = 1) AND
+                      (direction.flag = 0 OR
+                      direction.flag = 1)';
+
+                $db = Database::getConnection();
+                $result = $db->prepare($sql);
+                $result->execute([$search['question_id'], $search['test_id'], $search['direction_id']]);
+            }
+            else
+            {
+                $search = intval($search);
+                $sql = 'SELECT
+                      answer.id,
+                      answer.name,
+                      answer.question_id,
+                      answer.complexity_coefficient,
+                      answer.change_user_id,
+                      answer.change_datetime,
+                      answer.flag
+                    FROM
+                      answer
+                    WHERE
+                      answer.question_id = ? AND
+                      answer.flag >= 0';
+                $db = Database::getConnection();
+                $result = $db->prepare($sql);
+                $result->execute([$search]);
+            }
         }
 
         // Получение и возврат результатов
