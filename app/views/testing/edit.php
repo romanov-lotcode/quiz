@@ -72,6 +72,9 @@ include APP_VIEWS . 'layouts/header.php';
                 </table>
             </div>
             <div class="uk-form-row uk-width-1-1">
+                <?= $html_element['is_result_view']->render($option_is_result_view, $optgroup_is_result_view); ?>
+            </div>
+            <div class="uk-form-row uk-width-1-1">
                 <?= $html_element['flag']->render($option_flag, $optgroup_flag) ?>
             </div>
             <?php

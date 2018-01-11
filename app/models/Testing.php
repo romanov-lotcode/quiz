@@ -35,6 +35,7 @@ class Testing
           testing.minimum_score,
           testing.testing_time,
           testing.testing_time_flag,
+          testing.is_result_view,
           testing.change_user_id,
           testing.change_datetime,
           testing.flag,
@@ -86,6 +87,7 @@ class Testing
             testing.minimum_score,
             testing.testing_time,
             testing.testing_time_flag,
+            testing.is_result_view,
             testing.change_user_id,
             testing.change_datetime,
             testing.flag
@@ -291,9 +293,9 @@ class Testing
     public static function add($testing)
     {
         $sql = 'INSERT INTO testing (name, test_id, testing_count, question_count, is_question_random,
-            is_answer_random, minimum_score, testing_time, testing_time_flag, change_user_id, change_datetime, flag)
+            is_answer_random, minimum_score, testing_time, testing_time_flag, is_result_view, change_user_id, change_datetime, flag)
           VALUES (:name, :test_id, :testing_count, :question_count, :is_question_random,
-            :is_answer_random, :minimum_score, :testing_time, :testing_time_flag, :change_user_id, :change_datetime, :flag)';
+            :is_answer_random, :minimum_score, :testing_time, :testing_time_flag, :is_result_view, :change_user_id, :change_datetime, :flag)';
         $db = Database::getConnection();
         $result = $db->prepare($sql);
         $result->bindParam(':name', $testing['name'], PDO::PARAM_STR);
@@ -305,6 +307,7 @@ class Testing
         $result->bindParam(':minimum_score', $testing['minimum_score'], PDO::PARAM_INT);
         $result->bindParam(':testing_time', $testing['testing_time'], PDO::PARAM_STR);
         $result->bindParam(':testing_time_flag', $testing['testing_time_flag'], PDO::PARAM_INT);
+        $result->bindParam(':is_result_view', $testing['is_result_view'], PDO::PARAM_INT);
         $result->bindParam(':change_user_id', $testing['change_user_id'], PDO::PARAM_INT);
         $result->bindParam(':change_datetime', $testing['change_datetime'], PDO::PARAM_STR);
         $result->bindParam(':flag', $testing['flag'], PDO::PARAM_INT);
@@ -324,8 +327,8 @@ class Testing
         $sql = 'UPDATE testing
           SET name = :name, test_id = :test_id, testing_count = :testing_count, question_count = :question_count,
           is_question_random = :is_question_random, is_answer_random = :is_answer_random, minimum_score = :minimum_score,
-          testing_time = :testing_time, testing_time_flag = :testing_time_flag, change_user_id = :change_user_id,
-          change_datetime = :change_datetime, flag = :flag
+          testing_time = :testing_time, testing_time_flag = :testing_time_flag, is_result_view = :is_result_view,
+          change_user_id = :change_user_id, change_datetime = :change_datetime, flag = :flag
           WHERE id = :id AND flag > 0';
         $db = Database::getConnection();
         $result = $db->prepare($sql);
@@ -339,6 +342,7 @@ class Testing
         $result->bindParam(':minimum_score', $testing['minimum_score'], PDO::PARAM_INT);
         $result->bindParam(':testing_time', $testing['testing_time'], PDO::PARAM_STR);
         $result->bindParam(':testing_time_flag', $testing['testing_time_flag'], PDO::PARAM_INT);
+        $result->bindParam(':is_result_view', $testing['is_result_view'], PDO::PARAM_INT);
         $result->bindParam(':change_user_id', $testing['change_user_id'], PDO::PARAM_INT);
         $result->bindParam(':change_datetime', $testing['change_datetime'], PDO::PARAM_STR);
         $result->bindParam(':flag', $testing['flag'], PDO::PARAM_INT);

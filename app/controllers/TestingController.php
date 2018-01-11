@@ -359,6 +359,40 @@ class TestingController extends BaseController
         $html_element['testing_time_flag']->setId('testing_time_flag');
         $html_element['testing_time_flag']->setNecessarily(true);
 
+        $option_is_result_view_select = APP_YES;
+        $option_is_result_view = [];
+        $optgroup_is_result_view = [];
+
+        if (isset($_POST['is_result_view']))
+        {
+            $option_is_result_view_select = $_POST['is_result_view'];
+            $option_is_result_view_select = intval($option_is_result_view_select);
+            if ($option_is_result_view_select != APP_NO
+                && $option_is_result_view_select != APP_YES)
+            {
+                $option_is_result_view_select = APP_YES;
+            }
+        }
+
+        $i = 0;
+        $option_is_result_view[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_is_result_view[$i]->setValue(APP_YES);
+        $option_is_result_view[$i]->setText('Да');
+        ($option_is_result_view_select == $option_is_result_view[$i]->getValue())? $option_is_result_view[$i]->setSelected(true):'';
+
+        $i = 1;
+        $option_is_result_view[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_is_result_view[$i]->setValue(APP_NO);
+        $option_is_result_view[$i]->setText('Нет');
+        ($option_is_result_view_select == $option_is_result_view[$i]->getValue())? $option_is_result_view[$i]->setSelected(true):'';
+
+        $html_element['is_result_view'] = new \HTMLElement\HTMLSelectElement();
+        $html_element['is_result_view']->setCaption('Разрешить просматривать результаты с ответами');
+        $html_element['is_result_view']->setConfig('class', 'uk-width-1-4');
+        $html_element['is_result_view']->setName('is_result_view');
+        $html_element['is_result_view']->setId('is_result_view');
+        $html_element['is_result_view']->setNecessarily(true);
+
         $option_flag_select = FLAG_OFF;
         $option_flag = [];
         $optgroup_flag = [];
@@ -511,6 +545,7 @@ class TestingController extends BaseController
                     $testing['minimum_score'] = $html_element['minimum_score']->getValue();
                     // testing_time значение передано выше
                     $testing['testing_time_flag'] = $option_testing_time_flag_select;
+                    $testing['is_result_view'] = $option_is_result_view_select;
                     $testing['change_user_id'] = User::checkLogged();
                     $testing['change_datetime'] = $date_time->format('Y-m-d H:i:s');
                     $testing['flag'] = $option_flag_select;
@@ -807,6 +842,40 @@ class TestingController extends BaseController
         $html_element['testing_time_flag']->setId('testing_time_flag');
         $html_element['testing_time_flag']->setNecessarily(true);
 
+        $option_is_result_view_select = $testing['is_result_view'];
+        $option_is_result_view = [];
+        $optgroup_is_result_view = [];
+
+        if (isset($_POST['is_result_view']))
+        {
+            $option_is_result_view_select = $_POST['is_result_view'];
+            $option_is_result_view_select = intval($option_is_result_view_select);
+            if ($option_is_result_view_select != APP_NO
+                && $option_is_result_view_select != APP_YES)
+            {
+                $option_is_result_view_select = APP_YES;
+            }
+        }
+
+        $i = 0;
+        $option_is_result_view[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_is_result_view[$i]->setValue(APP_YES);
+        $option_is_result_view[$i]->setText('Да');
+        ($option_is_result_view_select == $option_is_result_view[$i]->getValue())? $option_is_result_view[$i]->setSelected(true):'';
+
+        $i = 1;
+        $option_is_result_view[$i] = new \HTMLElement\HTMLSelectOptionElement();
+        $option_is_result_view[$i]->setValue(APP_NO);
+        $option_is_result_view[$i]->setText('Нет');
+        ($option_is_result_view_select == $option_is_result_view[$i]->getValue())? $option_is_result_view[$i]->setSelected(true):'';
+
+        $html_element['is_result_view'] = new \HTMLElement\HTMLSelectElement();
+        $html_element['is_result_view']->setCaption('Разрешить просматривать результаты с ответами');
+        $html_element['is_result_view']->setConfig('class', 'uk-width-1-4');
+        $html_element['is_result_view']->setName('is_result_view');
+        $html_element['is_result_view']->setId('is_result_view');
+        $html_element['is_result_view']->setNecessarily(true);
+
         $option_flag_select = $testing['flag'];
         $option_flag = [];
         $optgroup_flag = [];
@@ -853,6 +922,7 @@ class TestingController extends BaseController
             $html_element['minute']->setConfig('disabled', 'disabled');
             $html_element['second']->setConfig('disabled', 'disabled');
             $html_element['testing_time_flag']->setConfig('disabled', 'disabled');
+            $html_element['is_result_view']->setConfig('disabled', 'disabled');
             $html_element['flag']->setConfig('disabled', 'disabled');
             $option_flag_select = FLAG_NO_CHANGE;
         }
@@ -982,6 +1052,7 @@ class TestingController extends BaseController
                     $testing['minimum_score'] = $html_element['minimum_score']->getValue();
                     // testing_time значение передано выше
                     $testing['testing_time_flag'] = $option_testing_time_flag_select;
+                    $testing['is_result_view'] = $option_is_result_view_select;
                     $testing['change_user_id'] = User::checkLogged();
                     $testing['change_datetime'] = $date_time->format('Y-m-d H:i:s');
                     $testing['flag'] = $option_flag_select;
