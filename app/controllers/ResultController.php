@@ -70,16 +70,26 @@ class ResultController extends BaseController
         $page = 1;
         $errors = false;
 
+        $url_link = '/result/index?';
+        $url_param = '';
+
         $testing_result_info = []; // Массив с данными отчета результата
+        $testing_result_report = []; // Массив с вопросами и ответами результата
 
         $user_id_to_view = 0;
 
         $is_can = false;
         $is_can_other_result_view = false;
+        $is_can_view_correct_answer = false; // Показывать/Не показывать ответы для тестирования
 
         $count_wrong = 0;
         $count_scip = 0;
         $count_correct = 0;
+
+        $is_testing_complete = false;
+
+        $date_converter = new Date_Converter();
+        $end_testing_date = null; // Дата завершения тестирования
 
         foreach ($user_right as $u_r)
         {
@@ -91,7 +101,11 @@ class ResultController extends BaseController
             {
                 $is_can = true;
             }
-            if ($is_can === true && $is_can_other_result_view === true)
+            if ($u_r['right_name'] == CAN_VIEW_CORRECT_ANSWER)
+            {
+                $is_can_view_correct_answer = true;
+            }
+            if ($is_can === true && $is_can_other_result_view === true && $is_can_view_correct_answer === true)
             {
                 break;
             }
@@ -116,6 +130,7 @@ class ResultController extends BaseController
             }
         }
 
+
         if ($is_can_other_result_view && $search['user_id'] > 0)
         {
             $user_id_to_view = $search['user_id'];
@@ -126,11 +141,36 @@ class ResultController extends BaseController
         }
 
         $testing_result_info = Testing_Result::getTestingResult($search['testing_result_id'], $user_id_to_view);
+
+        if ($testing_result_info['is_result_view'] == APP_YES)
+        {
+            $is_can_view_correct_answer = true;
+        }
+
         if (!is_array($testing_result_info) && count($testing_result_info) < 1)
         {
             $errors['no_testing_result'] = 'Результат не найден';
             goto _gt_view;
         }
+
+        $temp = null;
+        $temp = $testing_result_info['end_datetime'];
+        $temp = $date_converter->datetimeToDateOrTime($temp, 1);
+        $end_testing_date = $date_converter->dateSplit($temp, 1);
+        $temp = null;
+        $temp = $date_converter->getMonthName($end_testing_date['month'], 3);
+        $end_testing_date = trim($end_testing_date['day'] . ' ' . $temp . ' ' . $end_testing_date['year']);
+
+        $testing_result_report = Testing_Result_Report::getTestingResultReportByTestingResult($search['testing_result_id']);
+
+        if (!is_array($testing_result_report) && count($testing_result_report) < 1)
+        {
+            $count_scip = $testing_result_info['question_count'];
+            goto _gt_view;
+        }
+
+
+
 
 
 

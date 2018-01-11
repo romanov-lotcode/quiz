@@ -7,7 +7,7 @@ include APP_VIEWS . 'layouts/header.php';
 ?>
 
     <h1><?= $pagetitle ?></h1>
-    <a class="back" href="/test/index?<?= $url_param ?>">&larr; Вернуться назад</a>
+    <a class="back" href="/result/index?<?= $url_param ?>">&larr; Вернуться назад</a>
 
     <div data-uk-grid class="uk-width-2-3 uk-margin-large-top uk-align-center">
         <?php
@@ -43,7 +43,7 @@ include APP_VIEWS . 'layouts/header.php';
                         </tr>
                         <tr>
                             <td>
-                                <div class="extra">Дата:</div> ДД месяц ГГГГ
+                                <div class="extra">Дата:</div> <?= $end_testing_date ?>
                             </td>
                         </tr>
                         <tr>
@@ -55,14 +55,23 @@ include APP_VIEWS . 'layouts/header.php';
                     <table class="uk-form-row uk-width-1-1" cellspacing="0" cellpadding="0" style="margin-top: -5px">
                         <tr>
                             <td class="uk-width-1-2">
-                                <div class="extra">Результат:</div> Пройден/Не пройден
+                                <div class="extra">Результат:</div>
+                                <?php
+                                if ($is_testing_complete)
+                                {
+                                    echo '<b style="color: #659f13;">Тест пройден</b>';
+                                }
+                                else
+                                {
+                                    echo '<b style="color: #d85030;">Тест не пройден</b>';
+                                }
+                                ?>
                             </td>
                             <td class="uk-width-1-2">
                                 <div class="extra">Время:</div>15 минут 15 сек
                             </td>
                         </tr>
                     </table>
-
                     <table class="uk-form-row uk-width-1-1" cellspacing="0" style="margin-top: -5px">
                         <tr>
                             <td class="uk-width-1-3 uk-alert uk-alert-success">
@@ -73,6 +82,18 @@ include APP_VIEWS . 'layouts/header.php';
                             </td>
                             <td class="uk-width-1-3 uk-alert">
                                 Пропущенные вопросы: <b><?= $count_scip ?></b>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr><td style="border: 2px solid #808080"></td></tr>
+            <tr>
+                <td>
+                    <table class="uk-form-row uk-width-1-1" cellspacing="0" cellpadding="0" style="margin-top: -5px">
+                        <tr>
+                            <td class="uk-width-1-1">
+                                Проверка
                             </td>
                         </tr>
                     </table>
