@@ -68,7 +68,7 @@ include APP_VIEWS . 'layouts/header.php';
                                 ?>
                             </td>
                             <td class="uk-width-1-2">
-                                <div class="extra">Время:</div>15 минут 15 сек
+                                <div class="extra">Время:</div><?= $total_question_time ?>
                             </td>
                         </tr>
                     </table>

@@ -87,6 +87,13 @@ class ResultController extends BaseController
         $count_scip = 0;
         $count_correct = 0;
 
+        $points_scored = 0; // Набранные баллы
+        $points_max = 0; // Максимальное количество баллов
+        $points_min = 0; // Коэфициент прохождения
+
+        $total_question_time = 0; // Общее время вопросов
+
+        $is_result_actual = true; // Актуальны ли результаты
         $is_testing_complete = false;
 
         $date_converter = new Date_Converter();
@@ -154,6 +161,8 @@ class ResultController extends BaseController
             goto _gt_view;
         }
 
+        $points_min = $testing_result_info['minimum_score'];
+
         $temp = null;
         $temp = $testing_result_info['end_datetime'];
         $temp = $date_converter->datetimeToDateOrTime($temp, 1);
@@ -176,12 +185,16 @@ class ResultController extends BaseController
             if ($question_id_temp == 0)
             {
                 $filtered_result_report[$trr_value['question_id']]['question_name'] = $trr_value['question_name'];
+                $filtered_result_report[$trr_value['question_id']]['question_change_flag'] = 0;
                 $filtered_result_report[$trr_value['question_id']]['question_type_id'] = $trr_value['question_type_id'];
                 $filtered_result_report[$trr_value['question_id']]['question_explanation'] = $trr_value['question_explanation'];
                 $filtered_result_report[$trr_value['question_id']]['question_path_img'] = $trr_value['question_path_img'];
                 $filtered_result_report[$trr_value['question_id']]['question_time'] = $trr_value['question_time'];
+                $total_question_time += $trr_value['question_time'];
                 $filtered_result_report[$trr_value['question_id']]['answers'][] = $trr_value['answer_id'];
                 $filtered_result_report[$trr_value['question_id']]['all_answers'] = Answer::getAnswers($trr_value['question_id'], 1);
+                $filtered_result_report[$trr_value['question_id']]['view_answers'] = [];
+
             }
             else
             {
@@ -192,17 +205,103 @@ class ResultController extends BaseController
                 else
                 {
                     $filtered_result_report[$trr_value['question_id']]['question_name'] = $trr_value['question_name'];
+                    $filtered_result_report[$trr_value['question_id']]['question_change_flag'] = 0;
                     $filtered_result_report[$trr_value['question_id']]['question_type_id'] = $trr_value['question_type_id'];
                     $filtered_result_report[$trr_value['question_id']]['question_explanation'] = $trr_value['question_explanation'];
                     $filtered_result_report[$trr_value['question_id']]['question_path_img'] = $trr_value['question_path_img'];
                     $filtered_result_report[$trr_value['question_id']]['question_time'] = $trr_value['question_time'];
+                    $total_question_time += $trr_value['question_time'];
                     $filtered_result_report[$trr_value['question_id']]['answers'][] = $trr_value['answer_id'];
                     $filtered_result_report[$trr_value['question_id']]['all_answers'] = Answer::getAnswers($trr_value['question_id'], 1);
+                    $filtered_result_report[$trr_value['question_id']]['view_answers'] = [];
                 }
             }
             $question_id_temp = $trr_value['question_id'];
         }
-        print_r($filtered_result_report);
+
+        $temp_counter_right_answers = 0; // Временное количество правильных ответов
+        $temp = []; // Временные данные
+        foreach ($filtered_result_report as $frr_question_id => $frr_value)
+        {
+            $temp[$frr_question_id]['question_name'] = $frr_value['question_name'];
+            $temp[$frr_question_id]['question_type_id'] = $frr_value['question_type_id'];
+            $temp[$frr_question_id]['question_explanation'] = $frr_value['question_explanation'];
+            $temp[$frr_question_id]['question_path_img'] = $frr_value['question_path_img'];
+            $temp[$frr_question_id]['question_time'] = $frr_value['question_time'];
+            $temp[$frr_question_id]['question_change_flag'] = $frr_value['question_change_flag'];
+
+            // Правильно ли отвечен вопрос
+
+            // Изменился ли вопрос после ответа
+            if (count($frr_value['answers']) > 1 && $frr_value['question_type_id'] == 0)
+            {
+                // Если количество ответов более одного, а тип вопроса "один к одному" - значит вопрос был изменен
+                $temp[$frr_question_id]['question_change_flag'] = 1;
+                $is_result_actual = false; // Резульатты уже не актуальны
+
+
+            }
+
+            // Заносим правильные ответы в отдельный массив
+            foreach ($frr_value['all_answers'] as $frrv_aa_key => $frrv_aa_value)
+            {
+                if ($frrv_aa_value['flag'] == FLAG_ON || $frrv_aa_value['flag'] == FLAG_NO_CHANGE)
+                {
+                    if ($frrv_aa_value['complexity_coefficient'] > 0)
+                    {
+                        $points_max += $frrv_aa_value['complexity_coefficient'];
+                        $temp[$frr_question_id]['view_answers']['right'][] = $frrv_aa_value;
+                    }
+                }
+            }
+
+            foreach ($frr_value['answers'] as $frrv_a_key => $frrv_a_answer_id)
+            {
+                if ($frrv_a_answer_id == 0)
+                {
+                    $count_wrong++;
+                    continue;
+                }
+
+                foreach ($frr_value['all_answers'] as $frrv_aa_key => $frrv_aa_value)
+                {
+                    if ($frrv_a_answer_id == $frrv_aa_value['id'])
+                    {
+                        $points_scored += $frrv_aa_value['complexity_coefficient'];
+                        $temp[$frr_question_id]['view_answers']['answered'][$frrv_a_answer_id] = $frrv_aa_value;
+                    }
+                }
+            }
+        }
+
+
+
+        echo 'Max: '. $points_max;
+        echo '<br>';
+        echo 'Min: '. $points_min;
+        echo '<br>';
+        echo 'Набрано: '. $points_scored;
+        echo '<br>';
+
+        if ($points_scored >= $points_min)
+        {
+            $is_testing_complete = true;
+        }
+        $filtered_result_report = $temp;
+        $temp = '';
+        $total_question_time = $date_converter->secondsToTime($total_question_time);
+        if ($total_question_time['hours'] > 0)
+        {
+            $temp .= $total_question_time['hours'] . ' ч ';
+        }
+        if ($total_question_time['minutes'] > 0)
+        {
+            $temp .= $total_question_time['minutes'] . ' мин ';
+        }
+        $temp .= $total_question_time['seconds'] .' сек';
+        $total_question_time = $temp;
+        $temp = null;
+
 
 
 
