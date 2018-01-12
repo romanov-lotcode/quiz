@@ -177,4 +177,24 @@ class Date_Converter
 
         return $result;
     }
+
+    /**
+     * Преобразует количество секунды в массив во время в виде массива
+     * @param int $seconds - Секунды
+     * @return mixed
+     */
+    public function secondsToTime($seconds)
+    {
+        $time['hours'] = 0;
+        $time['minutes'] = 0;
+        $time['seconds'] = 0;
+
+        $seconds = intval($seconds);
+        $time['seconds'] = $seconds % 60;
+        $temp = floor($seconds / 60);
+        $time['minutes'] = $temp % 60;
+        $time['hours'] = floor($temp/60);
+
+        return $time;
+    }
 }
