@@ -219,7 +219,6 @@ class ResultController extends BaseController
             $question_id_temp = $trr_value['question_id'];
         }
 
-        $temp_counter_right_answers = 0; // Временное количество правильных ответов
         $temp = []; // Временные данные
         foreach ($filtered_result_report as $frr_question_id => $frr_value)
         {
@@ -238,8 +237,6 @@ class ResultController extends BaseController
                 // Если количество ответов более одного, а тип вопроса "один к одному" - значит вопрос был изменен
                 $temp[$frr_question_id]['question_change_flag'] = 1;
                 $is_result_actual = false; // Резульатты уже не актуальны
-
-
             }
 
             // Заносим правильные ответы в отдельный массив
@@ -257,12 +254,6 @@ class ResultController extends BaseController
 
             foreach ($frr_value['answers'] as $frrv_a_key => $frrv_a_answer_id)
             {
-                if ($frrv_a_answer_id == 0)
-                {
-                    $count_wrong++;
-                    continue;
-                }
-
                 foreach ($frr_value['all_answers'] as $frrv_aa_key => $frrv_aa_value)
                 {
                     if ($frrv_a_answer_id == $frrv_aa_value['id'])
@@ -273,15 +264,6 @@ class ResultController extends BaseController
                 }
             }
         }
-
-
-
-        echo 'Max: '. $points_max;
-        echo '<br>';
-        echo 'Min: '. $points_min;
-        echo '<br>';
-        echo 'Набрано: '. $points_scored;
-        echo '<br>';
 
         if ($points_scored >= $points_min)
         {
@@ -302,11 +284,77 @@ class ResultController extends BaseController
         $total_question_time = $temp;
         $temp = null;
 
+        $temp_counter_right_answers = 0; // Временное количество правильных ответов
+        $temp_counter_wrong_answers = 0; // Временное количество неправильныъ ответов
+        $wrong_answers = [];
+        $scip_questions = [];
+        foreach ($filtered_result_report as $frr_question_id => $frr_value)
+        {
+            $is_scip = false;
+            $is_wrong = false;
+            $is_right = false;
+            $i_asnwered = 0;
+            $temp_counter_right_answers = count($frr_value['view_answers']['right']);
 
+            if ($temp_counter_right_answers != count($frr_value['view_answers']['answered']))
+            {
+                if (!is_array($frr_value['view_answers']['answered']) || $frr_value['view_answers']['answered'] == null)
+                {
+                    $is_scip = true;
+                    $scip_questions[] = $frr_question_id;
+                    goto _gt_continue;
+                }
+                $is_wrong = true;
+                foreach ($frr_value['view_answers']['answered'] as $frr_vaa_answer_id => $frr_vaa_answer_value)
+                {
+                    if (!in_array($frr_vaa_answer_value, $frr_value['view_answers']['right']))
+                    {
+                        $wrong_answers[$frr_question_id][] = $frr_vaa_answer_id;
+                        $is_wrong = true;
+                    }
+                }
+            }
+            else
+            {
+                if (!is_array($frr_value['view_answers']['answered']) || $frr_value['view_answers']['answered'] == null)
+                {
+                    $is_scip = true;
+                    $scip_questions[] = $frr_question_id;
+                    goto _gt_continue;
+                }
+                foreach ($frr_value['view_answers']['answered'] as $frr_vaa_answer_id => $frr_vaa_answer_value)
+                {
+                    $i_asnwered++;
 
+                    if (in_array($frr_vaa_answer_value, $frr_value['view_answers']['right']))
+                    {
+                        if ($temp_counter_right_answers == $i_asnwered)
+                        {
+                            $is_right = true;
+                        }
+                    }
+                    else
+                    {
+                        $wrong_answers[$frr_question_id][] = $frr_vaa_answer_id;
+                        $is_wrong = true;
+                    }
+                }
+            }
 
-
-
+            _gt_continue:
+            if ($is_wrong == true)
+            {
+                $count_wrong++;
+            }
+            if ($is_right == true)
+            {
+                $count_correct++;
+            }
+            if ($is_scip == true)
+            {
+                $count_scip++;
+            }
+        }
 
         _gt_view:
         if ($is_can)

@@ -72,6 +72,21 @@ include APP_VIEWS . 'layouts/header.php';
                             </td>
                         </tr>
                     </table>
+                    <table class="uk-form-row uk-width-1-1" cellspacing="0" cellpadding="0" style="margin-top: -5px">
+                        <tr>
+                            <td class="uk-width-1-3 uk-alert <?php echo ($is_testing_complete)?  'uk-alert-success' : 'uk-alert-danger' ?>">
+                                Набрано баллов: <b><?= $points_scored ?></b>
+                            </td>
+                            <td class="uk-width-1-3 uk-alert">
+                                Балл для прохождения: <b><?= $points_min ?></b>
+                            </td>
+                            <td class="uk-width-1-3 uk-alert">
+                                Максимльное кол-ов баллов: <b><?= $points_max ?></b>
+                            </td>
+
+                        </tr>
+
+                    </table>
                     <table class="uk-form-row uk-width-1-1" cellspacing="0" style="margin-top: -5px">
                         <tr>
                             <td class="uk-width-1-3 uk-alert uk-alert-success">
