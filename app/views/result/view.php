@@ -102,18 +102,131 @@ include APP_VIEWS . 'layouts/header.php';
                     </table>
                 </td>
             </tr>
-            <tr><td style="border: 2px solid #808080"></td></tr>
-            <tr>
-                <td>
-                    <table class="uk-form-row uk-width-1-1" cellspacing="0" cellpadding="0" style="margin-top: -5px">
-                        <tr>
-                            <td class="uk-width-1-1">
-                                Проверка
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
+            <?php if (is_array($filtered_result_report) && count($filtered_result_report) > 0): ?>
+                <tr><td style="border: 2px solid #808080"></td></tr>
+                <?php
+                $q_number = 0;
+                foreach ($filtered_result_report as $frr_question_id => $frr_value):
+                    $q_number++;
+                ?>
+                <tr>
+                    <td>
+                        <table class="uk-form-row uk-width-1-1" cellspacing="0" cellpadding="0" style="margin-top: -5px">
+                            <tr>
+                                <?php
+                                if (in_array($frr_question_id, $scip_questions)):
+                                ?>
+                                <td class="uk-width-1-1 uk-alert">
+                                <?php
+                                elseif (array_key_exists($frr_question_id, $wrong_answers)):
+                                ?>
+                                <td class="uk-width-1-1 uk-alert uk-alert-danger">
+                                <?php
+                                else:
+                                ?>
+                                <td class="uk-width-1-1 uk-alert uk-alert-success">
+                                <?php
+                                endif;
+                                ?>
+                                    <?=$q_number.'. '. $frr_value['question_name'] ?>
+                                    <?php
+                                    if ($frr_value['question_path_img'] != null):
+                                        $img_src = 'http://quiz-v2/app/templates/images/questions/'.$frr_value['question_path_img'];
+                                    ?>
+                                    <div align="center">
+                                        <img src="<?= $img_src ?>" alt="Изображение отсутствует" class="quiz_img" />
+                                    </div>
+                                    <?php
+                                    endif; //if ($frr_value['question_path_img'] != null):
+                                    ?>
+                                    <?php if ($frr_value['question_explanation'] != null): ?>
+                                    <div class="uk-comment-meta">
+                                        <?= $frr_value['question_explanation'] ?>
+                                    </div>
+                                    <?php endif; // if ($frr_value['question_explanation'] != null): ?>
+                                </td>
+                            </tr>
+                            <?php
+                            if ($is_can_view_correct_answer):
+                            ?>
+                            <tr>
+                                <td>
+
+                                <?php
+                                if (!in_array($frr_question_id, $scip_questions)):
+                                    if (array_key_exists($frr_question_id, $wrong_answers)):
+                                    ?>
+                                    <div style="padding-left: 15px; padding-right: 15px;" class="uk-alert uk-alert-danger">
+                                    <?php
+                                    foreach ($frr_value['view_answers']['answered'] as $frr_vaa_answer_id => $frr_vaa_answer_value):
+                                        if (in_array($frr_vaa_answer_id, $wrong_answers[$frr_question_id])):
+                                        ?>
+
+                                        <i class="uk-icon-times"></i><?= $frr_vaa_answer_value['name'] ?><br />
+
+                                        <?php
+                                        else:
+                                        ?>
+                                        <i class="uk-icon-check"></i><?= $frr_vaa_answer_value['name'] ?><br />
+
+                                        <?php
+                                        endif;
+                                    ?>
+
+
+                                <?php
+                                    endforeach; // foreach ($frr_value['view_answers']['answered'] as $frr_vaa_answer_id => $frr_vaa_answer_value):
+                                ?>
+                                    </div>
+                                    <div style="padding-left: 15px; padding-right: 15px;" class="uk-alert uk-alert-success">
+                                <?php
+                                    foreach ($frr_value['view_answers']['right'] as $frr_var_key => $frr_var_value):
+                                    ?>
+                                        <i class="uk-icon-check"></i><?= $frr_var_value['name'] ?><br />
+                                    <?php
+                                    endforeach; //foreach ($frr_value['view_answers']['right'] as $frr_var_key => $frr_var_value):
+                                ?>
+                                    </div>
+                                <?php
+                                else:// if (array_key_exists($frr_question_id, $wrong_answers)):
+                                    ?>
+                                <div style="padding-left: 15px; padding-right: 15px;" class="uk-alert uk-alert-success">
+                                    <?php
+                                    foreach ($frr_value['view_answers']['answered'] as $frr_vaa_answer_id => $frr_vaa_answer_value):
+                                    ?>
+                                    <i class="uk-icon-check"></i><?= $frr_vaa_answer_value['name'] ?>
+                                    <?php
+                                    endforeach; //foreach ($frr_value['view_answers']['answered'] as $frr_vaa_answer_id => $frr_vaa_answer_value):
+                                    ?>
+                                </div>
+                                <?php
+                                    endif; // if (array_key_exists($frr_question_id, $wrong_answers)):
+                                else: //if (!in_array($frr_question_id, $scip_questions)):
+                                ?>
+                                <div style="padding-left: 15px; padding-right: 15px;" class="uk-alert uk-alert-success">
+                                    <?php
+                                    foreach ($frr_value['view_answers']['right'] as $frr_var_key => $frr_var_value):
+                                        ?>
+                                        <i class="uk-icon-check"></i><?= $frr_var_value['name'] ?><br />
+                                        <?php
+                                    endforeach; //foreach ($frr_value['view_answers']['right'] as $frr_var_key => $frr_var_value):
+                                    ?>
+                                </div>
+                                <?php
+                                endif; //if (!in_array($frr_question_id, $scip_questions)):
+                                ?>
+                                </td>
+                            </tr>
+                            <?php
+                            endif; //if ($is_can_view_correct_answer):
+                            ?>
+                        </table>
+                    </td>
+                </tr>
+                <?php
+                endforeach; // foreach ($filtered_result_report as $frr_question_id => $frr_value):
+                ?>
+            <?php endif; // if (is_array($filtered_result_report) && count($filtered_result_report) > 0): ?>
         </table>
 
         <?php endif; //if (!isset($errors['no_testing_result']) || $errors['no_testing_result'] == null): ?>
