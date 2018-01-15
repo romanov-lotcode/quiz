@@ -55,4 +55,5 @@ return [
 
     'result/index' => ['controller' => 'Result', 'action' => 'index'],
     'result/view' => ['controller' => 'Result', 'action' => 'view'],
+    'result/print' => ['controller' => 'Result', 'action' => 'print'],
 ];

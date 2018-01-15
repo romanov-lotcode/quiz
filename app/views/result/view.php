@@ -19,6 +19,10 @@ include APP_VIEWS . 'layouts/header.php';
         ?>
 
         <?php if (!isset($errors['no_testing_result']) || $errors['no_testing_result'] == null): ?>
+        <div style="margin-top: -40px" class="uk-button fr"
+             onclick="window.open('/result/print?testing_result_id=<?= $search['testing_result_id'] ?>&user_id=<?= $search['user_id'] ?>', 'new', 'width=1000,height=800,top=50,left=50')">
+            <i class="uk-icon-print"></i> Распечатать
+        </div>
 
         <table class="uk-form-row uk-width-1-1 result" cellpadding="0" cellspacing="0">
             <tr>
@@ -85,7 +89,6 @@ include APP_VIEWS . 'layouts/header.php';
                             </td>
 
                         </tr>
-
                     </table>
                     <table class="uk-form-row uk-width-1-1" cellspacing="0" style="margin-top: -5px">
                         <tr>
