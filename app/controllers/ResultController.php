@@ -295,7 +295,6 @@ class ResultController extends BaseController
             $is_right = false;
             $i_asnwered = 0;
             $temp_counter_right_answers = count($frr_value['view_answers']['right']);
-
             if ($temp_counter_right_answers != count($frr_value['view_answers']['answered']))
             {
                 if (!is_array($frr_value['view_answers']['answered']) || $frr_value['view_answers']['answered'] == null)
@@ -324,14 +323,14 @@ class ResultController extends BaseController
                 }
                 foreach ($frr_value['view_answers']['answered'] as $frr_vaa_answer_id => $frr_vaa_answer_value)
                 {
-                    $i_asnwered++;
-
                     if (in_array($frr_vaa_answer_value, $frr_value['view_answers']['right']))
                     {
+                        $i_asnwered++;
                         if ($temp_counter_right_answers == $i_asnwered)
                         {
                             $is_right = true;
                         }
+
                     }
                     else
                     {

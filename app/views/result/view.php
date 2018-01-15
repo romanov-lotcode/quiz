@@ -161,14 +161,11 @@ include APP_VIEWS . 'layouts/header.php';
                                     foreach ($frr_value['view_answers']['answered'] as $frr_vaa_answer_id => $frr_vaa_answer_value):
                                         if (in_array($frr_vaa_answer_id, $wrong_answers[$frr_question_id])):
                                         ?>
-
                                         <i class="uk-icon-times"></i><?= $frr_vaa_answer_value['name'] ?><br />
-
                                         <?php
                                         else:
                                         ?>
                                         <i class="uk-icon-check"></i><?= $frr_vaa_answer_value['name'] ?><br />
-
                                         <?php
                                         endif;
                                     ?>
@@ -194,7 +191,7 @@ include APP_VIEWS . 'layouts/header.php';
                                     <?php
                                     foreach ($frr_value['view_answers']['answered'] as $frr_vaa_answer_id => $frr_vaa_answer_value):
                                     ?>
-                                    <i class="uk-icon-check"></i><?= $frr_vaa_answer_value['name'] ?>
+                                    <i class="uk-icon-check"></i><?= $frr_vaa_answer_value['name'] ?><br />
                                     <?php
                                     endforeach; //foreach ($frr_value['view_answers']['answered'] as $frr_vaa_answer_id => $frr_vaa_answer_value):
                                     ?>
