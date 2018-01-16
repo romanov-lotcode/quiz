@@ -8,7 +8,6 @@
             margin: 0px;
             padding: 0px;
             width: 100%;
-            height: 100%;
             color: #101921;
             font: normal 18px 'PT Sans', Calibri, Raleway, Lato, Arial, Helvetica, Tahoma, Verdana, Sans-Serif;
         }
