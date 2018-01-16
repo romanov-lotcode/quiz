@@ -29,6 +29,11 @@ class UserController extends BaseController
             $page = htmlspecialchars($_GET['page']);
         }
 
+        if (isset($_GET['p_page']))
+        {
+            $page = htmlspecialchars($_GET['p_page']);
+        }
+
         if ($page < 1)
         {
             $page = 1;

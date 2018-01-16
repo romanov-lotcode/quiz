@@ -59,7 +59,7 @@ include APP_VIEWS . 'layouts/header.php';
                                 <?php
                             endif; //if ($u_item['flag'] != FLAG_NO_CHANGE || $u_item['id'] == $u_id):
                             ?>
-                            <a href="/result/index?<?= $url_param . '&uid='.$u_item['id'].'&pf='.PAGE_FROM_USER_INDEX ?>" class="action" title="Посмотреть результаты тестирования"><span class="uk-icon-sticky-note"></span></a>
+                            <a href="/result/index?s_name=<?= $search['name']. '&p_page='.$page . '&uid='.$u_item['id'].'&pf='.PAGE_FROM_USER_INDEX ?>" class="action" title="Посмотреть результаты тестирования"><span class="uk-icon-sticky-note"></span></a>
                         </td>
                     </tr>
                     <?php
