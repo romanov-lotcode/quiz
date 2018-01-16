@@ -45,6 +45,7 @@ define('CAN_MODERATOR_USER_TESTING', 'CAN_MODERATOR_USER_TESTING'); // Може�
 define('CAN_RESULT_VIEW', 'CAN_RESULT_VIEW'); // Может просматривать результат
 define('CAN_OTHER_RESULT_VIEW', 'CAN_OTHER_RESULT_VIEW'); // Может просматривать результат других пользователей
 define('CAN_VIEW_CORRECT_ANSWER', 'CAN_VIEW_CORRECT_ANSWER'); // Может просматривать правильные ответы
+define('CAN_MODERATOR_RESULT', 'CAN_MODERATOR_RESULT'); // Может изменять результаты
 
 // Страница, с которой был направлен пользователь
 define('PAGE_FROM_USER_INDEX', 'ui');
