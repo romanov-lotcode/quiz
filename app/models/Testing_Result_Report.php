@@ -70,4 +70,22 @@ class Testing_Result_Report
         }
         return false;
     }
+
+    /**
+     * Удаляет отчет результата тестирования
+     * @param int $testing_result_id - ID результата тестирования
+     * @return bool
+     */
+    public static function delete($testing_result_id)
+    {
+        $sql = 'DELETE FROM testing_result_report WHERE testing_result_id = :testing_result_id';
+        $db = Database::getConnection();
+        $result = $db->prepare($sql);
+        $result->bindParam(':testing_result_id', $testing_result_id, PDO::PARAM_INT);
+        if ($result->execute())
+        {
+            return true;
+        }
+        return false;
+    }
 }

@@ -7,13 +7,31 @@ class ResultController extends BaseController
         $user_right = parent::getUserRight();
         $u_id = User::checkLogged();
         $search = [];
+        $date_converter = new Date_Converter();
+
+        $search['type'] = 1; // Тип поиска.
+        // Если 1, то будут показаны завершенные тестирования
+        // Если 2, то будут показаны все тестирования
         $page = 1;
         $errors = false;
+
+        $back_link_default = '/main/index';
+
+        $back_link = '';
+        $back_link_param = '';
+
+        $url_link = '';
+        $url_param = '';
 
         $user_id_to_view = 0;
 
         $is_can = false;
+        $is_can_moderator_result = false;
         $is_can_other_result_view = false;
+
+        $index_number = 1;
+        $testing_results = [];
+        $total = 0;
 
         foreach ($user_right as $u_r)
         {
@@ -21,19 +39,23 @@ class ResultController extends BaseController
             {
                 $is_can_other_result_view = true;
             }
+            if ($u_r['right_name'] == CAN_MODERATOR_RESULT)
+            {
+                $is_can_moderator_result = true;
+            }
             if ($u_r['right_name'] == CAN_RESULT_VIEW)
             {
                 $is_can = true;
             }
-            if ($is_can === true && $is_can_other_result_view === true)
+            if ($is_can === true && $is_can_other_result_view === true && $is_can_moderator_result === true)
             {
                 break;
             }
         }
 
-        if (isset($_GET['testing_result_id']))
+        if (isset($_GET['pf']))
         {
-            $search['testing_result_id'] = intval(htmlspecialchars($_GET['testing_result_id']));
+            $search['pf'] = htmlspecialchars($_GET['pf']);
         }
 
         if (isset($_GET['user_id']))
@@ -50,10 +72,83 @@ class ResultController extends BaseController
             }
         }
 
+        if (isset($_GET['type']))
+        {
+            $search['type'] = htmlspecialchars($_GET['type']);
+        }
 
+        // Если пользователь пришел со страницы
+        if ($search['pf'] == 'uti')
+        {
+            $back_link = '/user_testing/index?';
+            if (isset($_GET['s_direction']))
+            {
+                $search['s_direction'] = htmlspecialchars($_GET['s_direction']);
+            }
+            $back_link_param .= '&s_direction='.$search['s_direction'];
+            if (isset($_GET['s_testing']))
+            {
+                $search['s_testing'] = htmlspecialchars($_GET['s_testing']);
+            }
+            $back_link_param .= '&s_testing='.$search['s_testing'];
+            if (isset($_GET['s_user_group']))
+            {
+                $search['s_user_group'] = htmlspecialchars($_GET['s_user_group']);
+            }
+            $back_link_param .= '&s_user_group='.$search['s_user_group'];
+            if (isset($_GET['s_name']))
+            {
+                $search['s_name'] = htmlspecialchars($_GET['s_name']);
+            }
+            $back_link_param .= '&s_name='.$search['s_name'];
+        }
+        if ($search['pf'] == 'ui')
+        {
+            $back_link = '/user/index?';
+            if (isset($_GET['s_name']))
+            {
+                $search['s_name'] = htmlspecialchars($_GET['s_name']);
+            }
+            $back_link_param .= '&s_name='.$search['s_name'];
+            if (isset($_GET['p_page']))
+            {
+                $search['p_page'] = htmlspecialchars($_GET['p_page']);
+            }
+            $back_link_param .= '&p_page='.$search['p_page'];
+        }
+        if (isset($_GET['uid']))
+        {
+            $search['user_id'] = htmlspecialchars($_GET['uid']);
+        }
+
+        if ($is_can_other_result_view && $search['user_id'] > 0)
+        {
+            $user_id_to_view = $search['user_id'];
+        }
+        else
+        {
+            $user_id_to_view = $u_id;
+        }
+        $search['user_id'] = $user_id_to_view;
+
+        if ($back_link != null)
+        {
+            $url_link = $back_link.$back_link_param;
+            $url_param .= $back_link_param.'&pf='.$search['pf'];
+        }
+        else
+        {
+            $url_link = $back_link_default;
+        }
+        $url_param .= '&page='. $page;
 
         if ($is_can)
         {
+            $testing_results = Testing_Result::getTestingResults($search, $page);
+            $total = Testing_Result::getTotalTestingResults($search);
+            $index_number = Testing_Result::getIndexNumber($page);
+            $pagination = new Pagination($total, $page, Testing_Result::SHOW_BY_DEFAULT, 'page=');
+
             include_once APP_VIEWS.'result/index.php';
         }
         else
@@ -70,7 +165,8 @@ class ResultController extends BaseController
         $page = 1;
         $errors = false;
 
-        $url_link = '/result/index?';
+        $back_link_param = '';
+
         $url_param = '';
 
         $testing_result_info = []; // Массив с данными отчета результата
@@ -138,6 +234,60 @@ class ResultController extends BaseController
             }
         }
 
+        if (isset($_GET['pf']))
+        {
+            $search['pf'] = htmlspecialchars($_GET['pf']);
+        }
+
+        if (isset($_GET['type']))
+        {
+            $search['type'] = htmlspecialchars($_GET['type']);
+        }
+
+        // Если пользователь пришел со страницы
+        if ($search['pf'] == 'uti')
+        {
+            if (isset($_GET['s_direction']))
+            {
+                $search['s_direction'] = htmlspecialchars($_GET['s_direction']);
+            }
+            $back_link_param .= '&s_direction='.$search['s_direction'];
+            if (isset($_GET['s_testing']))
+            {
+                $search['s_testing'] = htmlspecialchars($_GET['s_testing']);
+            }
+            $back_link_param .= '&s_testing='.$search['s_testing'];
+            if (isset($_GET['s_user_group']))
+            {
+                $search['s_user_group'] = htmlspecialchars($_GET['s_user_group']);
+            }
+            $back_link_param .= '&s_user_group='.$search['s_user_group'];
+            if (isset($_GET['s_name']))
+            {
+                $search['s_name'] = htmlspecialchars($_GET['s_name']);
+            }
+            $back_link_param .= '&s_name='.$search['s_name'];
+        }
+        if ($search['pf'] == 'ui')
+        {
+            if (isset($_GET['s_name']))
+            {
+                $search['s_name'] = htmlspecialchars($_GET['s_name']);
+            }
+            $back_link_param .= '&s_name='.$search['s_name'];
+            if (isset($_GET['p_page']))
+            {
+                $search['p_page'] = htmlspecialchars($_GET['p_page']);
+            }
+            $back_link_param .= '&p_page='.$search['p_page'];
+        }
+
+        if ($search['pf'] != null)
+        {
+            $url_param .= $back_link_param.'&pf='.$search['pf'];
+        }
+
+        $url_param .= '&page='. $page;
 
         if ($is_can_other_result_view && $search['user_id'] > 0)
         {
@@ -649,6 +799,159 @@ class ResultController extends BaseController
         if ($is_can)
         {
             include_once APP_VIEWS.'result/print.php';
+        }
+        else
+        {
+            header('Location: /main/error');
+        }
+    }
+
+    public function actionDelete()
+    {
+        $user_right = parent::getUserRight();
+        $u_id = User::checkLogged();
+        $search = [];
+        $page = 1;
+        $errors = false;
+
+        $page = 1;
+        $errors = false;
+
+        $back_link_param = '';
+
+        $url_param = '';
+
+        $user_id_to_view = 0;
+
+        $is_can = false;
+
+        $index_number = 1;
+        $results = [];
+        $total = 0;
+
+        foreach ($user_right as $u_r)
+        {
+            if ($u_r['right_name'] == CAN_MODERATOR_RESULT)
+            {
+                $is_can = true;
+            }
+            if ($is_can === true)
+            {
+                break;
+            }
+        }
+
+        if (isset($_GET['testing_result_id']))
+        {
+            $search['testing_result_id'] = intval(htmlspecialchars($_GET['testing_result_id']));
+        }
+
+        if (isset($_GET['user_id']))
+        {
+            $search['user_id'] = intval(htmlspecialchars($_GET['user_id']));
+        }
+
+        if (isset($_GET['page']))
+        {
+            $page = intval(htmlspecialchars($_GET['page']));
+            if ($page < 1)
+            {
+                $page = 1;
+            }
+        }
+
+        if (isset($_GET['pf']))
+        {
+            $search['pf'] = htmlspecialchars($_GET['pf']);
+        }
+
+        if (isset($_GET['type']))
+        {
+            $search['type'] = htmlspecialchars($_GET['type']);
+        }
+
+        // Если пользователь пришел со страницы
+        if ($search['pf'] == 'uti')
+        {
+            if (isset($_GET['s_direction']))
+            {
+                $search['s_direction'] = htmlspecialchars($_GET['s_direction']);
+            }
+            $back_link_param .= '&s_direction='.$search['s_direction'];
+            if (isset($_GET['s_testing']))
+            {
+                $search['s_testing'] = htmlspecialchars($_GET['s_testing']);
+            }
+            $back_link_param .= '&s_testing='.$search['s_testing'];
+            if (isset($_GET['s_user_group']))
+            {
+                $search['s_user_group'] = htmlspecialchars($_GET['s_user_group']);
+            }
+            $back_link_param .= '&s_user_group='.$search['s_user_group'];
+            if (isset($_GET['s_name']))
+            {
+                $search['s_name'] = htmlspecialchars($_GET['s_name']);
+            }
+            $back_link_param .= '&s_name='.$search['s_name'];
+        }
+        if ($search['pf'] == 'ui')
+        {
+            if (isset($_GET['s_name']))
+            {
+                $search['s_name'] = htmlspecialchars($_GET['s_name']);
+            }
+            $back_link_param .= '&s_name='.$search['s_name'];
+            if (isset($_GET['p_page']))
+            {
+                $search['p_page'] = htmlspecialchars($_GET['p_page']);
+            }
+            $back_link_param .= '&p_page='.$search['p_page'];
+        }
+
+        if ($search['pf'] != null)
+        {
+            $url_param .= $back_link_param.'&pf='.$search['pf'];
+        }
+
+
+        if ($is_can && $search['user_id'] > 0)
+        {
+            $user_id_to_view = $search['user_id'];
+        }
+        else
+        {
+            $user_id_to_view = $u_id;
+        }
+
+        $testing_result_info = Testing_Result::getTestingResult($search['testing_result_id'], $user_id_to_view);
+
+
+
+        if (isset($_POST['yes']))
+        {
+            if($is_can)
+            {
+                Testing_Result::delete($search['testing_result_id']);
+                Testing_Result_Report::delete($search['testing_result_id']);
+                $total = Testing_Result::getTotalTestingResults($search);
+                if ($total <= Testing_Result::SHOW_BY_DEFAULT)
+                {
+                    $page = 1;
+                }
+                $url_param .= '&page='.$page;
+                header('Location: /result/index?'.$url_param);
+            }
+        }
+        $url_param .= '&page='.$page;
+        if (isset($_POST['no']))
+        {
+            header('Location: /result/index?'.$url_param);
+        }
+
+
+        if ($is_can)
+        {
+            include_once APP_VIEWS.'result/delete.php';
         }
         else
         {
