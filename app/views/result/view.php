@@ -157,7 +157,8 @@ include APP_VIEWS . 'layouts/header.php';
 
                                 <?php
                                 if (!in_array($frr_question_id, $scip_questions)):
-                                    if (array_key_exists($frr_question_id, $wrong_answers)):
+                                    if (array_key_exists($frr_question_id, $wrong_answers) ||
+                                        count($frr_value['view_answers']['answered']) != count(($frr_value['view_answers']['right']))):
                                     ?>
                                     <div style="padding-left: 15px; padding-right: 15px;" class="uk-alert uk-alert-danger">
                                     <?php
@@ -200,7 +201,7 @@ include APP_VIEWS . 'layouts/header.php';
                                     ?>
                                 </div>
                                 <?php
-                                    endif; // if (array_key_exists($frr_question_id, $wrong_answers)):
+                                    endif; // if (array_key_exists($frr_question_id, $wrong_answers) || count($frr_value['view_answers']['answered']) != count(($frr_value['view_answers']['right']))):
                                 else: //if (!in_array($frr_question_id, $scip_questions)):
                                 ?>
                                 <div style="padding-left: 15px; padding-right: 15px;" class="uk-alert uk-alert-success">
