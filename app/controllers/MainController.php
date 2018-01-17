@@ -622,6 +622,28 @@ class MainController extends BaseController
             $question_number++;
             $question_answers = Answer::getAnswers($qid);
 
+            // Перемешать ответы на вопрос во время тестирования
+            function shuffle_assoc(&$array)
+            {
+                $keys = array_keys($array);
+
+                shuffle($keys);
+                $new = array();
+
+                foreach($keys as $key) {
+                    $new[$key] = $array[$key];
+                }
+
+                $array = $new;
+
+                return true;
+            }
+
+            if ($testing['is_answer_random'] == APP_YES)
+            {
+                shuffle_assoc($question_answers);
+            }
+
             $last_question_now = Testing::getSessionQuestionNow(); // Получаем последний засекаемый вопрос
 
             $question_session_start_datetime = Testing::getSessionQuestionStartdatetime($last_question_now); // Получаем начало времени вопроса
