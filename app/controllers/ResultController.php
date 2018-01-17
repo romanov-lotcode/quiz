@@ -140,7 +140,7 @@ class ResultController extends BaseController
         {
             $url_link = $back_link_default;
         }
-        $url_param .= '&page='. $page;
+        $url_param .= '&page='. $page.'&user_id='.$search['user_id'];
 
         if ($is_can)
         {
@@ -287,8 +287,6 @@ class ResultController extends BaseController
             $url_param .= $back_link_param.'&pf='.$search['pf'];
         }
 
-        $url_param .= '&page='. $page;
-
         if ($is_can_other_result_view && $search['user_id'] > 0)
         {
             $user_id_to_view = $search['user_id'];
@@ -297,6 +295,7 @@ class ResultController extends BaseController
         {
             $user_id_to_view = $u_id;
         }
+        $url_param .= '&page='. $page.'&user_id='.$user_id_to_view;
 
         $testing_result_info = Testing_Result::getTestingResult($search['testing_result_id'], $user_id_to_view);
 
@@ -938,11 +937,11 @@ class ResultController extends BaseController
                 {
                     $page = 1;
                 }
-                $url_param .= '&page='.$page;
+                $url_param .= '&page='.$page.'&user_id='.$user_id_to_view;
                 header('Location: /result/index?'.$url_param);
             }
         }
-        $url_param .= '&page='.$page;
+        $url_param .= '&page='.$page.'&user_id='.$user_id_to_view;
         if (isset($_POST['no']))
         {
             header('Location: /result/index?'.$url_param);
