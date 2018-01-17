@@ -12,10 +12,10 @@ include APP_VIEWS . 'layouts/header.php';
     <div class="uk-width-8-10" align="left">
 
         <table class="uk-width-1-1 search_param">
-            <?php if ($user['lastname'] != null): ?>
+            <?php if ($user['this_lastname'] != null): ?>
                 <tr>
                     <td class="uk-width-1-2"  colspan="2">
-                        Пользователь: "<?= trim($user['lastname'] . ' ' . $user['firstname'] . ' ' . $user['middlename']) ?>"
+                        Пользователь: "<?= trim($user['this_lastname'] . ' ' . $user['this_firstname'] . ' ' . $user['this_middlename']) ?>"
                     </td>
                     <td class="uk-width-1-3">
                         <a href="/user_user_group/add?<?= $url_param . '&uid='.$search['uid'] ?>" class="uk-button fr" title="Добавить">Добавить</a>
