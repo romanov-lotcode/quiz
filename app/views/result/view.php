@@ -106,7 +106,7 @@ include APP_VIEWS . 'layouts/header.php';
                 </td>
             </tr>
             <?php if (is_array($filtered_result_report) && count($filtered_result_report) > 0): ?>
-                <tr><td style="border: 2px solid #808080"></td></tr>
+                <tr><td style="border: 1px solid #999999;"></td></tr>
                 <?php
                 $q_number = 0;
                 foreach ($filtered_result_report as $frr_question_id => $frr_value):
