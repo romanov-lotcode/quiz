@@ -57,4 +57,8 @@ return [
     'result/view' => ['controller' => 'Result', 'action' => 'view'],
     'result/print' => ['controller' => 'Result', 'action' => 'print'],
     'result/delete' => ['controller' => 'Result', 'action' => 'delete'],
+
+    'user_or_app_right/index' => ['controller' => 'UserOrAppRight', 'action' => 'index'],
+
+    'user_or_app_right/delete' => ['controller' => 'UserOrAppRight', 'action' => 'delete'],
 ];
