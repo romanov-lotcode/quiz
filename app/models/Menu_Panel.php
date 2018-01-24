@@ -112,7 +112,6 @@ class Menu_Panel
                         $menu .= $this->render($members, $tree['id']);
                         if ($tree['type'] == 2)
                         {
-                            $menu .= '</ul>';
                             $menu .= '</div>';
                         }
                         $menu .= '</li>';
