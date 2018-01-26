@@ -51,7 +51,7 @@ include APP_VIEWS . 'layouts/header.php';
                 <div id="img_path_img" <?php if ($img_show == 0) echo 'style="display:none;"' ?>>
                     <span>Был выбран 1 файл</span>
                     <a href="#" class="uk-button delete">Удалить</a><br /><br />
-                    <img src="http://quiz-v2/temp/users/<?= $u_id .'/'.$question['path_img'] ?>" class="image">
+                    <img src="<?= IMG_SRC_TMP_USER . $u_id .'/'.$question['path_img'] ?>" class="image">
                 </div>
 
                 <!-- Область предпросмотра -->

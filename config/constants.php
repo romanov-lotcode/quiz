@@ -59,3 +59,6 @@ define('USER_GROUP_COUNT_NO_LIMIT', 999999999); // Количество груп
 // Типы вопросов
 define('QUESTION_TYPE_ONE_TO_ONE', 0); // Один к одному
 define('QUESTION_TYPE_ONE_TO_MANY', 1); // Один ко многим
+
+define('IMG_SRC_TMP_USER', 'http://quiz-v2/temp/users/'); // Временный путь из директории пользователя
+define('IMG_SRC_QUESTIONS', 'http://quiz-v2/app/templates/images/questions/'); // Путь к картинке из постоянной директории изображений

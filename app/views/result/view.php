@@ -134,7 +134,7 @@ include APP_VIEWS . 'layouts/header.php';
                                     <?=$q_number.'. '. $frr_value['question_name'] ?>
                                     <?php
                                     if ($frr_value['question_path_img'] != null):
-                                        $img_src = 'http://quiz-v2/app/templates/images/questions/'.$frr_value['question_path_img'];
+                                        $img_src = IMG_SRC_QUESTIONS.$frr_value['question_path_img'];
                                     ?>
                                     <div align="center">
                                         <img src="<?= $img_src ?>" alt="Изображение отсутствует" class="quiz_img" />

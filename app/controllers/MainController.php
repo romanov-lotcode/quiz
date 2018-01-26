@@ -617,7 +617,7 @@ class MainController extends BaseController
 
             $question = Question::getQuestion($qid);
 
-            $img_src = 'http://quiz-v2/app/templates/images/questions/'.$question['path_img'];
+            $img_src = IMG_SRC_QUESTIONS.$question['path_img'];
             $question_number = array_search($qid, $questions);
             $question_number++;
             $question_answers = Answer::getAnswers($qid);

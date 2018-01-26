@@ -353,7 +353,7 @@ class QuestionController extends BaseController
             /**
              * Обработка изображения Begin
              */
-            $user_dir = ROOT.'\\temp\\users\\'.$u_id;
+            $user_dir = ROOT.'/temp/users/'.$u_id;
 
             $types = array('image/gif' => '.gif', 'image/png' => '.png', 'image/jpeg' => '.jpg');
 
@@ -400,7 +400,7 @@ class QuestionController extends BaseController
             }
             if ($file_name != '')
             {
-                $full_file_path = $user_dir.'\\'.$file_name;
+                $full_file_path = $user_dir.'/'.$file_name;
                 move_uploaded_file($_FILES['path_img']['tmp_name'], $full_file_path);
                 $question['path_img'] = $file_name;
             }
@@ -527,7 +527,7 @@ class QuestionController extends BaseController
                     {
                         if ($file_name != null)
                         {
-                            $file = $user_dir.'\\'.$file_name;
+                            $file = $user_dir.'/'.$file_name;
                             if (file_exists($file))
                             {
                                 $file_type = '';
@@ -544,13 +544,13 @@ class QuestionController extends BaseController
                                     $file_type = '.png';
                                 }
                                 $name = $is_add.$file_type;
-                                copy($user_dir.'\\'.$file_name, ROOT.'\\app\\templates\\images\\questions\\'.$name);
+                                copy($user_dir.'/'.$file_name, ROOT.'/app/templates/images/questions/'.$name);
                                 Question::updatePathImg($is_add, $name);
                                 foreach ($types as $key => $value)
                                 {
-                                    if (file_exists($user_dir.'\\path_img'.$value))
+                                    if (file_exists($user_dir.'/path_img'.$value))
                                     {
-                                        unlink($user_dir.'\\path_img'.$value);
+                                        unlink($user_dir.'/path_img'.$value);
                                     }
                                 }
                             }
@@ -595,8 +595,8 @@ class QuestionController extends BaseController
         $img_delete = false;
         $old_file = '';
         $img_src = '';
-        $src_1 = 'http://quiz-v2/temp/users/'. $u_id .'/';
-        $src_2 = 'http://quiz-v2/app/templates/images/questions/';
+        $src_1 = IMG_SRC_TMP_USER. $u_id .'/';
+        $src_2 = IMG_SRC_QUESTIONS;
 
         foreach ($user_right as $u_r)
         {
@@ -862,7 +862,7 @@ class QuestionController extends BaseController
         }
 
         $img_src = $src_2;
-        $full_file_path = ROOT . '\\app\\templates\\images\\questions\\'.$question['path_img'];
+        $full_file_path = ROOT . '/app/templates/images/questions/'.$question['path_img'];
 
         if (isset($_POST['edit']))
         {
@@ -873,7 +873,7 @@ class QuestionController extends BaseController
             /**
              * Обработка изображения Begin
              */
-            $user_dir = ROOT.'\\temp\\users\\'.$u_id;
+            $user_dir = ROOT.'/temp/users/'.$u_id;
 
             $types = array('image/gif' => '.gif', 'image/png' => '.png', 'image/jpeg' => '.jpg');
 
@@ -920,7 +920,7 @@ class QuestionController extends BaseController
             }
             if ($file_name != '')
             {
-                $full_file_path = $user_dir.'\\'.$file_name;
+                $full_file_path = $user_dir.'/'.$file_name;
                 move_uploaded_file($_FILES['path_img']['tmp_name'], $full_file_path);
                 $question['path_img'] = $file_name;
                 $is_new_file_name = true;
@@ -1065,7 +1065,7 @@ class QuestionController extends BaseController
 
                     Question::edit($question);
 
-                    $old_file_path = ROOT.'\\app\\templates\\images\\questions\\'.$old_file;
+                    $old_file_path = ROOT.'/app/templates/images/questions/'.$old_file;
                     if ($img_delete)
                     {
                         if (file_exists($old_file_path))
@@ -1077,7 +1077,7 @@ class QuestionController extends BaseController
 
                     if ($is_new_file_name)
                     {
-                        $file = $user_dir.'\\'.$file_name;
+                        $file = $user_dir.'/'.$file_name;
                         if (file_exists($file))
                         {
                             if (exif_imagetype($file) == IMAGETYPE_GIF)
@@ -1093,12 +1093,12 @@ class QuestionController extends BaseController
                                 $file_type = '.png';
                             }
                             $name = $question['id'].$file_type;
-                            copy($user_dir.'\\'.$file_name, ROOT.'\\app\\templates\\images\\questions\\'.$name);
+                            copy($user_dir.'/'.$file_name, ROOT.'/app/templates/images/questions/'.$name);
                             foreach ($types as $key => $value)
                             {
-                                if (file_exists($user_dir.'\\path_img'.$value))
+                                if (file_exists($user_dir.'/path_img'.$value))
                                 {
-                                    unlink($user_dir.'\\path_img'.$value);
+                                    unlink($user_dir.'/path_img'.$value);
                                 }
                             }
                         }
