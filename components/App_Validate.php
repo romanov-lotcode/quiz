@@ -7,7 +7,7 @@ class App_Validate
 {
     public function checkLogin($value)
     {
-        $pattern = '/^[a-zA-Z][a-zA-Z0-9-_\.]{5,32}$/';
+        $pattern = '/^[a-zA-Z0-9][a-zA-Z0-9-_\.]{5,32}$/';
         if (preg_match($pattern, $value))
         {
             return true;
