@@ -96,6 +96,7 @@ class UserOrAppRightController extends BaseController
 
 
         $moderator = [];
+        $moderator['4'] = 'CAN_VIEW_CORRECT_ANSWER'; // Может просматривать правильные ответы
         $moderator['16'] = 'CAN_MODERATOR_TEST'; // Может работать с тестами
         $moderator['32'] = 'CAN_MODERATOR_DIRECTION'; // Может работать с направлениями
         $moderator['64'] = 'CAN_MODERATOR_TESTING'; // Может работать с тестированиями
